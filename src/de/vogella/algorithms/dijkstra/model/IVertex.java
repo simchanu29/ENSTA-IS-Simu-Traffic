@@ -1,9 +1,9 @@
 package de.vogella.algorithms.dijkstra.model;
-import simEntity.Carrefour.CarrefoursNames;;
+import simEntity.Carrefour.CarrefourNames;;
 
 public interface IVertex {
   public String getId();
 
-  public CarrefoursNames getName();
+  public CarrefourNames getName();
     
 } 

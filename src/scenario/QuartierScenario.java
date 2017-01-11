@@ -11,7 +11,7 @@ import enstabretagne.simulation.components.SimFeatures;
 import enstabretagne.simulation.components.SimScenario;
 import enstabretagne.simulation.core.SimEngine;
 import enstabretagne.simulation.core.SimEvent;
-import simEntity.Carrefour.CarrefoursNames;
+import simEntity.Carrefour.CarrefourNames;
 import simEntity.Voiture.Voiture;
 import simEntity.Voiture.VoitureFeatures;
 import simEntity.Voiture.VoitureInit;
@@ -54,7 +54,7 @@ public class QuartierScenario extends SimScenario  {
 				originCarrefourProba=(int)random.nextDouble()*7;
 			}
 			VoitureFeatures vf ;
-			vf=new VoitureFeatures("Voiture_"+nbVoiture++,CarrefoursNames.valueOf("P"+originCarrefourProba),CarrefoursNames.valueOf("P"+destCarrefourProba));
+			vf=new VoitureFeatures("Voiture_"+nbVoiture++,CarrefourNames.valueOf("P"+originCarrefourProba),CarrefourNames.valueOf("P"+destCarrefourProba));
 			
 			Voiture v=(Voiture)createChild(getEngine(),Voiture.class, vf.getId(), vf);
 			

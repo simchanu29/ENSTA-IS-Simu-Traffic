@@ -11,7 +11,7 @@ import de.vogella.algorithms.dijkstra.model.Graph;
 import de.vogella.algorithms.dijkstra.model.IEdge;
 import de.vogella.algorithms.dijkstra.model.IVertex;
 import de.vogella.algorithms.dijkstra.model.Vertex;
-import simEntity.Carrefour.CarrefoursNames;;
+import simEntity.Carrefour.CarrefourNames;
 
 
 public class DijkstraRoutier {
@@ -26,25 +26,25 @@ public class DijkstraRoutier {
   public DijkstraRoutier() {
 	    nodes = new ArrayList<IVertex>();
 	    edges = new ArrayList<IEdge>();
-	    Vertex location = new Vertex("Node_" + 0,CarrefoursNames.I2 );
+	    Vertex location = new Vertex("Node_" + 0,CarrefourNames.I2 );
 	      nodes.add(location);
-	      LinkedList<CarrefoursNames> P=new LinkedList<CarrefoursNames>();
-	      P.add(CarrefoursNames.I1);
-	      P.add(CarrefoursNames.P1);
-	      P.add(CarrefoursNames.P2);
-	      P.add(CarrefoursNames.P3);
-	      P.add(CarrefoursNames.P4);
-	      P.add(CarrefoursNames.P5);
-	      P.add(CarrefoursNames.P6);
-	      P.add(CarrefoursNames.P7);
+	      LinkedList<CarrefourNames> P=new LinkedList<CarrefourNames>();
+	      P.add(CarrefourNames.I1);
+	      P.add(CarrefourNames.P1);
+	      P.add(CarrefourNames.P2);
+	      P.add(CarrefourNames.P3);
+	      P.add(CarrefourNames.P4);
+	      P.add(CarrefourNames.P5);
+	      P.add(CarrefourNames.P6);
+	      P.add(CarrefourNames.P7);
 	    for (int i = 1; i < 8; i++) {
 	      location = new Vertex("Node_" + i, P.get(i));
 	      nodes.add(location);
 	    }
-	    LinkedList<CarrefoursNames> numero=new LinkedList<CarrefoursNames>();
-	    numero.add(CarrefoursNames.I4);
-	    numero.add(CarrefoursNames.I3);
-	    numero.add(CarrefoursNames.I1);
+	    LinkedList<CarrefourNames> numero=new LinkedList<CarrefourNames>();
+	    numero.add(CarrefourNames.I4);
+	    numero.add(CarrefourNames.I3);
+	    numero.add(CarrefourNames.I1);
 	    int j=0;
 	    for (int i= 8; i < 11; i++) {
 		      location = new Vertex("Node_" + i,numero.get(j));
@@ -70,7 +70,7 @@ public class DijkstraRoutier {
 public void chemin(int NodeDepart,int NodeArrive) {
     dijkstra.execute(nodes.get(NodeDepart));
     LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(NodeArrive));
-    LinkedList<CarrefoursNames> gps = new LinkedList<CarrefoursNames>();
+    LinkedList<CarrefourNames> gps = new LinkedList<CarrefourNames>();
     for (IVertex vertex : path) {
         gps.add(vertex.getName());
       }

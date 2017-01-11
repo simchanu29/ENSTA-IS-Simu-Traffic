@@ -1,20 +1,20 @@
 
 
 package de.vogella.algorithms.dijkstra.model;
-import simEntity.Carrefour.CarrefoursNames;
+import simEntity.Carrefour.CarrefourNames;
 public class Vertex implements IVertex{
   final private String id;
-  public  CarrefoursNames name;
+  public  CarrefourNames name;
   
   
-  public Vertex(String id, CarrefoursNames name) {
+  public Vertex(String id, CarrefourNames name) {
     this.id = id;
     this.name = name;
   }
   public String getId() {
     return id;
   }
-public CarrefoursNames getName(){
+public CarrefourNames getName(){
 	return name;
 	
 
