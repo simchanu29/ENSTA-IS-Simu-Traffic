@@ -18,6 +18,9 @@ public class Voiture extends SimEntity implements IVoiture,IRecordable {
 	CarrefoursNames nextCarrefour;
 	int currentIndex=0;
 	EtatVoiture etatVoiture;
+	LogicalDateTime heureEntreeFileAttente;
+	LogicalDateTime heureDebutMvt;	
+	LogicalDuration dureeAttente;
 
 	public Voiture(SimEngine engine,String name, SimFeatures features) {
 		super(engine,name, features);				
@@ -64,11 +67,6 @@ public class Voiture extends SimEntity implements IVoiture,IRecordable {
 	public EtatVoiture getEtatVoiture() {
 		return etatVoiture;
 	}
-
-	LogicalDateTime heureEntreeFileAttente;
-	LogicalDateTime heureDebutMvt;
-	
-	LogicalDuration dureeAttente;
 
 	@Override
 	public void setEtatVoiture(EtatVoiture  etatVoiture) {
