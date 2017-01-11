@@ -1,6 +1,6 @@
 package simEntity.Carrefour;
 
-public enum CarrefoursNames {
+public enum CarrefourNames {
 	I1("I1"),
 	I2("I2"),
 	I3("I3"),
@@ -15,7 +15,7 @@ public enum CarrefoursNames {
 	
 	private final String name;
 	
-	private CarrefoursNames(String name){
+	private CarrefourNames(String name){
 		this.name=name;
 	}
 		

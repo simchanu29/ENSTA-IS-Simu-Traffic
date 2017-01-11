@@ -2,22 +2,22 @@
 package simEntity.Voiture;
 import enstabretagne.simulation.components.SimFeatures;
 
-import simEntity.Carrefour.CarrefoursNames;
+import simEntity.Carrefour.CarrefourNames;
 public class VoitureFeatures extends SimFeatures {
 
-	CarrefoursNames originCarrefour;
-	CarrefoursNames destination;
+	CarrefourNames originCarrefour;
+	CarrefourNames destination;
 	
-	public CarrefoursNames getOriginCarrefour() {
+	public CarrefourNames getOriginCarrefour() {
 		return originCarrefour;
 	}
 	
-	public CarrefoursNames getDestination() {
+	public CarrefourNames getDestination() {
 		return destination;
 	}
 	
-	public VoitureFeatures(String id, CarrefoursNames originCarrefour,
-			CarrefoursNames destination) {
+	public VoitureFeatures(String id, CarrefourNames originCarrefour,
+			CarrefourNames destination) {
 		super(id);
 		this.originCarrefour=originCarrefour;
 		this.destination = destination;

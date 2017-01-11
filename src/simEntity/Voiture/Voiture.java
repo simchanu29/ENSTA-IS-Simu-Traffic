@@ -12,10 +12,10 @@ import enstabretagne.simulation.components.SimEntity;
 import enstabretagne.simulation.components.SimFeatures;
 import enstabretagne.simulation.components.SimInitParameters;
 import enstabretagne.simulation.core.SimEngine;
-import simEntity.Carrefour.CarrefoursNames;
+import simEntity.Carrefour.CarrefourNames;
 
 public class Voiture extends SimEntity implements IVoiture,IRecordable {
-	CarrefoursNames nextCarrefour;
+	CarrefourNames nextCarrefour;
 	int currentIndex=0;
 	EtatVoiture etatVoiture;
 	LogicalDateTime heureEntreeFileAttente;
@@ -37,13 +37,13 @@ public class Voiture extends SimEntity implements IVoiture,IRecordable {
 		setEtatVoiture(EtatVoiture.EnRoute);
 	}
 
-	LinkedList<CarrefoursNames> path;
-	public void addToPath(CarrefoursNames CarrefourId){
+	LinkedList<CarrefourNames> path;
+	public void addToPath(CarrefourNames CarrefourId){
 		path.add(CarrefourId);
 	}
 	
 	
-	public CarrefoursNames allerNextCarrefour() {		
+	public CarrefourNames allerNextCarrefour() {
 		if(this.path.get(currentIndex+1)!=null) {
 			nextCarrefour=path.get(currentIndex+1);
 			currentIndex+=1;
