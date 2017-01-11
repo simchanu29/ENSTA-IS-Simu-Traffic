@@ -1,21 +1,24 @@
-package de.vogella.algorithms.dijkstra.model;
 
+
+package de.vogella.algorithms.dijkstra.model;
+import simEntity.Carrefour.CarrefoursNames;
 public class Vertex implements IVertex{
   final private String id;
-  final private String name;
+  public  CarrefoursNames name;
   
   
-  public Vertex(String id, String name) {
+  public Vertex(String id, CarrefoursNames name) {
     this.id = id;
     this.name = name;
   }
   public String getId() {
     return id;
   }
+public CarrefoursNames getName(){
+	return name;
+	
 
-  public String getName() {
-    return name;
-  }
+}
   
   @Override
   public int hashCode() {
@@ -42,9 +45,10 @@ public class Vertex implements IVertex{
     return true;
   }
 
-  @Override
   public String toString() {
-    return name;
-  }
+    return name.toString();
+  } 
+
+  
   
 } 

@@ -11,6 +11,7 @@ import de.vogella.algorithms.dijkstra.model.Graph;
 import de.vogella.algorithms.dijkstra.model.IEdge;
 import de.vogella.algorithms.dijkstra.model.IVertex;
 import de.vogella.algorithms.dijkstra.model.Vertex;
+import simEntity.Carrefour.CarrefoursNames;;
 
 
 public class DijkstraRoutier {
@@ -25,19 +26,28 @@ public class DijkstraRoutier {
   public DijkstraRoutier() {
 	    nodes = new ArrayList<IVertex>();
 	    edges = new ArrayList<IEdge>();
-	    Vertex location = new Vertex("Node_" + 0, "I" +2 );
+	    Vertex location = new Vertex("Node_" + 0,CarrefoursNames.I2 );
 	      nodes.add(location);
+	      LinkedList<CarrefoursNames> P=new LinkedList<CarrefoursNames>();
+	      P.add(CarrefoursNames.I1);
+	      P.add(CarrefoursNames.P1);
+	      P.add(CarrefoursNames.P2);
+	      P.add(CarrefoursNames.P3);
+	      P.add(CarrefoursNames.P4);
+	      P.add(CarrefoursNames.P5);
+	      P.add(CarrefoursNames.P6);
+	      P.add(CarrefoursNames.P7);
 	    for (int i = 1; i < 8; i++) {
-	      location = new Vertex("Node_" + i, "Generateur_" + i);
+	      location = new Vertex("Node_" + i, P.get(i));
 	      nodes.add(location);
 	    }
-	    LinkedList<String> numero=new LinkedList<String>();
-	    numero.add("3");
-	    numero.add("4");
-	    numero.add("1");
+	    LinkedList<CarrefoursNames> numero=new LinkedList<CarrefoursNames>();
+	    numero.add(CarrefoursNames.I4);
+	    numero.add(CarrefoursNames.I3);
+	    numero.add(CarrefoursNames.I1);
 	    int j=0;
 	    for (int i= 8; i < 11; i++) {
-		      location = new Vertex("Node_" + i, "I" + numero.get(j));
+		      location = new Vertex("Node_" + i,numero.get(j));
 		      nodes.add(location);
 		      j++;
 		    }
@@ -60,9 +70,9 @@ public class DijkstraRoutier {
 public void chemin(int NodeDepart,int NodeArrive) {
     dijkstra.execute(nodes.get(NodeDepart));
     LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(NodeArrive));
-    LinkedList<String> gps = new LinkedList<String>();
+    LinkedList<CarrefoursNames> gps = new LinkedList<CarrefoursNames>();
     for (IVertex vertex : path) {
-        gps.add(vertex.toString());
+        gps.add(vertex.getName());
       }
      System.out.println(gps);
 //     return gps;
