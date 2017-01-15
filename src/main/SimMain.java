@@ -9,18 +9,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import Scenarios.SimTrafficScenario;
 import Scenarios.SimTrafficScenarioFeatures;
 import enstabretagne.base.time.LogicalDateTime;
+import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.base.utility.CategoriesGenerator;
 import enstabretagne.base.utility.LoggerParamsNames;
 import enstabretagne.base.utility.loggerimpl.SXLSXExcelDataloggerImpl;
 import enstabretagne.base.utility.loggerimpl.SysOutLogger;
 import enstabretagne.monitors.MonteCarloMonitor;
+import enstabretagne.simulation.components.ScenarioId;
 import enstabretagne.simulation.components.SimScenario;
 import enstabretagne.simulation.core.*;
 
 import simEntity.Carrefour.CarrefourFeatures;
 import simEntity.Carrefour.CarrefourInit;
 import simEntity.Carrefour.CarrefourNames;
+import simEntity.Quartier.QuartierFeatures;
+import simEntity.Quartier.QuartierInit;
 
 public class SimMain extends MonteCarloMonitor implements IMonitor {
 
@@ -55,7 +61,7 @@ public class SimMain extends MonteCarloMonitor implements IMonitor {
 //        String heureDebutArriveeClient="09:00";
 //        String heureFinArriveeClient="20:00";
         int nbVoitureMaxEnQuartier = 10000;
-//        double vitesseDeCoupe=19;
+        double vitesseVoiture = 19;
         double periodeArriveeVoituresEnMinutes;
 //        List<DayOfWeek> joursFermeture = new ArrayList<DayOfWeek>();
 //        joursFermeture.add(DayOfWeek.SUNDAY);
@@ -97,22 +103,20 @@ public class SimMain extends MonteCarloMonitor implements IMonitor {
 
         scsf = new SimTrafficScenarioFeatures(
                 "test1",
-                60.0//periodeArriveeClientsEnMinutes,//arrivée toute les 12 minutes des clients
-//                heureDebutArriveeClient,
-//                heureFinArriveeClient,
-//                new SalonFeatures("Salon Petunia", 10, 4, nbClientMaxEnSalle, heureDebutOuvertureSalon, heureFermetureSalon,joursFermeture, l),
-//                new SalonInit(i),
-//                new CategoriesGenerator(0, periodeArriveeClientsEnMinutes*10, 10, 3, 2),
-//                new CategoriesGenerator(0, vitesseDeCoupe*5, 50, 3, 2)
+                60.0,
+                new QuartierFeatures("Salon Petunia", nbVoitureMaxEnQuartier, l),
+                new QuartierInit(i),
+                new CategoriesGenerator(0, periodeArriveeVoituresEnMinutes*10, 10, 3, 2),
+                new CategoriesGenerator(0, vitesseVoiture*5, 50, 3, 2)
         );
 
-//        listeScenario.add(new SalonCoiffureScenario(
-//                sm.getEngine(),
-//                new ScenarioId("Scenario1"),
-//                scsf,
-//                start,
-//                start.add(LogicalDuration.ofDay(nbJoursDeSimulation))
-//        ));
+        listeScenario.add(new SimTrafficScenario(
+                sm.getEngine(),
+                new ScenarioId("Scenario1"),
+                scsf,
+                start,
+                start.add(LogicalDuration.ofDay(nbJoursDeSimulation))
+        ));
 
         //================================ Fin mise en place scénario ==================================================
 

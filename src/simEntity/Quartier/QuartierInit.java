@@ -13,8 +13,8 @@ public class QuartierInit {
 		public HashMap<CarrefourNames, CarrefourInit> getCarrefoursInits() {
 			return carrefourInit;
 		}
-		
-		
+
+
 
 
 }

@@ -6,7 +6,7 @@ import enstabretagne.simulation.components.SimFeatures;
 import simEntity.Carrefour.CarrefourFeatures;
 
 public class QuartierFeatures extends SimFeatures {
-	int frequenceObservationNbVoitures;	
+	int frequenceObservationNbVoitures;
 	List<CarrefourFeatures> carrefourFeatures;
 
 	public QuartierFeatures(String id,
@@ -15,12 +15,12 @@ public class QuartierFeatures extends SimFeatures {
 		super(id);
 		this.frequenceObservationNbVoitures = frequenceObservationNbVoitures;
 	}
-	
+
 	public int getFrequenceObservationNbVoitures() {
 		return frequenceObservationNbVoitures;
 	}
-	
-	
+
+
 	public List<CarrefourFeatures> getCarrefourFeatures() {
 		return carrefourFeatures;
 	}
