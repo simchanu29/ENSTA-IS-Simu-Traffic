@@ -1,5 +1,7 @@
 package simEntity.Carrefour;
 
+import fr.ensta.lerouxlu.simu.SimEngine;
+import fr.ensta.lerouxlu.simu.SimEntity;
 import simEntity.Carrefour.Regle.CarrefourRegle;
 import simEntity.Voiture.Voiture;
 
@@ -7,8 +9,10 @@ import java.util.Queue;
 
 /**
  * Created by Tag on 18/01/2017.
+ *
+ * TODO : initialize et compagnie (les fonctions de simEntity)
  */
-public class Carrefour {
+public class Carrefour extends SimEntity{
 
     private CarrefourNames nom;
     private CarrefourRegle regle;
@@ -37,7 +41,8 @@ public class Carrefour {
      * Malgré tout on a un doublon avec la definition du carrefour
      * TODO : investiguer si c'est un probleme.
      */
-    public Carrefour(CarrefourNames nom, CarrefourRegle regle,Carrefour carrSud,Carrefour carrEst,Carrefour carrNord,Carrefour carrOuest){
+    public Carrefour(SimEngine engine, CarrefourNames nom, CarrefourRegle regle, Carrefour carrSud, Carrefour carrEst, Carrefour carrNord, Carrefour carrOuest){
+        super(engine,"Carrefour");
         carrefourEst=carrEst;
         carrefourNord=carrNord;
         carrefourOuest=carrOuest;
