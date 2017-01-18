@@ -14,11 +14,9 @@ public class Vertex implements IVertex{
   public String getId() {
     return id;
   }
-public CarrefourNames getName(){
+  public CarrefourNames getName(){
 	return name;
-	
-
-}
+  }
   
   @Override
   public int hashCode() {
