@@ -17,24 +17,20 @@ public  class Voiture extends SimEntity {
 		private String name;
 		private CarrefourNames departure;
 		private CarrefourNames destination;
-		private LinkedList<CarrefourNames> path;
-//    /**
-//     * La position du dernier carrefour de la voiture. C'est pour permettre à la voiture de savoir où elle est.
-//     * TODO : ajouter le carrefour dans lequel arrive la voiture a l'evenement la voiture arrive dans le carrefour
-//     */
-//		private Carrefour location;
-//    /**
-//     * La position de l'avant-dernier carrefour. C'est simplement pour avoir facilement
-//     */
-//		private Carrefour lastLocation;
+		private Path chemin;
+		private LogicalDuration tempsOptimal;
+		
 
 
-		public Voiture(SimEngine engine, String name, CarrefourNames departure, CarrefourNames destination, LinkedList<CarrefourNames> path) {
+		public Voiture(SimEngine engine, String name, CarrefourNames location, CarrefourNames destination) {
+
 			super(engine,"Voiture");
 			this.name=name;
 			this.departure=departure;
 			this.destination=destination;
-			this.path=path;
+			this.chemin=new Path(location,destination);
+			this.tempsOptimal=chemin.getTrajet();
+
 		}
 		
 		
@@ -70,12 +66,12 @@ public  class Voiture extends SimEntity {
 		@Override
 		public void deactivate() {
 			super.deactivate();
-			Logger.Information(this, "deactivate", "je suis desactivé");
+			Logger.Information(this, "deactivate", "je suis desactivÃ©");
 		}
 		@Override
 		public void terminate() {
 			super.terminate();
-			Logger.Information(this, "terminate","je suis terminé");
+			Logger.Information(this, "terminate","je suis terminÃ©");
 
 		}
 		public class GoTo extends SimEvent {
@@ -85,9 +81,8 @@ public  class Voiture extends SimEntity {
 			}
 			@Override
 			public void process() {
-				Logger.Information(name, "goTo",name+ " go to "+ destination);	
-				long randomDuration = getEngine().getRandomDuration();
-				addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofHours(randomDuration))));
+				Logger.Information(name, "goTo",name+ " go to "+ destination);
+				addEvent(new IsArrived(getEngine().SimulationDate().add(tempsOptimal)));
 				
 			}
 			
@@ -106,8 +101,15 @@ public  class Voiture extends SimEntity {
 		public CarrefourNames getDestination() {
 			return destination;
 		}
-		public LinkedList<CarrefourNames> getPath() {
-			return path;
+
+		
+
+		public Path getChemin() {
+			return chemin;
+		}
+
+		public LogicalDuration getTempsOptimal() {
+			return tempsOptimal;
 		}
 
 		public void setLocation(CarrefourNames location) {
@@ -117,4 +119,6 @@ public  class Voiture extends SimEntity {
 		public void setDestination(CarrefourNames destination) {
 			this.destination = destination;
 		}
+		
+		
 	}

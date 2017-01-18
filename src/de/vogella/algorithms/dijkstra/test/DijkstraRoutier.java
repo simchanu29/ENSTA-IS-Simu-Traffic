@@ -20,6 +20,7 @@ public class DijkstraRoutier {
   private List<IEdge> edges;
   private Graph graph;
   private DijkstraAlgorithm dijkstra;
+  private LinkedList<IVertex> trajet;
   
   
   
@@ -52,16 +53,16 @@ public class DijkstraRoutier {
 		      j++;
 		    }
 
-	    addLane("Edge_0", 1, 10, 1);
-	    addLane("Edge_1", 10, 0, 1);
-	    addLane("Edge_2", 0, 3, 1);
-	    addLane("Edge_3", 2, 0, 1);
-	    addLane("Edge_4", 10, 8, 1);
-	    addLane("Edge_5", 5, 8, 1);
-	    addLane("Edge_6", 6, 8, 1);
-	    addLane("Edge_7", 8, 9, 1);
-	    addLane("Edge_8", 7, 9, 1);
-	    addLane("Edge_9", 4, 9, 1 );;
+	    addLane("Edge_0", 1, 10, 216);
+	    addLane("Edge_1", 10, 0, 94);
+	    addLane("Edge_2", 0, 3, 324);
+	    addLane("Edge_3", 2, 0, 144);
+	    addLane("Edge_4", 10, 8, 252);
+	    addLane("Edge_5", 5, 8, 324);
+	    addLane("Edge_6", 6, 8, 72);
+	    addLane("Edge_7", 8, 9, 58);
+	    addLane("Edge_8", 7, 9, 216);
+	    addLane("Edge_9", 4, 9, 101 );;
 
 	    graph = new Graph(nodes, edges);
 	    dijkstra = new DijkstraAlgorithm(graph);
@@ -74,8 +75,18 @@ public LinkedList<CarrefourNames> chemin(int NodeDepart,int NodeArrive) {
     for (IVertex vertex : path) {
         gps.add(vertex.getName());
       }
+    this.trajet=path;
      return gps;
     }
+public double temps(){
+	double time=0;
+	int size=trajet.size()-1;
+	for (int i=0;i<size;i++){
+		time=time+dijkstra.getDistance(trajet.get(i),trajet.get(i+1));
+	}
+	
+	return time;
+}
 
   private void addLane(String laneId, int sourceLocNo, int destLocNo,
       int duration) {
