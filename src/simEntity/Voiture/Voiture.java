@@ -28,36 +28,18 @@ public  class Voiture extends SimEntity {
 			this.path=path;
 		}
 		
-		@Override
-		public void initialize() {
-			super.initialize();
-			Logger.Information(this, "initialize", name + " s initialise");
-		}
-		
-		public void goTo() {
-			
-			Logger.Information(this, "goTo",name+ " go to "+ this.destination);	
-			long randomDuration = getEngine().getRandomDuration();
-			addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofHours(randomDuration))));
-		}
-		
-		public void isArrived() {
 
-			Logger.Information(this, "isArrived",name+ " is arrived at " + this.destination);
-			
-		}
+	
+		
 		
 		public class IsArrived extends SimEvent {
-
 			public IsArrived(LogicalDateTime scheduledDate){
 				super(scheduledDate);
 			}
 			@Override
 			public void process() {
-				isArrived();
-				
-			}
-			
+				Logger.Information(name, "isArrived",name+ " is arrived at " + destination);				
+			}			
 		}
 
 		@Override
@@ -71,6 +53,12 @@ public  class Voiture extends SimEntity {
 			Logger.Information(this, "activate", name +" se reveille");
 			this.addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
 					
+		}
+		
+		@Override
+		public void initialize() {
+			super.initialize();
+			Logger.Information(this, "initialize", name + " s initialise");
 		}
 		
 		@Override
@@ -91,7 +79,9 @@ public  class Voiture extends SimEntity {
 			}
 			@Override
 			public void process() {
-				goTo();
+				Logger.Information(name, "goTo",name+ " go to "+ destination);	
+				long randomDuration = getEngine().getRandomDuration();
+				addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofHours(randomDuration))));
 				
 			}
 			
