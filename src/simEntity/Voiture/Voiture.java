@@ -16,16 +16,19 @@ public  class Voiture extends SimEntity {
 		private String name;
 		private CarrefourNames location;
 		private CarrefourNames destination;
-		private LinkedList<CarrefourNames> path;
+		private Path chemin;
+		private LogicalDuration tempsOptimal;
 		
 
 
-		public Voiture(SimEngine engine, String name, CarrefourNames location, CarrefourNames destination, LinkedList<CarrefourNames> path) {
+		public Voiture(SimEngine engine, String name, CarrefourNames location, CarrefourNames destination) {
 			super(engine,"Voiture");
 			this.name=name;
 			this.location=location;
 			this.destination=destination;
-			this.path=path;
+			this.chemin=new Path(location,destination);
+			this.tempsOptimal=chemin.getTrajet();
+
 		}
 		
 
@@ -79,9 +82,8 @@ public  class Voiture extends SimEntity {
 			}
 			@Override
 			public void process() {
-				Logger.Information(name, "goTo",name+ " go to "+ destination);	
-				long randomDuration = getEngine().getRandomDuration();
-				addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofHours(randomDuration))));
+				Logger.Information(name, "goTo",name+ " go to "+ destination);
+				addEvent(new IsArrived(getEngine().SimulationDate().add(tempsOptimal)));
 				
 			}
 			
@@ -100,8 +102,15 @@ public  class Voiture extends SimEntity {
 		public CarrefourNames getDestination() {
 			return destination;
 		}
-		public LinkedList<CarrefourNames> getPath() {
-			return path;
+
+		
+
+		public Path getChemin() {
+			return chemin;
+		}
+
+		public LogicalDuration getTempsOptimal() {
+			return tempsOptimal;
 		}
 
 		public void setLocation(CarrefourNames location) {
@@ -111,4 +120,6 @@ public  class Voiture extends SimEntity {
 		public void setDestination(CarrefourNames destination) {
 			this.destination = destination;
 		}
+		
+		
 	}

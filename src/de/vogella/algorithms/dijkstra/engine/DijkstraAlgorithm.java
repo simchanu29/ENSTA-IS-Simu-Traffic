@@ -69,7 +69,7 @@ public class DijkstraAlgorithm {
 	    return null;
   }
   
-  private double getDistance(IVertex node, IVertex target) {
+  public double getDistance(IVertex node, IVertex target) {
     for (IEdge edge : edges) {
       if (edge.getSource().equals(node)
           && edge.getDestination().equals(target)) {

@@ -68,16 +68,12 @@ public class SimMonitor extends SimEntity{
 				nameD = CarrefourNames.randomCarrefour();
 			}
 			String name = "Voiture_"+String.valueOf(nbVoiture);
-			int indexL=CarrefourNames.valueOf(nameL.toString()).ordinal()+1;
-			int indexD=CarrefourNames.valueOf(nameD.toString()).ordinal()+1;
-			
-			LinkedList<CarrefourNames> path= map.chemin(indexL, indexD);
-			Voiture v = new Voiture(getEngine(), name, nameL,nameD, path );
+			Voiture v = new Voiture(getEngine(), name, nameL,nameD);
 			Logger.Information(name, "NouvelleVoiture", name + " est créée en "+nameL);
 			LogicalDateTime d = getNextTimeForVoiture();
 			if(d!=null) addEvent(new NouvelleVoitureEvent(d));
 			v.activate();
-			System.out.println("Path "+v.getName()+" :  " + v.getPath());
+			System.out.println("Path "+v.getName()+" :  " + v.getChemin().getPath());
 			nbVoiture++;
 			
 		}
