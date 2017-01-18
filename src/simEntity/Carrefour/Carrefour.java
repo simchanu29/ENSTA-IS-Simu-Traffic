@@ -48,6 +48,53 @@ public class Carrefour {
         this.regle=regle;
     }
 
+    public boolean authorisationPassage(Voiture voiture){
+
+        boolean auth = regle.voiturePasse();
+
+        return auth;
+    }
+
+    public Carrefour getCarrefourEst() {
+        return carrefourEst;
+    }
+
+    public Carrefour getCarrefourNord() {
+        return carrefourNord;
+    }
+
+    public Carrefour getCarrefourOuest() {
+        return carrefourOuest;
+    }
+
+    public Carrefour getCarrefourSud() {
+        return carrefourSud;
+    }
+
+    public CarrefourNames getNom() {
+        return nom;
+    }
+
+    public CarrefourRegle getRegle() {
+        return regle;
+    }
+
+    public Queue<Voiture> getQueueEst() {
+        return queueEst;
+    }
+
+    public Queue<Voiture> getQueueNord() {
+        return queueNord;
+    }
+
+    public Queue<Voiture> getQueueOuest() {
+        return queueOuest;
+    }
+
+    public Queue<Voiture> getQueueSud() {
+        return queueSud;
+    }
+
     //Evenements : ceux qui arrivent d'un point de vue global sur l'etat du carrefour
    /* *
     * - Feu vert/Feu rouge

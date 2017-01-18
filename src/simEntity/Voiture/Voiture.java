@@ -14,16 +14,14 @@ import simEntity.Carrefour.CarrefourNames;
 public  class Voiture extends SimEntity {
 
 		private String name;
-		private CarrefourNames location;
+		private CarrefourNames departure;
 		private CarrefourNames destination;
 		private LinkedList<CarrefourNames> path;
-		
 
-
-		public Voiture(SimEngine engine, String name, CarrefourNames location, CarrefourNames destination, LinkedList<CarrefourNames> path) {
+		public Voiture(SimEngine engine, String name, CarrefourNames departure, CarrefourNames destination, LinkedList<CarrefourNames> path) {
 			super(engine,"Voiture");
 			this.name=name;
-			this.location=location;
+			this.departure=departure;
 			this.destination=destination;
 			this.path=path;
 		}
@@ -95,7 +93,7 @@ public  class Voiture extends SimEntity {
 		}
 		
 		public CarrefourNames getLocation() {
-			return location;
+			return departure;
 		}
 		public CarrefourNames getDestination() {
 			return destination;
@@ -105,7 +103,7 @@ public  class Voiture extends SimEntity {
 		}
 
 		public void setLocation(CarrefourNames location) {
-			this.location = location;
+			this.departure = location;
 		}
 		
 		public void setDestination(CarrefourNames destination) {
