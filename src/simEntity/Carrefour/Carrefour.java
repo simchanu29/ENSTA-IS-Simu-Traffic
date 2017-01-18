@@ -1,6 +1,5 @@
 package simEntity.Carrefour;
 
-import org.apache.commons.lang.ObjectUtils;
 import simEntity.Carrefour.Regle.CarrefourRegle;
 import simEntity.Voiture.Voiture;
 
@@ -48,6 +47,11 @@ public class Carrefour {
         this.regle=regle;
     }
 
+    /**
+     * La methode principale pour authoriser les voitures à passer
+     * @param voiture
+     * @return true si la voiture peux passer
+     */
     public boolean authorisationPassage(Voiture voiture){
 
         // Lui il a besoin de savoir où est la voiture qui veut passer et si les autres files prioritaires sont vide
@@ -73,39 +77,30 @@ public class Carrefour {
     public Carrefour getCarrefourEst() {
         return carrefourEst;
     }
-
     public Carrefour getCarrefourNord() {
         return carrefourNord;
     }
-
     public Carrefour getCarrefourOuest() {
         return carrefourOuest;
     }
-
     public Carrefour getCarrefourSud() {
         return carrefourSud;
     }
-
     public CarrefourNames getNom() {
         return nom;
     }
-
     public CarrefourRegle getRegle() {
         return regle;
     }
-
     public Queue<Voiture> getQueueEst() {
         return queueEst;
     }
-
     public Queue<Voiture> getQueueNord() {
         return queueNord;
     }
-
     public Queue<Voiture> getQueueOuest() {
         return queueOuest;
     }
-
     public Queue<Voiture> getQueueSud() {
         return queueSud;
     }
