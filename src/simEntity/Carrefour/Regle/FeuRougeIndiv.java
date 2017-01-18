@@ -37,6 +37,8 @@ public class FeuRougeIndiv extends CarrefourRegle{
         this.dureeFeuVertS = dureeFeuVertS;
         this.dureeFeuVertE = dureeFeuVertE;
         this.dureeFeuVertO = dureeFeuVertO;
+
+        this.addEvent( new FeuVertN(getEngine().SimulationDate()) );
     }
 
     @Override
@@ -64,17 +66,17 @@ public class FeuRougeIndiv extends CarrefourRegle{
                 this.feuVertS = false;
                 this.feuVertE = false;
                 this.feuVertO = false;
-            case "Sud":
+            case Sud:
                 this.feuVertN = false;
                 this.feuVertS = true;
                 this.feuVertE = false;
                 this.feuVertO = false;
-            case "Est":
+            case Est:
                 this.feuVertN = false;
                 this.feuVertS = false;
                 this.feuVertE = true;
                 this.feuVertO = false;
-            case "Ouest":
+            case Ouest:
                 this.feuVertN = false;
                 this.feuVertS = false;
                 this.feuVertE = false;
