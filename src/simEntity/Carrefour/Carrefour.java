@@ -11,6 +11,9 @@ import java.util.Queue;
  */
 public class Carrefour {
 
+    private CarrefourNames nom;
+    private CarrefourRegle regle;
+
     /**
      * Les variables qui indiquent au carrefour à quel carrefour il est relié
      */
@@ -21,6 +24,7 @@ public class Carrefour {
 
     /**
      * Les ports d'entrée dans le carrefour
+     * Les queues sont vide à l'initialisation
      */
     private Queue<Voiture> queueSud;
     private Queue<Voiture> queueEst;
@@ -31,9 +35,22 @@ public class Carrefour {
      * Constructeur carrefour, si le lien est vide, mettre NULL
      *
      * Le carrefourNames est necessaire pour l'instant pour Dijkistra
+     * Malgré tout on a un doublon avec la definition du carrefour
+     * TODO : investiguer si c'est un probleme.
      */
     public Carrefour(CarrefourNames nom, CarrefourRegle regle,Carrefour carrSud,Carrefour carrEst,Carrefour carrNord,Carrefour carrOuest){
+        carrefourEst=carrEst;
+        carrefourNord=carrNord;
+        carrefourOuest=carrOuest;
+        carrefourSud=carrSud;
 
+        this.nom=nom;
+        this.regle=regle;
     }
+
+    //Evenements : ceux qui arrivent d'un point de vue global sur l'etat du carrefour
+   /* *
+    * - Feu vert/Feu rouge
+    * */
 
 }
