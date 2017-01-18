@@ -50,9 +50,10 @@ public class Carrefour {
 
     public boolean authorisationPassage(Voiture voiture){
 
-        boolean auth = regle.voiturePasse();
-
-        return auth;
+        // Lui il a besoin de savoir où est la voiture qui veut passer et si les autres files prioritaires sont vide
+        // Il a donc besoin de connaitre l'etat des autres files(recupérer l'objet) et la file dans laquelle est la
+        // voiture (le carrefour ?)
+        return regle.voiturePasse(voiture,this);
     }
 
     public Carrefour getCarrefourEst() {

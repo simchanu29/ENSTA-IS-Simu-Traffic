@@ -9,6 +9,7 @@ import enstabretagne.base.utility.Logger;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
+import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
 
 public  class Voiture extends SimEntity {
@@ -17,6 +18,12 @@ public  class Voiture extends SimEntity {
 		private CarrefourNames departure;
 		private CarrefourNames destination;
 		private LinkedList<CarrefourNames> path;
+    /**
+     * La position du dernier carrefour de la voiture. C'est pour permettre à la voiture de savoir où elle est.
+     * TODO : ajouter le carrefour dans lequel arrive la voiture a l'evenement la voiture arrive dans le carrefour
+     */
+		private Carrefour location;
+
 
 		public Voiture(SimEngine engine, String name, CarrefourNames departure, CarrefourNames destination, LinkedList<CarrefourNames> path) {
 			super(engine,"Voiture");
