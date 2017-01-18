@@ -26,9 +26,6 @@ public  class Voiture extends SimEntity {
 			this.path=path;
 		}
 		
-
-	
-		
 		
 		public class IsArrived extends SimEvent {
 			public IsArrived(LogicalDateTime scheduledDate){
