@@ -1,4 +1,4 @@
-package fr.ensta.lerouxlu.simu;
+package Main;
 
 import java.util.HashMap;
 
@@ -9,12 +9,10 @@ import enstabretagne.base.utility.LoggerParamsNames;
 import enstabretagne.base.utility.loggerimpl.SXLSXExcelDataloggerImpl;
 import enstabretagne.base.utility.loggerimpl.SysOutLogger;
 import enstabretagne.simulation.core.ISimulationDateProvider;
-import fr.ensta.lerouxlu.DemoSimple.Sim;
+import fr.ensta.lerouxlu.simu.SimEngine;
+import simEntity.Monitor.SimMonitor;
 
-public class SimMonitor {
-		
-
-	
+public class Main {
 	public static void main(String [] args) {
 		
 		//Premier d'entre eux: le logger qui écrit dans la sortie standard
@@ -24,7 +22,7 @@ public class SimMonitor {
 		//Premier d'entre eux: le logger qui écrit dans un fichier excel
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put(LoggerParamsNames.DirectoryName.toString(), System.getProperty("user.dir"));
-		params.put(LoggerParamsNames.FileName.toString(), "LoggerAndProba.xlsx");
+		params.put(LoggerParamsNames.FileName.toString(), "Traffic.xlsx");
 		loggersNames.put(SXLSXExcelDataloggerImpl.class.getCanonicalName(),params);
 		
 		LogicalDateTime begin = LogicalDateTime.Zero;
@@ -33,15 +31,13 @@ public class SimMonitor {
 		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(30));
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
-
-		Sim alice = new Sim(engine);
-		alice.setName("Alice");
-		Sim bob = new Sim(engine);
-		bob.setName("Bob");
-		
-		engine.initialize();
+		SimMonitor sm=new SimMonitor(engine, "Monitor");
+		engine.initialize();	
 		engine.resume();
-		while (engine.triggerNextEvent()) {}
+		while (engine.triggerNextEvent()) {
+			
+		}
+		
+		Logger.Terminate();
 	}
-	
 }

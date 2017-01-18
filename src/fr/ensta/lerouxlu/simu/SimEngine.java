@@ -50,14 +50,16 @@ public class SimEngine implements ISimulationDateProvider, IEventObserver {
 	}
 	
 	public void resume() {
+		System.out.println("resume");
 		for (SimEntity entity : entities)
 			entity.activate();
 	}
 	
 	public boolean triggerNextEvent() {
 		
-		if(echeancier.size()==0 )
+		if(echeancier.size()==0 ){			
 			return false;
+		}
 		ISimEvent nextEvent = echeancier.first();
 		echeancier.remove(nextEvent);
 		
@@ -70,7 +72,6 @@ public class SimEngine implements ISimulationDateProvider, IEventObserver {
 		}
 		
 		nextEvent.process();
-		
 		for (SimEntity entity : entities) {
 			if (entity.isAffectedBy(nextEvent))
 				entity.release();

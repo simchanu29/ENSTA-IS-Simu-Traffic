@@ -67,15 +67,14 @@ public class DijkstraRoutier {
 	    dijkstra = new DijkstraAlgorithm(graph);
 }
 
-public void chemin(int NodeDepart,int NodeArrive) {
+public LinkedList<CarrefourNames> chemin(int NodeDepart,int NodeArrive) {
     dijkstra.execute(nodes.get(NodeDepart));
     LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(NodeArrive));
     LinkedList<CarrefourNames> gps = new LinkedList<CarrefourNames>();
     for (IVertex vertex : path) {
         gps.add(vertex.getName());
       }
-     System.out.println(gps);
-//     return gps;
+     return gps;
     }
 
   private void addLane(String laneId, int sourceLocNo, int destLocNo,
