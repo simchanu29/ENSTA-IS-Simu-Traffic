@@ -23,8 +23,7 @@ public class Main {
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put(LoggerParamsNames.DirectoryName.toString(), System.getProperty("user.dir"));
 		params.put(LoggerParamsNames.FileName.toString(), "Traffic.xlsx");
-		loggersNames.put(SXLSXExcelDataloggerImpl.class.getCanonicalName(),params);
-		
+		loggersNames.put(SXLSXExcelDataloggerImpl.class.getCanonicalName(),params);	
 		LogicalDateTime begin = LogicalDateTime.Zero;
 
 		
