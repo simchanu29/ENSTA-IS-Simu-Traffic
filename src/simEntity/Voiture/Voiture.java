@@ -19,7 +19,6 @@ public  class Voiture extends SimEntity {
 		private CarrefourNames destination;
 		private Path chemin;
 		private LogicalDuration tempsOptimal;
-		
 
 
 		public Voiture(SimEngine engine, String name, CarrefourNames location, CarrefourNames destination) {
@@ -30,25 +29,13 @@ public  class Voiture extends SimEntity {
 			this.destination=destination;
 			this.chemin=new Path(location,destination);
 			this.tempsOptimal=chemin.getTrajet();
-
-		}
-		
-		
-		public class IsArrived extends SimEvent {
-			public IsArrived(LogicalDateTime scheduledDate){
-				super(scheduledDate);
-			}
-			@Override
-			public void process() {
-				Logger.Information(name, "isArrived",name+ " is arrived at " + destination);				
-			}			
 		}
 
 		@Override
 		public String toString() {
 			return name;
 		}
-		
+
 		@Override
 		public void activate() {
 			super.activate();
@@ -56,7 +43,7 @@ public  class Voiture extends SimEntity {
 			this.addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
 					
 		}
-		
+
 		@Override
 		public void initialize() {
 			super.initialize();
@@ -68,12 +55,24 @@ public  class Voiture extends SimEntity {
 			super.deactivate();
 			Logger.Information(this, "deactivate", "je suis desactivé");
 		}
+
 		@Override
 		public void terminate() {
 			super.terminate();
 			Logger.Information(this, "terminate","je suis terminé");
 
 		}
+
+        public class IsArrived extends SimEvent {
+        public IsArrived(LogicalDateTime scheduledDate){
+            super(scheduledDate);
+        }
+        @Override
+        public void process() {
+            Logger.Information(name, "isArrived",name+ " is arrived at " + destination);
+        }
+    }
+
 		public class GoTo extends SimEvent {
 
 			public GoTo(LogicalDateTime scheduledDate){
@@ -87,36 +86,33 @@ public  class Voiture extends SimEntity {
 			}
 			
 		}
+
+		//TODO : isArrived in a queue
+        //TODO : leave un carrefour
+
 		public String getName() {
 			return name;
 		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-		
 		public CarrefourNames getLocation() {
 			return departure;
 		}
-		public CarrefourNames getDestination() {
+        public CarrefourNames getDestination() {
 			return destination;
 		}
-
-		
-
-		public Path getChemin() {
+        public Path getChemin() {
 			return chemin;
 		}
-
-		public LogicalDuration getTempsOptimal() {
+        public LogicalDuration getTempsOptimal() {
 			return tempsOptimal;
 		}
 
 		public void setLocation(CarrefourNames location) {
 			this.departure = location;
 		}
-		
-		public void setDestination(CarrefourNames destination) {
+        public void setName(String name) {
+        this.name = name;
+    }
+        public void setDestination(CarrefourNames destination) {
 			this.destination = destination;
 		}
 		
