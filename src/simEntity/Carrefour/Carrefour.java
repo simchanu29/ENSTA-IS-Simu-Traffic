@@ -56,6 +56,20 @@ public class Carrefour {
         return regle.voiturePasse(voiture,this);
     }
 
+    public QueueNames getQueueOfVoiture(Voiture voiture){
+        if(queueEst.contains(voiture)){
+            return QueueNames.Est;
+        }else if(queueNord.contains(voiture)){
+            return QueueNames.Nord;
+        }else if(queueOuest.contains(voiture)){
+            return QueueNames.Ouest;
+        }else if(queueSud.contains(voiture)){
+            return QueueNames.Sud;
+        }else{
+            return null;
+        }
+    }
+
     public Carrefour getCarrefourEst() {
         return carrefourEst;
     }

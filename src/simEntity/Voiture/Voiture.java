@@ -18,11 +18,15 @@ public  class Voiture extends SimEntity {
 		private CarrefourNames departure;
 		private CarrefourNames destination;
 		private LinkedList<CarrefourNames> path;
-    /**
-     * La position du dernier carrefour de la voiture. C'est pour permettre à la voiture de savoir où elle est.
-     * TODO : ajouter le carrefour dans lequel arrive la voiture a l'evenement la voiture arrive dans le carrefour
-     */
-		private Carrefour location;
+//    /**
+//     * La position du dernier carrefour de la voiture. C'est pour permettre à la voiture de savoir où elle est.
+//     * TODO : ajouter le carrefour dans lequel arrive la voiture a l'evenement la voiture arrive dans le carrefour
+//     */
+//		private Carrefour location;
+//    /**
+//     * La position de l'avant-dernier carrefour. C'est simplement pour avoir facilement
+//     */
+//		private Carrefour lastLocation;
 
 
 		public Voiture(SimEngine engine, String name, CarrefourNames departure, CarrefourNames destination, LinkedList<CarrefourNames> path) {
