@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEntity;
@@ -12,7 +13,7 @@ import fr.ensta.lerouxlu.simu.SimEvent;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
 
-public  class Voiture extends SimEntity {
+public  class Voiture extends SimEntity implements IRecordable {
 
 		private String name;
 		private CarrefourNames departure;
@@ -21,13 +22,13 @@ public  class Voiture extends SimEntity {
 		private LogicalDuration tempsOptimal;
 
 
-		public Voiture(SimEngine engine, String name, CarrefourNames location, CarrefourNames destination) {
+		public Voiture(SimEngine engine, String name, CarrefourNames departure, CarrefourNames destination) {
 
 			super(engine,"Voiture");
 			this.name=name;
 			this.departure=departure;
 			this.destination=destination;
-			this.chemin=new Path(location,destination);
+			this.chemin=new Path(departure,destination);
 			this.tempsOptimal=chemin.getTrajet();
 		}
 
@@ -39,7 +40,7 @@ public  class Voiture extends SimEntity {
 		@Override
 		public void activate() {
 			super.activate();
-			Logger.Information(this, "activate", name +" se reveille");
+			//Logger.Information(this, "activate", name +" se reveille");
 			this.addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
 					
 		}
@@ -47,19 +48,19 @@ public  class Voiture extends SimEntity {
 		@Override
 		public void initialize() {
 			super.initialize();
-			Logger.Information(this, "initialize", name + " s initialise");
+			//Logger.Information(this, "initialize", name + " s initialise");
 		}
 		
 		@Override
 		public void deactivate() {
 			super.deactivate();
-			Logger.Information(this, "deactivate", "je suis desactivé");
+			//Logger.Information(this, "deactivate", "je suis desactivé");
 		}
 
 		@Override
 		public void terminate() {
 			super.terminate();
-			Logger.Information(this, "terminate","je suis terminé");
+			//Logger.Information(this, "terminate","je suis terminé");
 
 		}
 
@@ -73,6 +74,22 @@ public  class Voiture extends SimEntity {
         }
     }
 
+		@Override
+		public String[] getTitles() {
+			String[] titles={"D�part","Arriv�e","Dur�e Trajet"};
+			return titles;
+		}
+
+		@Override
+		public String[] getRecords() {
+			return new String[]{getDeparture().toString(),getDestination().toString(),getTempsOptimal().toString()};
+		}
+
+		@Override
+		public String getClassement() {
+			return "Voiture";
+		}
+		
 		public class GoTo extends SimEvent {
 
 			public GoTo(LogicalDateTime scheduledDate){
@@ -80,9 +97,8 @@ public  class Voiture extends SimEntity {
 			}
 			@Override
 			public void process() {
-				Logger.Information(name, "goTo",name+ " go to "+ destination);
-				addEvent(new IsArrived(getEngine().SimulationDate().add(tempsOptimal)));
-				
+				//Logger.Information(name, "goTo",name+ " go to "+ destination);
+				addEvent(new IsArrived(getEngine().SimulationDate().add(tempsOptimal)));				
 			}
 			
 		}
@@ -93,7 +109,12 @@ public  class Voiture extends SimEntity {
 		public String getName() {
 			return name;
 		}
-		public CarrefourNames getLocation() {
+
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public CarrefourNames getDeparture() {
 			return departure;
 		}
         public CarrefourNames getDestination() {
@@ -106,13 +127,12 @@ public  class Voiture extends SimEntity {
 			return tempsOptimal;
 		}
 
-		public void setLocation(CarrefourNames location) {
-			this.departure = location;
+		public void setDeparture(CarrefourNames departure) {
+			this.departure = departure;
 		}
-        public void setName(String name) {
-        this.name = name;
-    }
-        public void setDestination(CarrefourNames destination) {
+		
+		public void setDestination(CarrefourNames destination) {
+		
 			this.destination = destination;
 		}
 		

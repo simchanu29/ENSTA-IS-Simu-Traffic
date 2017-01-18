@@ -1,6 +1,7 @@
 package simEntity.Monitor;
 
 import enstabretagne.base.math.MoreRandom;
+import enstabretagne.base.time.LogicalDateTime;
 import simEntity.Carrefour.CarrefourNames;
 
 public class TestProba {
@@ -85,16 +86,10 @@ public class TestProba {
 		return destination;
 	}
 	public static void main (String[] args){
-		for (int i=0;i<1000;i++){
-			calculDestination(CarrefourNames.P2);
-		}
-		System.out.print(p1/10+"  ");
-		System.out.print(p2/10+"  ");
-		System.out.print(p3/10+"  ");
-		System.out.print(p4/10+"  ");
-		System.out.print(p5/10+"  ");
-		System.out.print(p6/10+"  ");
-		System.out.print(p7/10+"  ");
+		LogicalDateTime logicalDate=new LogicalDateTime("10/12/2016 10:34:47.6789");
+		System.out.println(logicalDate);
+		System.out.println(logicalDate.getHour());
+		
 		
 	}
 }

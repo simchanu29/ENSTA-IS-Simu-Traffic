@@ -17,11 +17,19 @@ public class SimEngine implements ISimulationDateProvider, IEventObserver {
 	private Set<SimEntity> entities = new HashSet<>();
 	private double germe;
 	MoreRandom random;
+	private int nbVoiture;
 	
 	public long getRandomDuration() {
 		return Math.round(random.nextDouble()*10);
 	}
 	
+	public int getNbVoiture() {
+		return nbVoiture;
+	}
+	
+	public void addVoiture(int nb) {
+		nbVoiture+=nb;
+	}
 	
 	
 	public SimEngine(long germe, LogicalDateTime begin, LogicalDuration maxTime) {
@@ -30,6 +38,7 @@ public class SimEngine implements ISimulationDateProvider, IEventObserver {
 		currentTime = begin;
 		this.maxTime = currentTime.add(maxTime);
 		echeancier.add(new StopEvent(this.maxTime));
+		nbVoiture=0;
 	}
 	
 	
