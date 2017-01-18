@@ -9,12 +9,13 @@ import enstabretagne.base.utility.Logger;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
+import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
 
 public  class Voiture extends SimEntity {
 
 		private String name;
-		private CarrefourNames location;
+		private CarrefourNames departure;
 		private CarrefourNames destination;
 		private Path chemin;
 		private LogicalDuration tempsOptimal;
@@ -22,17 +23,15 @@ public  class Voiture extends SimEntity {
 
 
 		public Voiture(SimEngine engine, String name, CarrefourNames location, CarrefourNames destination) {
+
 			super(engine,"Voiture");
 			this.name=name;
-			this.location=location;
+			this.departure=departure;
 			this.destination=destination;
 			this.chemin=new Path(location,destination);
 			this.tempsOptimal=chemin.getTrajet();
 
 		}
-		
-
-	
 		
 		
 		public class IsArrived extends SimEvent {
@@ -67,12 +66,12 @@ public  class Voiture extends SimEntity {
 		@Override
 		public void deactivate() {
 			super.deactivate();
-			Logger.Information(this, "deactivate", "je suis desactivé");
+			Logger.Information(this, "deactivate", "je suis desactivÃ©");
 		}
 		@Override
 		public void terminate() {
 			super.terminate();
-			Logger.Information(this, "terminate","je suis terminé");
+			Logger.Information(this, "terminate","je suis terminÃ©");
 
 		}
 		public class GoTo extends SimEvent {
@@ -97,7 +96,7 @@ public  class Voiture extends SimEntity {
 		}
 		
 		public CarrefourNames getLocation() {
-			return location;
+			return departure;
 		}
 		public CarrefourNames getDestination() {
 			return destination;
@@ -114,7 +113,7 @@ public  class Voiture extends SimEntity {
 		}
 
 		public void setLocation(CarrefourNames location) {
-			this.location = location;
+			this.departure = location;
 		}
 		
 		public void setDestination(CarrefourNames destination) {
