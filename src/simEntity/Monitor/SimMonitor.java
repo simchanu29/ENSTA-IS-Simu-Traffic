@@ -19,7 +19,6 @@ import simEntity.Carrefour.CarrefourNames;
 import simEntity.Voiture.Voiture;
 
 public class SimMonitor extends SimEntity{
-	int nbVoiture;
 	MoreRandom random;
 	String name;
 	DijkstraRoutier map; 
@@ -43,7 +42,7 @@ public class SimMonitor extends SimEntity{
 		LogicalDuration t = LogicalDuration.ofSeconds(d);
 		LogicalDateTime e = getEngine().SimulationDate().add(t);
 	
-		addEvent(new NouvelleVoitureEvent(e));
+		//addEvent(new NouvelleVoitureEvent(e));
 	}
 	
 	
@@ -52,7 +51,7 @@ public class SimMonitor extends SimEntity{
 	}
 	
 	
-	
+	/*
 	
 	class NouvelleVoitureEvent extends SimEvent {
 		public NouvelleVoitureEvent(LogicalDateTime scheduledDate) {
@@ -151,5 +150,5 @@ public class SimMonitor extends SimEntity{
 		
 		return destination;
 	}
-	
+	*/
 }

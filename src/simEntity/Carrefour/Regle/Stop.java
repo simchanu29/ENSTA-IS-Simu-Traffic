@@ -10,11 +10,13 @@ import simEntity.Voiture.Voiture;
 public class Stop extends CarrefourRegle {
 
     public Stop(SimEngine engine) {
+
 		super(engine);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
+
     public boolean voiturePasse(Voiture voiture, Carrefour carrefour) {
         return false;
     }
