@@ -29,7 +29,7 @@ public  class Voiture extends SimEntity {
 			this.departure=departure;
 			this.destination=destination;
 			this.chemin=new Path(location,destination);
-			this.tempsOptimal=chemin.getTrajet();
+			this.tempsOptimal=chemin.getTime2next();
 
 		}
 		
@@ -86,7 +86,7 @@ public  class Voiture extends SimEntity {
 			@Override
 			public void process() {
 				Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
-				addEvent(new IsArrived(getEngine().SimulationDate().add(tempsOptimal)));
+				addEvent(new IsArrived(getEngine().SimulationDate().add(chemin.getTime2next())));
 				
 			}
 			

@@ -21,7 +21,8 @@ public class Path {
 	private CarrefourNames next;
 	private int compteur;
 	
-	private LogicalDuration trajet;
+	private LinkedList<Double> trajet;
+	private LogicalDuration Time2next;
 
 	public Path(CarrefourNames start, CarrefourNames end) {
 		super();
@@ -33,8 +34,9 @@ public class Path {
 		this.path =viamichelin.chemin(indexL, indexD); ;
 		this.last = start;
 		this.next =path.get(1);
-		this.trajet = LogicalDuration.ofSeconds((long)viamichelin.temps());
+		this.trajet =viamichelin.temps();
 		this.compteur=1;
+		this.Time2next=LogicalDuration.ofSeconds(trajet.getFirst());
 	}
 	
 	
@@ -42,6 +44,7 @@ public class Path {
 		if (this.end==this.next){
 			this.last=this.next;}
 		else{
+			this.Time2next=LogicalDuration.ofSeconds(trajet.get(compteur));
 			compteur++;
 			this.last=this.next;
 			this.next=this.path.get(compteur);
@@ -118,13 +121,27 @@ public class Path {
 		this.next = next;
 	}
 
-	public LogicalDuration getTrajet() {
+
+	public LogicalDuration getTime2next() {
+		return Time2next;
+	}
+
+
+	public void setTime2next(LogicalDuration time2next) {
+		Time2next = time2next;
+	}
+
+
+	public LinkedList<Double> getTrajet() {
 		return trajet;
 	}
 
-	public void setTrajet(LogicalDuration trajet) {
+
+	public void setTrajet(LinkedList<Double> trajet) {
 		this.trajet = trajet;
 	}
+	
+	
 	
 	
 	
