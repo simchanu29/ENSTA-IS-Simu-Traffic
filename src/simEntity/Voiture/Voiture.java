@@ -40,7 +40,11 @@ public  class Voiture extends SimEntity {
 			}
 			@Override
 			public void process() {
-				Logger.Information(name, "isArrived",name+ " is arrived at " + destination);				
+				Logger.Information(name, "isArrived",name+ " is arrived at " + chemin.getNext());
+				chemin.etape();
+				if (chemin.getNext()!=chemin.getLast()){
+					addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
+				}
 			}			
 		}
 
@@ -81,7 +85,7 @@ public  class Voiture extends SimEntity {
 			}
 			@Override
 			public void process() {
-				Logger.Information(name, "goTo",name+ " go to "+ destination);
+				Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
 				addEvent(new IsArrived(getEngine().SimulationDate().add(tempsOptimal)));
 				
 			}

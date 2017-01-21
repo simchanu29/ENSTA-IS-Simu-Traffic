@@ -19,6 +19,7 @@ public class Path {
 	private LinkedList<CarrefourNames> path;
 	private CarrefourNames last;
 	private CarrefourNames next;
+	private int compteur;
 	
 	private LogicalDuration trajet;
 
@@ -31,8 +32,20 @@ public class Path {
 		int indexD=CarrefourNames.valueOf(end.toString()).ordinal()+1;
 		this.path =viamichelin.chemin(indexL, indexD); ;
 		this.last = start;
-		this.next = end;
+		this.next =path.get(1);
 		this.trajet = LogicalDuration.ofSeconds((long)viamichelin.temps());
+		this.compteur=1;
+	}
+	
+	
+	public void etape(){
+		if (this.end==this.next){
+			this.last=this.next;}
+		else{
+			compteur++;
+			this.last=this.next;
+			this.next=this.path.get(compteur);
+		}
 	}
 	
 	

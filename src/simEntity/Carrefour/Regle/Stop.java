@@ -1,5 +1,6 @@
 package simEntity.Carrefour.Regle;
 
+import fr.ensta.lerouxlu.simu.SimEngine;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Voiture.Voiture;
 
@@ -8,7 +9,12 @@ import simEntity.Voiture.Voiture;
  */
 public class Stop extends CarrefourRegle {
 
-    @Override
+    public Stop(SimEngine engine) {
+		super(engine);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
     public boolean voiturePasse(Voiture voiture, Carrefour carrefour) {
         return false;
     }
