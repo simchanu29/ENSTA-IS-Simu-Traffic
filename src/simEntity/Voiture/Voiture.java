@@ -28,8 +28,26 @@ public  class Voiture extends SimEntity implements IRecordable {
 			this.name=name;
 			this.departure=departure;
 			this.destination=destination;
-			this.chemin=new Path(departure,destination);
-			this.tempsOptimal=chemin.getTrajet();
+
+			this.chemin=new Path(location,destination);
+			this.tempsOptimal=chemin.getTime2next();
+
+		}
+		
+		
+		public class IsArrived extends SimEvent {
+			public IsArrived(LogicalDateTime scheduledDate){
+				super(scheduledDate);
+			}
+			@Override
+			public void process() {
+				Logger.Information(name, "isArrived",name+ " is arrived at " + chemin.getNext());
+				chemin.etape();
+				if (chemin.getNext()!=chemin.getLast()){
+					addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
+				}
+			}			
+
 		}
 
 		@Override
@@ -97,8 +115,10 @@ public  class Voiture extends SimEntity implements IRecordable {
 			}
 			@Override
 			public void process() {
-				//Logger.Information(name, "goTo",name+ " go to "+ destination);
-				addEvent(new IsArrived(getEngine().SimulationDate().add(tempsOptimal)));				
+
+				Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
+				addEvent(new IsArrived(getEngine().SimulationDate().add(chemin.getTime2next())));
+				
 			}
 			
 		}

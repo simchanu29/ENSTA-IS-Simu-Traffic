@@ -11,8 +11,6 @@ public class mainTest {
 		DijkstraRoutier map=new DijkstraRoutier();
 		LinkedList<CarrefourNames> gps =map.chemin(1,9);
 		System.out.println(gps);
-		double time=map.temps();
-		System.out.println(time);
 
 	}
 

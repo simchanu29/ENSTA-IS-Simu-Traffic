@@ -78,15 +78,16 @@ public LinkedList<CarrefourNames> chemin(int NodeDepart,int NodeArrive) {
     this.trajet=path;
      return gps;
     }
-public double temps(){
-	double time=0;
+public LinkedList<Double> temps(){
+	LinkedList<Double> time=new LinkedList<Double>();
 	int size=trajet.size()-1;
 	for (int i=0;i<size;i++){
-		time=time+dijkstra.getDistance(trajet.get(i),trajet.get(i+1));
+		time.add(i, dijkstra.getDistance(trajet.get(i),trajet.get(i+1)));
 	}
 	
 	return time;
 }
+
 
   private void addLane(String laneId, int sourceLocNo, int destLocNo,
       int duration) {
