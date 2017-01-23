@@ -29,7 +29,7 @@ public  class Voiture extends SimEntity implements IRecordable {
 			this.departure=departure;
 			this.destination=destination;
 
-			this.chemin=new Path(location,destination);
+			this.chemin=new Path(departure,destination);
 			this.tempsOptimal=chemin.getTime2next();
 
 		}
