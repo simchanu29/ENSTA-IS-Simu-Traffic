@@ -1,7 +1,7 @@
 package Main;
 
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
@@ -14,11 +14,15 @@ import fr.ensta.lerouxlu.simu.SimEngine;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
 import simEntity.Carrefour.Regle.CarrefourRegle;
+import simEntity.Carrefour.Regle.FeuRougeCroises;
 import simEntity.Monitor.SimMonitor;
+import simEntity.Quartier.Quartier;
 
 public class Main {
 	public static void main(String [] args) {
-		
+
+	    //=== LOGGER ===
+
 		//Premier d'entre eux: le logger qui écrit dans la sortie standard
 		HashMap<String,HashMap<String,Object>> loggersNames = new HashMap<String,HashMap<String,Object>>();
 		loggersNames.put(SysOutLogger.class.getCanonicalName(), new HashMap<String,Object>());
@@ -30,8 +34,9 @@ public class Main {
 		loggersNames.put(SXLSXExcelDataloggerImpl.class.getCanonicalName(),params);	
 		LogicalDateTime begin = LogicalDateTime.Zero;
 
-		
+
 		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(24));
+
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
 		SimMonitor sm=new SimMonitor(engine, "Monitor");
@@ -42,19 +47,36 @@ public class Main {
 		LinkedList<Integer> freqPopVoitureP5=createListeFreq(30,400,20,150,20);
 		LinkedList<Integer> freqPopVoitureP6=createListeFreq(20,50,30,100,10);
 		LinkedList<Integer> freqPopVoitureP7=createListeFreq(30,30,10,100,10);
-		
-		Carrefour p1=new Carrefour(engine, CarrefourNames.P1, freqPopVoitureP1);
-		Carrefour p2=new Carrefour(engine, CarrefourNames.P2, freqPopVoitureP2);
-		Carrefour p3=new Carrefour(engine, CarrefourNames.P3, freqPopVoitureP3);
-		Carrefour p4=new Carrefour(engine, CarrefourNames.P4, freqPopVoitureP4);
-		Carrefour p5=new Carrefour(engine, CarrefourNames.P5, freqPopVoitureP5);
-		Carrefour p6=new Carrefour(engine, CarrefourNames.P6, freqPopVoitureP6);
-		Carrefour p7=new Carrefour(engine, CarrefourNames.P7, freqPopVoitureP7);
-		
+
+		//=== INIT SIM OBJECTS ===
+
+        // initialisation quartier
+        Quartier githubCity = new Quartier(engine, "githubCity");
+
+        // initialisation des carrefours (pour l'instant servent à rien)
+        Carrefour p1=new Carrefour(engine, githubCity, CarrefourNames.P1, new FeuRougeCroises(engine,30,30), freqPopVoitureP1);
+        Carrefour p2=new Carrefour(engine, githubCity, CarrefourNames.P2, new FeuRougeCroises(engine,30,30), freqPopVoitureP2);
+        Carrefour p3=new Carrefour(engine, githubCity, CarrefourNames.P3, new FeuRougeCroises(engine,30,30), freqPopVoitureP3);
+        Carrefour p4=new Carrefour(engine, githubCity, CarrefourNames.P4, new FeuRougeCroises(engine,30,30), freqPopVoitureP4);
+        Carrefour p5=new Carrefour(engine, githubCity, CarrefourNames.P5, new FeuRougeCroises(engine,30,30), freqPopVoitureP5);
+        Carrefour p6=new Carrefour(engine, githubCity, CarrefourNames.P6, new FeuRougeCroises(engine,30,30), freqPopVoitureP6);
+        Carrefour p7=new Carrefour(engine, githubCity, CarrefourNames.P7, new FeuRougeCroises(engine,30,30), freqPopVoitureP7);
+
+
+        // initialisons une liste de carrefour qui sera le quartier.
+
+        // Mise en place d'une liste pour une iteration facile et une modularité des carrefours
+        List<Carrefour> listCarrefour = Arrays.asList(p1,p2,p3,p4,p5,p6,p7);
+        // Mise en place de la table de hachage pour les carrefours
+        HashMap<CarrefourNames,Carrefour> dicCarrefour = new HashMap<>();
+        for (Carrefour carrefour:listCarrefour) {
+            dicCarrefour.put(carrefour.getNom(),carrefour);
+        }
+        githubCity.setDicCarrefour(dicCarrefour);
+
 		engine.initialize();	
 		engine.resume();
-		while (engine.triggerNextEvent()) {			
-		}
+		while (engine.triggerNextEvent()) {}
 		
 		Logger.Terminate();
 	}

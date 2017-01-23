@@ -15,146 +15,172 @@ import simEntity.Carrefour.CarrefourNames;
 
 public  class Voiture extends SimEntity implements IRecordable {
 
-		private String name;
-		private CarrefourNames departure;
-		private CarrefourNames destination;
-		private Path chemin;
-		private LogicalDuration tempsOptimal;
+    private String name;
+    private Carrefour departure;
+    private Carrefour destination;
+    private Path chemin;
+    private LogicalDuration tempsOptimal;
 
+    public Voiture(SimEngine engine, String name, Carrefour departure, Carrefour destination) {
 
-		public Voiture(SimEngine engine, String name, CarrefourNames departure, CarrefourNames destination) {
+        super(engine,"Voiture");
+        this.name=name;
+        this.departure=departure;
+        this.destination=destination;
 
-			super(engine,"Voiture");
-			this.name=name;
-			this.departure=departure;
-			this.destination=destination;
+        this.chemin=new Path(departure.getNom(),destination.getNom());
+        this.tempsOptimal=chemin.getTime2next();
 
-			this.chemin=new Path(departure,destination);
-			this.tempsOptimal=chemin.getTime2next();
+    }
 
-		}
-		
-		
-		public class IsArrived extends SimEvent {
-			public IsArrived(LogicalDateTime scheduledDate){
+    //=== EVENT ===
+    // On considère que la voiture est toujours en transition.
+
+    /* TEMP
+     * J'aime pas l'idée actuelle de la conception : a savoir que le goto chaine infiniement avec le isArrived
+     * Il faudrait plutôt ça comme event :
+     *  - ArriveToQueue
+     *      On arrive dans la file du carrefour, ne déclenche aucun évenements.
+     *  - CrossCarrefour
+     *      Dès que la voiture peut passer, cet evenement est déclenché. Utilise le isArrived déjà configuré.
+     *      La voiture peut passer dès qu'on lui dit que c'est ok. Il faut que le check se fasse dès que la voiture
+     *      arrive en 1ère position, dès qu'une voiture passe
+     *
+     *      DONC il faut un evenement déclenché par le carrefour : firstInQueue
+     *           il faut un evenement du carrefour : voitureCrossing qui déclenche les évenements des voiture*/
+
+    /**
+     * EVENT
+     * crossCarrefour
+     */
+    public class CrossCarrefour extends SimEvent {
+			public CrossCarrefour(LogicalDateTime scheduledDate){
 				super(scheduledDate);
 			}
 			@Override
 			public void process() {
-				Logger.Information(name, "isArrived",name+ " is arrived at " + chemin.getNext());
+				Logger.Information(name, "crossCarrefour",name+ " is crossing " + chemin.getNext());
+
+				// On avance d'une etape. Le next qui est celui auquel on est arrivé. L'avancement d'étape le
+                // transforme en last.
 				chemin.etape();
 				if (chemin.getNext()!=chemin.getLast()){
+				    //La voiture déclenche l'évenemenement pour se deplacer au carrefour suivant.
 					addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
 				}
-			}			
-
+			}
 		}
 
-		@Override
-		public String toString() {
-			return name;
-		}
+    /**
+     * EVENT
+     * Le GoTo déclenche le ArriveToQueue
+     * C'est le deplacement de la voiture jusqu'à la queue suivante.
+     */
+    public class GoTo extends SimEvent {
 
-		@Override
-		public void activate() {
-			super.activate();
-			//Logger.Information(this, "activate", name +" se reveille");
-			this.addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
-					
-		}
-
-		@Override
-		public void initialize() {
-			super.initialize();
-			//Logger.Information(this, "initialize", name + " s initialise");
-		}
-		
-		@Override
-		public void deactivate() {
-			super.deactivate();
-			//Logger.Information(this, "deactivate", "je suis desactivé");
-		}
-
-		@Override
-		public void terminate() {
-			super.terminate();
-			//Logger.Information(this, "terminate","je suis terminé");
-
-		}
-
-        public class IsArrived extends SimEvent {
-        public IsArrived(LogicalDateTime scheduledDate){
+        public GoTo(LogicalDateTime scheduledDate){
             super(scheduledDate);
         }
         @Override
         public void process() {
-            Logger.Information(name, "isArrived",name+ " is arrived at " + destination);
+            Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
+            addEvent(new ArriveToQueue(getEngine().SimulationDate().add(chemin.getTime2next())));
         }
     }
 
-		@Override
-		public String[] getTitles() {
-			String[] titles={"D�part","Arriv�e","Dur�e Trajet"};
-			return titles;
-		}
+    /**
+     * EVENT
+     * Place la voiture dans la queue.
+     */
+    public class ArriveToQueue extends SimEvent {
+        public ArriveToQueue(LogicalDateTime scheduledDate){
+            super(scheduledDate);
+        }
+        @Override
+        public void process() {
+            // Le next c'est celui après la queue
 
-		@Override
-		public String[] getRecords() {
-			return new String[]{getDeparture().toString(),getDestination().toString(),getTempsOptimal().toString()};
-		}
+        }
+    }
 
-		@Override
-		public String getClassement() {
-			return "Voiture";
-		}
-		
-		public class GoTo extends SimEvent {
+    //TODO : isArrived in a queue
+    //TODO : leave un carrefour
 
-			public GoTo(LogicalDateTime scheduledDate){
-				super(scheduledDate);
-			}
-			@Override
-			public void process() {
+    //=== OVERRIDE ===
 
-				Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
-				addEvent(new IsArrived(getEngine().SimulationDate().add(chemin.getTime2next())));
-				
-			}
-			
-		}
+    @Override
+    public String toString() {
+        return name;
+    }
 
-		//TODO : isArrived in a queue
-        //TODO : leave un carrefour
+    @Override
+    public void activate() {
+        super.activate();
+        //Logger.Information(this, "activate", name +" se reveille");
+        this.addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
+    }
 
-		public String getName() {
-			return name;
-		}
+    @Override
+    public void initialize() {
+        super.initialize();
+        //Logger.Information(this, "initialize", name + " s initialise");
+    }
 
-		public void setName(String name) {
-			this.name = name;
-		}
-		
-		public CarrefourNames getDeparture() {
-			return departure;
-		}
-        public CarrefourNames getDestination() {
-			return destination;
-		}
-        public Path getChemin() {
-			return chemin;
-		}
-        public LogicalDuration getTempsOptimal() {
-			return tempsOptimal;
-		}
+    @Override
+    public void deactivate() {
+        super.deactivate();
+        //Logger.Information(this, "deactivate", "je suis desactivé");
+    }
 
-		public void setDeparture(CarrefourNames departure) {
-			this.departure = departure;
-		}
-		
-		public void setDestination(CarrefourNames destination) {
-		
-			this.destination = destination;
-		}
-		
-		
-	}
+    @Override
+    public void terminate() {
+        super.terminate();
+        //Logger.Information(this, "terminate","je suis terminé");
+
+    }
+
+    //=== GETTER AND SETTERS ===
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public Carrefour getDeparture() {
+        return departure;
+    }
+    public Carrefour getDestination() {
+        return destination;
+    }
+    public Path getChemin() {
+        return chemin;
+    }
+    public LogicalDuration getTempsOptimal() {
+        return tempsOptimal;
+    }
+
+    @Override
+    public String[] getTitles() {
+        String[] titles={"D�part","Arriv�e","Dur�e Trajet"};
+        return titles;
+    }
+
+    @Override
+    public String[] getRecords() {
+        return new String[]{getDeparture().toString(),getDestination().toString(),getTempsOptimal().toString()};
+    }
+
+    @Override
+    public String getClassement() {
+        return "Voiture";
+    }
+
+    public void setDeparture(Carrefour departure) {
+        this.departure = departure;
+    }
+    public void setDestination(Carrefour destination) { this.destination = destination; }
+
+
+}
