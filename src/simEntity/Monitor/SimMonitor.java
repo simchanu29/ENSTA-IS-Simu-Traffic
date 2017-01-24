@@ -18,6 +18,11 @@ import fr.ensta.lerouxlu.simu.SimEvent;
 import simEntity.Carrefour.CarrefourNames;
 import simEntity.Voiture.Voiture;
 
+/**
+ * Cette classe a pas un super nom par arpport à ce qu'elle fait. Il semble qu'elle mette en place l'apparition des
+ * voiture et leur trajet
+ * TODO : verifier la redondance avec Quartier
+ */
 public class SimMonitor extends SimEntity{
 	MoreRandom random;
 	String name;
@@ -32,8 +37,7 @@ public class SimMonitor extends SimEntity{
 
 	public void initialize() {
 		super.activate();
-		Logger.Information(this.name, "activate", "Monitor se reveille");		
-	
+		Logger.Information(this.name, "activate", "Monitor se reveille");
 	}
 	
 	public void activate() {

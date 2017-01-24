@@ -20,7 +20,6 @@ public enum CarrefourNames {
 	I3("I3"),
 	I4("I4");
 
-	
 	private final String name;
 	
 	private static final List<CarrefourNames> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
