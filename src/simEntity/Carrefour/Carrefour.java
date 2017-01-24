@@ -89,7 +89,8 @@ public class Carrefour extends SimEntity {
      *
      * @param engine
      * @param nom
-     * @param freqPopVoiture
+     * @param regle
+     * @param quartier
      */
     // Constructeur Intersection 
     public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle){
@@ -98,6 +99,10 @@ public class Carrefour extends SimEntity {
     	this.nom=nom;
         this.regle=regle;
     	this.quartier = quartier;
+        queueSud=new LinkedList<Voiture>();
+        queueNord=new LinkedList<Voiture>();
+        queueOuest=new LinkedList<Voiture>();
+        queueEst=new LinkedList<Voiture>();
     }
     
     // Construction spot de pop
@@ -160,7 +165,6 @@ public class Carrefour extends SimEntity {
     CarrefourNames calculDestination(CarrefourNames departure){
         CarrefourNames destination=null;
         double pDest = random.nextDouble()*100;
-        System.out.println("pDest :  "+ pDest);
         switch(departure){
             case P1:
                 if(pDest<=5) destination=CarrefourNames.P2;
@@ -227,9 +231,7 @@ public class Carrefour extends SimEntity {
 
     public void addToQueue(Voiture voiture){
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getLast());
-        System.out.println("lastCarr  : " + lastCarr.getNom() );
         QueueNames queue = getQueueByCarrefour(lastCarr);
-        System.out.println("QueueNames  : " + queue.name());
         addToQueueByName(queue,voiture);
     }
 
@@ -237,7 +239,6 @@ public class Carrefour extends SimEntity {
 
         switch (queue){
             case Nord:
-            	System.out.println("queueNord   :"+queueNord.toString());
                 queueNord.add(voiture);
                 break;
             case Sud:
@@ -269,7 +270,6 @@ public class Carrefour extends SimEntity {
         @Override
 		public void process() {
             CarrefourNames origin = nom;
-            System.out.println("nom origine : "+nom);
             CarrefourNames destination = calculDestination(origin);
 //            Carrefour origin = Carrefour.this;
 //            CarrefourNames destinationName = calculDestination(origin);

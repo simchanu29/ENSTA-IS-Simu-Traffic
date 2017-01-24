@@ -107,7 +107,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         public void process() {
             // Le next c'est celui aprÃ¨s la queue
             Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
-            System.out.println("origin :"+ Voiture.this.departure+ "  destination :"+Voiture.this.destination   +"  newtCarre  "+nextCarr.getNom());
+            //System.out.println("origin :"+ Voiture.this.departure+ "  destination :"+Voiture.this.destination   +"  newtCarre  "+nextCarr.getNom());
             nextCarr.addToQueue(Voiture.this);
         }
     }
