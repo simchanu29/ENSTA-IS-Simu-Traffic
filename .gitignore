@@ -2,3 +2,5 @@
 *.iml
 Javadoc
 bin
+*.xlsx
+*.jar
