@@ -71,6 +71,11 @@ public class Carrefour extends SimEntity {
         carrefourNord=carrNord;
         carrefourOuest=carrOuest;
         carrefourSud=carrSud;
+        
+        queueSud=new LinkedList<Voiture>();
+        queueNord=new LinkedList<Voiture>();
+        queueOuest=new LinkedList<Voiture>();
+        queueEst=new LinkedList<Voiture>();
 
         this.nom=nom;
         this.regle=regle;
@@ -222,23 +227,27 @@ public class Carrefour extends SimEntity {
 
     public void addToQueue(Voiture voiture){
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getLast());
+        System.out.println("lastCarr  : " + lastCarr.getNom() );
         QueueNames queue = getQueueByCarrefour(lastCarr);
+        System.out.println("QueueNames  : " + queue.name());
         addToQueueByName(queue,voiture);
     }
 
     public void addToQueueByName(QueueNames queue,Voiture voiture){
+
         switch (queue){
             case Nord:
-                getQueueNord().add(voiture);
+            	System.out.println("queueNord   :"+queueNord.toString());
+                queueNord.add(voiture);
                 break;
             case Sud:
-                getQueueSud().add(voiture);
+            	queueSud.add(voiture);
                 break;
             case Est:
-                getQueueEst().add(voiture);
+            	queueEst.add(voiture);
                 break;
             case Ouest:
-                getQueueOuest().add(voiture);
+                queueOuest.add(voiture);
                 break;
             case Not_a_queue:
                 System.out.println("ERREUR : queue inconnue");
