@@ -71,6 +71,11 @@ public class Carrefour extends SimEntity {
         carrefourNord=carrNord;
         carrefourOuest=carrOuest;
         carrefourSud=carrSud;
+        
+        queueSud=new LinkedList<Voiture>();
+        queueNord=new LinkedList<Voiture>();
+        queueOuest=new LinkedList<Voiture>();
+        queueEst=new LinkedList<Voiture>();
 
         this.nom=nom;
         this.regle=regle;
@@ -83,19 +88,30 @@ public class Carrefour extends SimEntity {
     /**
      *
      * @param engine
+     * @param quartier
      * @param nom
-     * @param freqPopVoiture
+     * @param regle
      */
-    public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle, LinkedList<Integer>freqPopVoiture){
+    // Constructeur Intersection 
+    public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle){
     	super(engine,"Carrefour");
 
     	this.nom=nom;
         this.regle=regle;
     	this.quartier = quartier;
+    }
+    
+    // Construction spot de pop
+    public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, LinkedList<Integer>freqPopVoiture){
+    	super(engine,"Carrefour");
+
+    	this.nom=nom;;
+    	this.quartier = quartier;
 
         random = new MoreRandom(MoreRandom.globalSeed);
         this.freqPopVoiture=freqPopVoiture;
     }
+
 
     /**
      * override functions
@@ -109,9 +125,8 @@ public class Carrefour extends SimEntity {
     public void activate() {
         super.activate();
         LogicalDateTime e = getEngine().SimulationDate();
-
         //Si le carrefour est un g�n�rateur (ie un des 7 premiers noms de l'�num�ration)
-        if (CarrefourNames.valueOf(nom.toString()).ordinal()<=7){
+        if (CarrefourNames.valueOf(nom.toString()).ordinal()<7){
             addEvent(new NouvelleVoitureEvent(e));
         }
     }
@@ -146,6 +161,7 @@ public class Carrefour extends SimEntity {
     CarrefourNames calculDestination(CarrefourNames departure){
         CarrefourNames destination=null;
         double pDest = random.nextDouble()*100;
+        System.out.println("pDest :  "+ pDest);
         switch(departure){
             case P1:
                 if(pDest<=5) destination=CarrefourNames.P2;
@@ -212,23 +228,27 @@ public class Carrefour extends SimEntity {
 
     public void addToQueue(Voiture voiture){
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getLast());
+        System.out.println("lastCarr  : " + lastCarr.getNom() );
         QueueNames queue = getQueueByCarrefour(lastCarr);
+        System.out.println("QueueNames  : " + queue.name());
         addToQueueByName(queue,voiture);
     }
 
     public void addToQueueByName(QueueNames queue,Voiture voiture){
+
         switch (queue){
             case Nord:
-                getQueueNord().add(voiture);
+            	System.out.println("queueNord   :"+queueNord.toString());
+                queueNord.add(voiture);
                 break;
             case Sud:
-                getQueueSud().add(voiture);
+            	queueSud.add(voiture);
                 break;
             case Est:
-                getQueueEst().add(voiture);
+            	queueEst.add(voiture);
                 break;
             case Ouest:
-                getQueueOuest().add(voiture);
+                queueOuest.add(voiture);
                 break;
             case Not_a_queue:
                 System.out.println("ERREUR : queue inconnue");
@@ -250,6 +270,7 @@ public class Carrefour extends SimEntity {
         @Override
 		public void process() {
             CarrefourNames origin = nom;
+            System.out.println("nom origine : "+nom);
             CarrefourNames destination = calculDestination(origin);
 //            Carrefour origin = Carrefour.this;
 //            CarrefourNames destinationName = calculDestination(origin);

@@ -3,7 +3,6 @@ package simEntity.Quartier;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEntity;
-import org.python.antlr.ast.Str;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
 
