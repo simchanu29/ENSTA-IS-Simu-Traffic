@@ -54,19 +54,47 @@ public class Main {
         Quartier githubCity = new Quartier(engine, "githubCity");
 
         // initialisation des carrefours (pour l'instant servent à rien)
-        Carrefour p1=new Carrefour(engine, githubCity, CarrefourNames.P1, new FeuRougeCroises(engine,30,30), freqPopVoitureP1);
-        Carrefour p2=new Carrefour(engine, githubCity, CarrefourNames.P2, new FeuRougeCroises(engine,30,30), freqPopVoitureP2);
-        Carrefour p3=new Carrefour(engine, githubCity, CarrefourNames.P3, new FeuRougeCroises(engine,30,30), freqPopVoitureP3);
-        Carrefour p4=new Carrefour(engine, githubCity, CarrefourNames.P4, new FeuRougeCroises(engine,30,30), freqPopVoitureP4);
-        Carrefour p5=new Carrefour(engine, githubCity, CarrefourNames.P5, new FeuRougeCroises(engine,30,30), freqPopVoitureP5);
-        Carrefour p6=new Carrefour(engine, githubCity, CarrefourNames.P6, new FeuRougeCroises(engine,30,30), freqPopVoitureP6);
-        Carrefour p7=new Carrefour(engine, githubCity, CarrefourNames.P7, new FeuRougeCroises(engine,30,30), freqPopVoitureP7);
+        Carrefour p1=new Carrefour(engine, githubCity, CarrefourNames.P1, freqPopVoitureP1);
+        Carrefour p2=new Carrefour(engine, githubCity, CarrefourNames.P2, freqPopVoitureP2);
+        Carrefour p3=new Carrefour(engine, githubCity, CarrefourNames.P3, freqPopVoitureP3);
+        Carrefour p4=new Carrefour(engine, githubCity, CarrefourNames.P4, freqPopVoitureP4);
+        Carrefour p5=new Carrefour(engine, githubCity, CarrefourNames.P5, freqPopVoitureP5);
+        Carrefour p6=new Carrefour(engine, githubCity, CarrefourNames.P6, freqPopVoitureP6);
+        Carrefour p7=new Carrefour(engine, githubCity, CarrefourNames.P7, freqPopVoitureP7);
+        Carrefour i1=new Carrefour(engine, githubCity, CarrefourNames.I1, new FeuRougeCroises(engine,30,30));
+        Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new FeuRougeCroises(engine,30,30));
+        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeCroises(engine,30,30));
+        Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new FeuRougeCroises(engine,30,30));
+        
+        // relier les carrefours entre eux
+        p1.setCarrefourEst(i1);
+        p2.setCarrefourNord(i2);
+        p3.setCarrefourOuest(i2);
+        p4.setCarrefourOuest(i3);
+        p5.setCarrefourEst(i4);
+        p6.setCarrefourSud(i4);
+        p7.setCarrefourSud(i3);
+        i1.setCarrefourOuest(p1);
+        i1.setCarrefourEst(i2);
+        i1.setCarrefourNord(i4);
+        i2.setCarrefourOuest(i1);
+        i2.setCarrefourEst(p3);
+        i2.setCarrefourSud(p2);
+        i3.setCarrefourOuest(i4);
+        i3.setCarrefourEst(p4);
+        i3.setCarrefourNord(p7);
+        i4.setCarrefourOuest(p5);
+        i4.setCarrefourEst(i3);
+        i4.setCarrefourNord(p6);
+        i4.setCarrefourSud(i1);
+        
+        
 
 
         // initialisons une liste de carrefour qui sera le quartier.
 
         // Mise en place d'une liste pour une iteration facile et une modularité des carrefours
-        List<Carrefour> listCarrefour = Arrays.asList(p1,p2,p3,p4,p5,p6,p7);
+        List<Carrefour> listCarrefour = Arrays.asList(p1,p2,p3,p4,p5,p6,p7,i1,i2,i3,i4);
         // Mise en place de la table de hachage pour les carrefours
         HashMap<CarrefourNames,Carrefour> dicCarrefour = new HashMap<>();
         for (Carrefour carrefour:listCarrefour) {

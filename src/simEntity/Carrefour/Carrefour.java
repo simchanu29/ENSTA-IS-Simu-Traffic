@@ -86,16 +86,26 @@ public class Carrefour extends SimEntity {
      * @param nom
      * @param freqPopVoiture
      */
-    public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle, LinkedList<Integer>freqPopVoiture){
+    // Constructeur Intersection 
+    public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle){
     	super(engine,"Carrefour");
 
     	this.nom=nom;
         this.regle=regle;
     	this.quartier = quartier;
+    }
+    
+    // Construction spot de pop
+    public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, LinkedList<Integer>freqPopVoiture){
+    	super(engine,"Carrefour");
+
+    	this.nom=nom;;
+    	this.quartier = quartier;
 
         random = new MoreRandom(MoreRandom.globalSeed);
         this.freqPopVoiture=freqPopVoiture;
     }
+
 
     /**
      * override functions
@@ -109,9 +119,8 @@ public class Carrefour extends SimEntity {
     public void activate() {
         super.activate();
         LogicalDateTime e = getEngine().SimulationDate();
-
         //Si le carrefour est un g�n�rateur (ie un des 7 premiers noms de l'�num�ration)
-        if (CarrefourNames.valueOf(nom.toString()).ordinal()<=7){
+        if (CarrefourNames.valueOf(nom.toString()).ordinal()<7){
             addEvent(new NouvelleVoitureEvent(e));
         }
     }
@@ -146,6 +155,7 @@ public class Carrefour extends SimEntity {
     CarrefourNames calculDestination(CarrefourNames departure){
         CarrefourNames destination=null;
         double pDest = random.nextDouble()*100;
+        System.out.println("pDest :  "+ pDest);
         switch(departure){
             case P1:
                 if(pDest<=5) destination=CarrefourNames.P2;
@@ -250,6 +260,7 @@ public class Carrefour extends SimEntity {
         @Override
 		public void process() {
             CarrefourNames origin = nom;
+            System.out.println("nom origine : "+nom);
             CarrefourNames destination = calculDestination(origin);
 //            Carrefour origin = Carrefour.this;
 //            CarrefourNames destinationName = calculDestination(origin);
