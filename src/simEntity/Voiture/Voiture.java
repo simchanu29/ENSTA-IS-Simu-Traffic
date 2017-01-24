@@ -12,23 +12,26 @@ import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
+import simEntity.Quartier.Quartier;
 
 public  class Voiture extends SimEntity implements IRecordable {
 
     private String name;
-    private Carrefour departure;
-    private Carrefour destination;
+    private Quartier quartier;
+    private CarrefourNames departure;
+    private CarrefourNames destination;
     private Path chemin;
     private LogicalDuration tempsOptimal;
 
-    public Voiture(SimEngine engine, String name, Carrefour departure, Carrefour destination) {
+    public Voiture(SimEngine engine, String name, Quartier quartier, CarrefourNames departure, CarrefourNames destination) {
 
         super(engine,"Voiture");
         this.name=name;
+        this.quartier = quartier;
         this.departure=departure;
         this.destination=destination;
 
-        this.chemin=new Path(departure.getNom(),destination.getNom());
+        this.chemin=new Path(departure,destination);
         this.tempsOptimal=chemin.getTime2next();
 
     }
@@ -52,6 +55,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     /**
      * EVENT
      * crossCarrefour
+     * déclenché par FirstInQueue si la voiture peut passer
      */
     public class CrossCarrefour extends SimEvent {
 			public CrossCarrefour(LogicalDateTime scheduledDate){
@@ -66,7 +70,8 @@ public  class Voiture extends SimEntity implements IRecordable {
 				chemin.etape();
 				if (chemin.getNext()!=chemin.getLast()){
 				    //La voiture déclenche l'évenemenement pour se deplacer au carrefour suivant.
-					addEvent(new GoTo(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
+					addEvent(new GoTo(getEngine().SimulationDate()));
+					//TODO : addEvent ACArBecomesFirst sur le carrefour où viens de quitter la voiture (donc ici c'est Last)
 				}
 			}
 		}
@@ -75,6 +80,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      * EVENT
      * Le GoTo déclenche le ArriveToQueue
      * C'est le deplacement de la voiture jusqu'à la queue suivante.
+     * Déclenché par CrossCarrefour
      */
     public class GoTo extends SimEvent {
 
@@ -91,6 +97,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     /**
      * EVENT
      * Place la voiture dans la queue.
+     * Declenché par GoTo
      */
     public class ArriveToQueue extends SimEvent {
         public ArriveToQueue(LogicalDateTime scheduledDate){
@@ -99,12 +106,32 @@ public  class Voiture extends SimEntity implements IRecordable {
         @Override
         public void process() {
             // Le next c'est celui après la queue
-
+            Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
+            nextCarr.addToQueue(Voiture.this);
         }
     }
 
-    //TODO : isArrived in a queue
-    //TODO : leave un carrefour
+    /**
+     * EVENT
+     * La voiture est la premiere dans la queue.
+     * On declenche donc la verification si on peut passer.
+     * Cet evenement est declenche par le carrefour lorsqu'une voiture deviens la première dans la queue sur une
+     * des files du carrefour.
+     */
+    public class FirstInQueue extends SimEvent {
+        public FirstInQueue(LogicalDateTime scheduledDate){
+            super(scheduledDate);
+        }
+        @Override
+        public void process() {
+            Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
+            boolean peutPasser = carrefourActuel.authorisationPassage(Voiture.this);
+
+            if(peutPasser){
+                addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
+            }
+        }
+    }
 
     //=== OVERRIDE ===
 
@@ -148,10 +175,10 @@ public  class Voiture extends SimEntity implements IRecordable {
         return name;
     }
 
-    public Carrefour getDeparture() {
+    public CarrefourNames getDeparture() {
         return departure;
     }
-    public Carrefour getDestination() {
+    public CarrefourNames getDestination() {
         return destination;
     }
     public Path getChemin() {
@@ -177,10 +204,10 @@ public  class Voiture extends SimEntity implements IRecordable {
         return "Voiture";
     }
 
-    public void setDeparture(Carrefour departure) {
+    public void setDeparture(CarrefourNames departure) {
         this.departure = departure;
     }
-    public void setDestination(Carrefour destination) { this.destination = destination; }
+    public void setDestination(CarrefourNames destination) { this.destination = destination; }
 
 
 }

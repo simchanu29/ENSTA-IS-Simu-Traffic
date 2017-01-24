@@ -7,7 +7,8 @@ public enum QueueNames {
     Nord("Nord"),
     Est("Est"),
     Ouest("Ouest"),
-    Sud("Sud");
+    Sud("Sud"),
+    Not_a_queue("-1");
 
     private String name;
 
