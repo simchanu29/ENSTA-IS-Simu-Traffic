@@ -88,10 +88,11 @@ public class Carrefour extends SimEntity {
     /**
      *
      * @param engine
+     * @param quartier
      * @param nom
      * @param regle
-     * @param quartier
      */
+
     // Constructeur Intersection 
     public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle){
     	super(engine,"Carrefour");
