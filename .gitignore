@@ -3,3 +3,5 @@
 Javadoc
 bin
 *.xlsx
+*.class
+*.jar
