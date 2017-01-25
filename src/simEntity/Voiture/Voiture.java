@@ -204,7 +204,7 @@ public  class Voiture extends SimEntity implements IRecordable {
                     //On quitte le carrefour
                     setInsideCarrefour(false);
 
-                    //On enlève lavoiture du buffer
+                    //On enlève la voiture du buffer
                     carrefourActuel.setBufferOfVoiture(Voiture.this, null);
 
                     addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
