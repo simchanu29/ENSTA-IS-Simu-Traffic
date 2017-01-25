@@ -107,7 +107,6 @@ public class FeuRougeCroises extends CarrefourRegle {
             getAuthorizationEnterCarrefour().put(QueueNames.Est,true);
             getAuthorizationEnterCarrefour().put(QueueNames.Ouest,true);
             FeuRougeCroises.this.addEvent( new FeuRougeNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertEO))) );
-
         }
     }
 }

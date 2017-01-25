@@ -10,7 +10,6 @@ import simEntity.Voiture.Voiture;
 
 /**
  * Created by Tag on 18/01/2017.
- * Classe de gestion des feux. Il n'y a qu'un seul feu vert à la fois.
  */
 public class FeuRougeIndiv extends CarrefourRegle{
 
