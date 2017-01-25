@@ -1,9 +1,5 @@
 package simEntity.Voiture;
 
-
-import java.util.LinkedList;
-import java.util.Queue;
-
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
