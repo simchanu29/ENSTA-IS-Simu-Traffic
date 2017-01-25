@@ -10,6 +10,7 @@ import simEntity.Voiture.Voiture;
 
 /**
  * Created by Tag on 18/01/2017.
+ * Classe de gestion des feux. Il n'y a qu'un seul feu vert à la fois.
  */
 public class FeuRougeIndiv extends CarrefourRegle{
 
@@ -17,11 +18,6 @@ public class FeuRougeIndiv extends CarrefourRegle{
     private int dureeFeuVertS;
     private int dureeFeuVertE;
     private int dureeFeuVertO;
-
-    private boolean feuVertN;
-    private boolean feuVertS;
-    private boolean feuVertE;
-    private boolean feuVertO;
 
     /**
      * Constructeur
@@ -41,46 +37,28 @@ public class FeuRougeIndiv extends CarrefourRegle{
         this.addEvent( new FeuVertN(getEngine().SimulationDate()) );
     }
 
-    @Override
-    public boolean voiturePasse(Voiture voiture, Carrefour carrefour) {
-        QueueNames voitureQueue = carrefour.getQueueOfVoiture(voiture);
-
-        switch (voitureQueue){
-            case Nord:
-                return feuVertN;
-            case Sud:
-                return feuVertS;
-            case Est:
-                return feuVertE;
-            case Ouest:
-                return feuVertO;
-        }
-
-        return false;
-    }
-
     public void setFeuIndiv(QueueNames direction){
         switch (direction){
             case Nord:
-                this.feuVertN = true;
-                this.feuVertS = false;
-                this.feuVertE = false;
-                this.feuVertO = false;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,true);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
             case Sud:
-                this.feuVertN = false;
-                this.feuVertS = true;
-                this.feuVertE = false;
-                this.feuVertO = false;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,true);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
             case Est:
-                this.feuVertN = false;
-                this.feuVertS = false;
-                this.feuVertE = true;
-                this.feuVertO = false;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,true);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
             case Ouest:
-                this.feuVertN = false;
-                this.feuVertS = false;
-                this.feuVertE = false;
-                this.feuVertO = true;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,true);
         }
     }
 
