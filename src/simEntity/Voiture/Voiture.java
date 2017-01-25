@@ -124,9 +124,9 @@ public  class Voiture extends SimEntity implements IRecordable {
             nextCarr.addToQueue(Voiture.this);
             //Déclencher CheckCarrefour si la voiture est la 1ere dans sa file
             Queue<Voiture> myQueue=nextCarr.getQueueOfVoiture(Voiture.this);
-            if (myQueue.size()==1){
-            	addEvent(new CheckPassage(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
-            }
+            
+            //UpdateCarrefour pour voir si c'est la 1ere dans la file et déclencher CheckPassage quand ça sera le cas
+            nextCarr.updateCarrefour();
         }
     }
 
@@ -148,6 +148,12 @@ public  class Voiture extends SimEntity implements IRecordable {
 
             if(peutPasser){
                 addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
+                //Logger.Information(this, "checkPassage", name +" ok pass in 1s");
+            }
+            else{
+            	//Check si elle peut passer toutes les 2s
+            	 addEvent(new CheckPassage(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
+            	 Logger.Information(this, "checkPassage", name +" can't pass, try again in 2s");
             }
         }
     }
