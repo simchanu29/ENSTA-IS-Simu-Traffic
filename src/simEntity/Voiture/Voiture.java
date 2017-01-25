@@ -159,25 +159,27 @@ public  class Voiture extends SimEntity implements IRecordable {
         public void process() {
             setInsideRoute(false);
 
-            Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
-            boolean peutPasser = carrefourActuel.autorisationPassageEntree(Voiture.this);
-
             // Le !insideCarrefour est juste une sécurité, on pourrait ajouter un else if !insideCarrefour et log une
             // erreur si ça arrivait
-            if(peutPasser && !insideCarrefour){
-                //On entre dans le carrefour et quitte la file
-                setInsideCarrefour(true);
+            if(!insideCarrefour) {
+                Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
+                boolean peutPasser = carrefourActuel.autorisationPassageEntree(Voiture.this);
 
-                //On rajoute la voiture dans le bon buffer
-                carrefourActuel.setBufferFromQueue(Voiture.this);
+                if (peutPasser) {
+                    //On entre dans le carrefour et quitte la file
+                    setInsideCarrefour(true);
 
-                //dequeue voiture de la file du carrefour qu'on vient de quitter
-                carrefourActuel.rmFromQueue(Voiture.this);
+                    //On rajoute la voiture dans le bon buffer
+                    carrefourActuel.setBufferFromQueue(Voiture.this);
 
-                addEvent(new CheckPrio(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
-                //Logger.Information(this, "checkPassage", name +" ok pass in 1s");
+                    //dequeue voiture de la file du carrefour qu'on vient de quitter
+                    carrefourActuel.rmFromQueue(Voiture.this);
+
+                    addEvent(new CheckPrio(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
+                    //Logger.Information(this, "checkPassage", name +" ok pass in 1s");
+                }
             }
-            else if(insideCarrefour){
+            else{
                 System.out.println("[ERROR] checkPassage while inside carrefour");
             }
         }
@@ -193,19 +195,22 @@ public  class Voiture extends SimEntity implements IRecordable {
         }
         @Override
         public void process(){
-            Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
-            boolean peutPasser = carrefourActuel.autorisationPassageSortie(Voiture.this);
 
-            if(peutPasser && insideCarrefour){
-                //On quitte le carrefour
-                setInsideCarrefour(false);
+            if(insideCarrefour) {
+                Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
+                boolean peutPasser = carrefourActuel.autorisationPassageSortie(Voiture.this);
 
-                //On enlève lavoiture du buffer
-                carrefourActuel.setBufferOfVoiture(Voiture.this,null);
+                if (peutPasser && insideCarrefour) {
+                    //On quitte le carrefour
+                    setInsideCarrefour(false);
 
-                addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
+                    //On enlève lavoiture du buffer
+                    carrefourActuel.setBufferOfVoiture(Voiture.this, null);
+
+                    addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
+                }
             }
-            else if(!insideCarrefour){
+            else{
                 System.out.println("[ERROR] checkPrio while outside or crossing carrefour");
             }
         }
