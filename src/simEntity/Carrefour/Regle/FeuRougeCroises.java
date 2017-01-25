@@ -11,21 +11,30 @@ import simEntity.Voiture.Voiture;
 /**
  * Created by Tag on 18/01/2017.
  *
- * Le principe c'est que ce sont des feux croisés alternés. LMes différentes variables sont pour plus de lisibilité
+ * Le principe c'est que ce sont des feux croisés alternés. Les différentes variables sont pour plus de lisibilité
  * concernant les évenements
  */
 public class FeuRougeCroises extends CarrefourRegle {
 
     /**
      * Duree du feu rouge Nord-Sud en secondes
+     * On laisse des int pour que le constructeur soit plus court
      */
     private int dureeFeuRougeNS;
     /**
      * Duree du feu vert Nord-Sud en secondes
+     * On laisse des int pour que le constructeur soit plus court
      */
     private int dureeFeuVertNS;
-
+    /**
+     * Duree du feu rouge Est-Ouest en secondes
+     * On laisse des int pour que le constructeur soit plus court
+     */
     private int dureeFeuRougeEO;
+    /**
+     * Duree du feu vert Est-Ouest en secondes
+     * On laisse des int pour que le constructeur soit plus court
+     */
     private int dureeFeuVertEO;
 
 

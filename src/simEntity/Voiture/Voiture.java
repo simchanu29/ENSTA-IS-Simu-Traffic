@@ -37,15 +37,15 @@ public  class Voiture extends SimEntity implements IRecordable {
     //=== EVENT ===
     // On considÃ¨re que la voiture est toujours en transition.
 
-    /* TEMP
+    /* TEMP TODO : erase this if not necessary
      * J'aime pas l'idÃ©e actuelle de la conception : a savoir que le goto chaine infiniement avec le isArrived
-     * Il faudrait plutÃ´t Ã§a comme event :
+     * Il faudrait plutôt ça comme event :
      *  - ArriveToQueue
      *      On arrive dans la file du carrefour, ne dÃ©clenche aucun Ã©venements.
      *  - CrossCarrefour
      *      DÃ¨s que la voiture peut passer, cet evenement est dÃ©clenchÃ©. Utilise le isArrived dÃ©jÃ  configurÃ©.
      *      La voiture peut passer dÃ¨s qu'on lui dit que c'est ok. Il faut que le check se fasse dÃ¨s que la voiture
-     *      arrive en 1Ã¨re position, dÃ¨s qu'une voiture passe
+     *      arrive en 1ère position, dès qu'une voiture passe
      *
      *      DONC il faut un evenement dÃ©clenchÃ© par le carrefour : firstInQueue
      *           il faut un evenement du carrefour : voitureCrossing qui dÃ©clenche les Ã©venements des voiture*/
@@ -53,7 +53,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     /**
      * EVENT
      * crossCarrefour
-     * dÃ©clenchÃ© par FirstInQueue si la voiture peut passer
+     * déclenché par FirstInQueue si la voiture peut passer
      */
     public class CrossCarrefour extends SimEvent {
 			public CrossCarrefour(LogicalDateTime scheduledDate){
@@ -63,22 +63,22 @@ public  class Voiture extends SimEntity implements IRecordable {
 			public void process() {
 				Logger.Information(name, "crossCarrefour",name+ " is crossing " + chemin.getNext());
 
-				// On avance d'une etape. Le next qui est celui auquel on est arrivÃ©. L'avancement d'Ã©tape le
+				// On avance d'une etape. Le next qui est celui auquel on est arrivé. L'avancement d'étape le
                 // transforme en last.
 				chemin.etape();
 				if (chemin.getNext()!=chemin.getLast()){
-				    //La voiture dÃ©clenche l'Ã©venemenement pour se deplacer au carrefour suivant.
+				    //La voiture dÃ©clenche l'évenemenement pour se deplacer au carrefour suivant.
 					addEvent(new GoTo(getEngine().SimulationDate()));
-					//TODO : addEvent ACArBecomesFirst sur le carrefour oÃ¹ viens de quitter la voiture (donc ici c'est Last)
+					//TODO : addEvent ACArBecomesFirst sur le carrefour qui viens de quitter la voiture (donc ici c'est Last)
 				}
 			}
 		}
 
     /**
      * EVENT
-     * Le GoTo dÃ©clenche le ArriveToQueue
-     * C'est le deplacement de la voiture jusqu'Ã  la queue suivante.
-     * DÃ©clenchÃ© par CrossCarrefour
+     * Le GoTo déclenche le ArriveToQueue
+     * C'est le deplacement de la voiture jusqu'à  la queue suivante.
+     * Déclenché par CrossCarrefour
      */
     public class GoTo extends SimEvent {
 
