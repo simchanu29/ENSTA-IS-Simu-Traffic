@@ -59,7 +59,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      */
     public class CrossCarrefour extends SimEvent {
 			public CrossCarrefour(LogicalDateTime scheduledDate){
-				super(scheduledDate);
+				super(scheduledDate,Voiture.this);
 			}
 			@Override
 			public void process() {
@@ -85,7 +85,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     public class GoTo extends SimEvent {
 
         public GoTo(LogicalDateTime scheduledDate){
-            super(scheduledDate);
+            super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
@@ -101,7 +101,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      */
     public class ArriveToQueue extends SimEvent {
         public ArriveToQueue(LogicalDateTime scheduledDate){
-            super(scheduledDate);
+            super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
@@ -120,7 +120,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      */
     public class FirstInQueue extends SimEvent {
         public FirstInQueue(LogicalDateTime scheduledDate){
-            super(scheduledDate);
+            super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
