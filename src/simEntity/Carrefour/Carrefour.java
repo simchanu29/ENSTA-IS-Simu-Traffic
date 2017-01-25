@@ -12,8 +12,11 @@ import java.util.Queue;
 import enstabretagne.base.math.MoreRandom;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 
+import fr.ensta.lerouxlu.simu.SimEngine;
+import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 
 
@@ -145,7 +148,6 @@ public class Carrefour extends SimEntity {
     CarrefourNames calculDestination(CarrefourNames departure){
         CarrefourNames destination=null;
         double pDest = random.nextDouble()*100;
-        System.out.println("pDest :  "+ pDest);
         switch(departure){
             case P1:
                 if(pDest<=5) destination=CarrefourNames.P2;
@@ -212,9 +214,8 @@ public class Carrefour extends SimEntity {
 
     public void addToQueue(Voiture voiture){
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getLast());
-        System.out.println("lastCarr  : " + lastCarr.getNom() );
         QueueNames queue = getQueueByCarrefour(lastCarr);
-        System.out.println("QueueNames  : " + queue.name());
+        System.out.println("Add to queue : " + queue.name());
         getQueueByName(queue).add(voiture);
     }
 
@@ -231,11 +232,7 @@ public class Carrefour extends SimEntity {
         @Override
 		public void process() {
             CarrefourNames origin = nom;
-            System.out.println("nom origine : "+nom);
             CarrefourNames destination = calculDestination(origin);
-//            Carrefour origin = Carrefour.this;
-//            CarrefourNames destinationName = calculDestination(origin);
-//            Carrefour destination = quartier.getDicCarrefour().get(destinationName);
 
 			String name = "Voiture_"+String.valueOf(getEngine().getNbVoiture());
 			Voiture v = new Voiture(getEngine(), name, quartier, origin, destination);
@@ -244,9 +241,7 @@ public class Carrefour extends SimEntity {
 			if(d!=null) addEvent(new NouvelleVoitureEvent(d));
 			v.activate();
 			getEngine().addVoiture(1);
-
 		}
-
 	}
 
     /**
