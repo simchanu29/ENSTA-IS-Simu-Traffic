@@ -17,7 +17,7 @@ public class Path {
 	private CarrefourNames start;
 	private CarrefourNames end;
 	private LinkedList<CarrefourNames> path;
-	private CarrefourNames last;
+	private CarrefourNames previous;
 	private CarrefourNames next;
 	private int compteur;
 	
@@ -32,7 +32,7 @@ public class Path {
 		int indexL=CarrefourNames.valueOf(start.toString()).ordinal()+1;
 		int indexD=CarrefourNames.valueOf(end.toString()).ordinal()+1;
 		this.path =viamichelin.chemin(indexL, indexD); ;
-		this.last = start;
+		this.previous = start;
 		this.next =path.get(1);
 		this.trajet =viamichelin.temps();
 		this.compteur=1;
@@ -42,42 +42,14 @@ public class Path {
 	
 	public void etape(){
 		if (this.end==this.next){
-			this.last=this.next;}
+			this.previous=this.next;}
 		else{
 			this.Time2next=LogicalDuration.ofSeconds(trajet.get(compteur));
 			compteur++;
-			this.last=this.next;
+			this.previous=this.next;
 			this.next=this.path.get(compteur);
 		}
 	}
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -105,12 +77,12 @@ public class Path {
 		this.path = path;
 	}
 
-	public CarrefourNames getLast() {
-		return last;
+	public CarrefourNames getPrevious() {
+		return previous;
 	}
 
-	public void setLast(CarrefourNames last) {
-		this.last = last;
+	public void setLast(CarrefourNames previous) {
+		this.previous = previous;
 	}
 
 	public CarrefourNames getNext() {
@@ -140,7 +112,12 @@ public class Path {
 	public void setTrajet(LinkedList<Double> trajet) {
 		this.trajet = trajet;
 	}
-	
+
+
+	@Override
+	public String toString() {
+		return "[" + path + "]";
+	}
 	
 	
 	

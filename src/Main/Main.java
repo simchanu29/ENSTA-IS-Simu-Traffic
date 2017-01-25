@@ -23,11 +23,11 @@ public class Main {
 
 	    //=== LOGGER ===
 
-		//Premier d'entre eux: le logger qui écrit dans la sortie standard
+		//Premier d'entre eux: le logger qui ï¿½crit dans la sortie standard
 		HashMap<String,HashMap<String,Object>> loggersNames = new HashMap<String,HashMap<String,Object>>();
 		loggersNames.put(SysOutLogger.class.getCanonicalName(), new HashMap<String,Object>());
 		
-		//Premier d'entre eux: le logger qui écrit dans un fichier excel
+		//Premier d'entre eux: le logger qui ï¿½crit dans un fichier excel
 		HashMap<String,Object> params = new HashMap<String,Object>();
 		params.put(LoggerParamsNames.DirectoryName.toString(), System.getProperty("user.dir"));
 		params.put(LoggerParamsNames.FileName.toString(), "Traffic.xlsx");
@@ -53,7 +53,7 @@ public class Main {
         // initialisation quartier
         Quartier githubCity = new Quartier(engine, "githubCity");
 
-        // initialisation des carrefours (pour l'instant servent à rien)
+        // initialisation des carrefours (pour l'instant servent ï¿½ rien)
         Carrefour p1=new Carrefour(engine, githubCity, CarrefourNames.P1, freqPopVoitureP1);
         Carrefour p2=new Carrefour(engine, githubCity, CarrefourNames.P2, freqPopVoitureP2);
         Carrefour p3=new Carrefour(engine, githubCity, CarrefourNames.P3, freqPopVoitureP3);
@@ -65,7 +65,7 @@ public class Main {
         Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new FeuRougeCroises(engine,30,30));
         Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeCroises(engine,30,30));
         Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new FeuRougeCroises(engine,30,30));
-        
+        System.out.println("Suuuuud  "+i4.getQueueSud().toString());
         // relier les carrefours entre eux
         p1.setCarrefourEst(i1);
         p2.setCarrefourNord(i2);
@@ -93,7 +93,7 @@ public class Main {
 
         // initialisons une liste de carrefour qui sera le quartier.
 
-        // Mise en place d'une liste pour une iteration facile et une modularité des carrefours
+        // Mise en place d'une liste pour une iteration facile et une modularitï¿½ des carrefours
         List<Carrefour> listCarrefour = Arrays.asList(p1,p2,p3,p4,p5,p6,p7,i1,i2,i3,i4);
         // Mise en place de la table de hachage pour les carrefours
         HashMap<CarrefourNames,Carrefour> dicCarrefour = new HashMap<>();

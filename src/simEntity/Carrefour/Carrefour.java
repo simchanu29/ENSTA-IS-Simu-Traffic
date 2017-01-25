@@ -55,6 +55,7 @@ public class Carrefour extends SimEntity {
 
     MoreRandom random;
     private LinkedList<Integer> freqPopVoiture; // Faire une liste des frequences en fonction des heures
+    private LinkedList<Voiture> listFirstInQueue;
 
     /**
      * Constructeur carrefour, si le lien est vide, mettre NULL
@@ -77,6 +78,7 @@ public class Carrefour extends SimEntity {
         queueOuest=new LinkedList<Voiture>();
         queueEst=new LinkedList<Voiture>();
 
+        listFirstInQueue=new LinkedList<Voiture>();
         this.nom=nom;
         this.regle=regle;
         this.quartier = quartier;
@@ -104,6 +106,7 @@ public class Carrefour extends SimEntity {
         queueNord=new LinkedList<Voiture>();
         queueOuest=new LinkedList<Voiture>();
         queueEst=new LinkedList<Voiture>();
+        listFirstInQueue=new LinkedList<Voiture>();
     }
     
     // Construction spot de pop
@@ -151,7 +154,7 @@ public class Carrefour extends SimEntity {
     //=== UTILITY FUNCTIONS ===
 
     /**
-     * La methode principale pour authoriser les voitures à passer
+     * La methode principale pour autoriser les voitures à passer
      * @param voiture
      * @return true si la voiture peux passer
      */
@@ -161,6 +164,34 @@ public class Carrefour extends SimEntity {
         // Il a donc besoin de connaitre l'etat des autres files(recupérer l'objet) et la file dans laquelle est la
         // voiture (le carrefour ?)
         return regle.voiturePasse(voiture,this);
+    }
+    /**
+     * updateCarrefour déclenche CheckPassage pour toutes les voitures en 1ere place dans chaque
+     * file d'attente du carrefour s'il y en a et si il a pas déja été déclenché précédemment pour 
+     * cette voiture
+     */
+
+    public void updateCarrefour(){
+    	System.out.println("(updateCarrefour)  "+ nom+"     listeFirst : "+listFirstInQueue); 
+
+    	if(queueNord.peek()!=null && !this.listFirstInQueue.contains(queueNord.peek())){
+    			this.listFirstInQueue.add(queueNord.peek());
+    			addEvent(queueNord.peek().new CheckPassage(getEngine().SimulationDate()));    		
+    	}
+    	if(queueSud.peek()!=null && !this.listFirstInQueue.contains(queueSud.peek())){
+    			this.listFirstInQueue.add(queueSud.peek());
+    			addEvent(queueSud.peek().new CheckPassage(getEngine().SimulationDate()));
+    	}
+    	if(queueOuest.peek()!=null && !this.listFirstInQueue.contains(queueOuest.peek())){
+    			this.listFirstInQueue.add(queueOuest.peek());
+    			addEvent(queueOuest.peek().new CheckPassage(getEngine().SimulationDate()));
+    	}
+    	if(queueEst.peek()!=null && !this.listFirstInQueue.contains(queueEst.peek())){ 
+    			this.listFirstInQueue.add(queueEst.peek());
+    			addEvent(queueEst.peek().new CheckPassage(getEngine().SimulationDate()));
+    	}
+    	
+    	//addEvent(prevCarr.new UpdateCarrefour(getEngine().SimulationDate()));
     }
 
     CarrefourNames calculDestination(CarrefourNames departure){
@@ -231,13 +262,19 @@ public class Carrefour extends SimEntity {
     }
 
     public void addToQueue(Voiture voiture){
-        Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getLast());
+        Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getPrevious());
         QueueNames queue = getQueueByCarrefour(lastCarr);
         addToQueueByName(queue,voiture);
     }
+    
+    public void rmFromQueue(Voiture voiture){
+    	//System.out.println("(rmFromQueue)       "+this.getQueueOfVoiture(voiture).peek().getName()+"  will be removed from  "+ nom +"/"+this.getQueueNameOfVoiture(voiture));
+    	this.listFirstInQueue.remove(voiture);     //supprime de la liste des voitures en 1ere place des files d'attente
+    	this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente 
+    }
 
     public void addToQueueByName(QueueNames queue,Voiture voiture){
-
+    	//System.out.println("(addToQueueByName)     "+voiture.getName()+"  will be added to  "+ nom +"/"+queue);
         switch (queue){
             case Nord:
                 queueNord.add(voiture);
@@ -288,21 +325,8 @@ public class Carrefour extends SimEntity {
 
 	}
 
-    /**
-     * EVENT
-     * CrossCarrefour déclenche l'avancée de la voiture précédente et donc cet evenement.
-     * déclenché par CrossCarrefour TODO : modifier CrossCarrefour
-     */
-    class ACarBecomesFirst extends SimEvent{
-        public ACarBecomesFirst(LogicalDateTime scheduledDate) {
-            super(scheduledDate);
-        }
-        @Override
-        public void process() {
 
-        }
-    }
-
+    
 	//=== GETTER AND SETTERS ===
 
     public LogicalDateTime getNextTimeForVoiture() {
@@ -320,7 +344,7 @@ public class Carrefour extends SimEntity {
 
         return possibleVoitureArrival;
     }
-    public QueueNames getQueueOfVoiture(Voiture voiture){
+    public QueueNames getQueueNameOfVoiture(Voiture voiture){
         if(queueEst.contains(voiture)){
             return QueueNames.Est;
         }else if(queueNord.contains(voiture)){
@@ -331,6 +355,21 @@ public class Carrefour extends SimEntity {
             return QueueNames.Sud;
         }else{
             return QueueNames.Not_a_queue;
+        }
+    }
+    
+    public Queue<Voiture> getQueueOfVoiture(Voiture voiture){
+        if(queueEst.contains(voiture)){
+            return queueEst;
+        }else if(queueNord.contains(voiture)){
+            return queueNord;
+        }else if(queueOuest.contains(voiture)){
+            return queueOuest;
+        }else if(queueSud.contains(voiture)){
+            return queueSud;
+        }else{
+        	System.err.println(voiture.getName()+" doesn't have a valid queue");
+            return null;
         }
     }
     public QueueNames getQueueByCarrefour(Carrefour carrefour){
