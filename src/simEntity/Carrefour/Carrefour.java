@@ -270,12 +270,16 @@ public class Carrefour extends SimEntity {
     public void addToQueue(Voiture voiture){
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getPrevious());
         QueueNames queue = getQueueByCarrefour(lastCarr);
+
         System.out.println("(AddToQueue)   " +voiture.getName()+"  added to queue : " + nom+"/"+queue.name());
+
         getQueueByName(queue).add(voiture);
     }
 
     public void rmFromQueue(Voiture voiture){
+
         System.out.println("(rmFromQueue)       "+this.getQueueOfVoiture(voiture).peek().getName()+"  will be removed from  "+ nom +"/"+this.getQueueNameOfVoiture(voiture));
+
         //this.listFirstInQueue.remove(voiture);     //supprime de la liste des voitures en 1ere place des files d'attente
         this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente
     }
