@@ -149,7 +149,7 @@ public  class Voiture extends SimEntity implements IRecordable {
             }
             else{
             	//Check si elle peut passer toutes les 2s
-            	 //addEvent(new CheckPassage(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
+            	 addEvent(new CheckPassage(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(2))));
             	 Logger.Information(this, "checkPassage", name +" can't pass, try again in 2s");
             }
         }
