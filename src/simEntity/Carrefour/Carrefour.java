@@ -12,11 +12,8 @@ import java.util.Queue;
 import enstabretagne.base.math.MoreRandom;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
-import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 
-import fr.ensta.lerouxlu.simu.SimEngine;
-import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 
 
@@ -144,7 +141,8 @@ public class Carrefour extends SimEntity {
         // Lui il a besoin de savoir où est la voiture qui veut passer et si les autres files prioritaires sont vide
         // Il a donc besoin de connaitre l'etat des autres files(recupérer l'objet) et la file dans laquelle est la
         // voiture (le carrefour ?)
-        return regle.voitureEntre(voiture,this);
+        boolean bufferAvailable = getBufferFromQueue(voiture)==null;
+        return (regle.voitureEntre(voiture,this) && bufferAvailable);
     }
 
     public boolean autorisationPassageSortie(Voiture voiture){
@@ -152,29 +150,52 @@ public class Carrefour extends SimEntity {
     }
 
     /**
-     * updateCarrefour déclenche CheckPassage pour toutes les voitures en 1ere place dans chaque
-     * file d'attente du carrefour s'il y en a et si il a pas déja été déclenché précédemment pour
-     * cette voiture
+     * updateCarrefour déclenche
+     *  - CheckPassage pour toutes les voitures en 1ere place dans chaque file d'attente du carrefour qui n'a pas reagi
+     *    suite a un precedent evenement (En train de resoudre checkPrio donc)
+     *  - CheckPrio pour toutes les voitures dans les buffer si elles n'ont pas reagi suite a un precedent evenement
      */
     public void updateCarrefour(){
-    	System.out.println("(updateCarrefour)  "+ nom+"     listeFirst : "+listFirstInQueue);
+    	System.out.println("(updateCarrefour)  "+ nom);
 
-    	if(queueNord.peek()!=null && !this.listFirstInQueue.contains(queueNord.peek())){
-    			this.listFirstInQueue.add(queueNord.peek());
+    	//CheckPassage
+        if( queueNord.peek()!=null && !queueNord.peek().isInsideCarrefour()){
     			addEvent(queueNord.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
-    	if(queueSud.peek()!=null && !this.listFirstInQueue.contains(queueSud.peek())){
-    			this.listFirstInQueue.add(queueSud.peek());
+    	if(  queueSud.peek()!=null && !queueSud.peek().isInsideCarrefour()){
     			addEvent(queueSud.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
-    	if(queueOuest.peek()!=null && !this.listFirstInQueue.contains(queueOuest.peek())){
-    			this.listFirstInQueue.add(queueOuest.peek());
+    	if(queueOuest.peek()!=null && !queueOuest.peek().isInsideCarrefour()){
     			addEvent(queueOuest.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
-    	if(queueEst.peek()!=null && !this.listFirstInQueue.contains(queueEst.peek())){
-    			this.listFirstInQueue.add(queueEst.peek());
+    	if(  queueEst.peek()!=null && !queueEst.peek().isInsideCarrefour()){
     			addEvent(queueEst.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
+
+    	//CheckPrio
+    	if(bufferCarrefourNE!=null && bufferCarrefourNE.isInsideCarrefour()){
+                addEvent(bufferCarrefourNE.new CrossCarrefour(getEngine().SimulationDate()));
+        }
+        if(bufferCarrefourSO!=null && bufferCarrefourSO.isInsideCarrefour()){
+                addEvent(bufferCarrefourSO.new CrossCarrefour(getEngine().SimulationDate()));
+        }
+
+//    	if(queueNord.peek()!=null && !this.listFirstInQueue.contains(queueNord.peek())){
+//    			this.listFirstInQueue.add(queueNord.peek());
+//    			addEvent(queueNord.peek().new CheckPassage(getEngine().SimulationDate()));
+//    	}
+//    	if(queueSud.peek()!=null && !this.listFirstInQueue.contains(queueSud.peek())){
+//    			this.listFirstInQueue.add(queueSud.peek());
+//    			addEvent(queueSud.peek().new CheckPassage(getEngine().SimulationDate()));
+//    	}
+//    	if(queueOuest.peek()!=null && !this.listFirstInQueue.contains(queueOuest.peek())){
+//    			this.listFirstInQueue.add(queueOuest.peek());
+//    			addEvent(queueOuest.peek().new CheckPassage(getEngine().SimulationDate()));
+//    	}
+//    	if(queueEst.peek()!=null && !this.listFirstInQueue.contains(queueEst.peek())){
+//    			this.listFirstInQueue.add(queueEst.peek());
+//    			addEvent(queueEst.peek().new CheckPassage(getEngine().SimulationDate()));
+//    	}
 
     	//addEvent(prevCarr.new UpdateCarrefour(getEngine().SimulationDate()));
     }
@@ -284,10 +305,40 @@ public class Carrefour extends SimEntity {
 		}
 	}
 
-
-
 	//=== GETTER AND SETTERS ===
 
+    public Voiture getBufferFromQueue(Voiture voiture){
+        //On utilise getQueueByVoiture car la voiture est forcément dans une queue
+        QueueNames queueName = getQueueNameOfVoiture(voiture);
+        switch (queueName){
+            case Nord: case Est:
+                return bufferCarrefourNE;
+            case Sud: case Ouest:
+                return bufferCarrefourSO;
+        }
+        return null;
+    }
+    public void setBufferFromQueue(Voiture voiture){
+        //On utilise getQueueByVoiture car la voiture est forcément dans une queue
+        QueueNames queueName = getQueueNameOfVoiture(voiture);
+        switch (queueName){
+            case Nord: case Est:
+                this.bufferCarrefourNE=voiture;
+                break;
+            case Sud: case Ouest:
+                this.bufferCarrefourSO=voiture;
+                break;
+        }
+    }
+    public Voiture setBufferOfVoiture(Voiture voiture,Voiture setValue){
+        if(voiture==bufferCarrefourNE){
+            this.bufferCarrefourNE=setValue;
+        }
+        else if(voiture==bufferCarrefourSO){
+            this.bufferCarrefourSO=setValue;
+        }
+        return null;
+    }
     public Queue getQueueByName(QueueNames queue){
         switch (queue){
             case Nord:
@@ -333,7 +384,6 @@ public class Carrefour extends SimEntity {
             return QueueNames.Not_a_queue;
         }
     }
-
     public Queue<Voiture> getQueueOfVoiture(Voiture voiture){
         if(queueEst.contains(voiture)){
             return queueEst;
@@ -351,10 +401,10 @@ public class Carrefour extends SimEntity {
     public QueueNames getQueueByCarrefour(Carrefour carrefour){
         // J'utilise la compraison par carrefour car c'est bien plus rapide de comparer deux adresses que des String
         // Mais si nécessaire on peut changer par les nom des carrefours.
-        if(     carrefour==this.carrefourNord ){return QueueNames.Nord;}
-        else if(carrefour==this.carrefourSud  ){return QueueNames.Sud ;}
-        else if(carrefour==this.carrefourEst  ){return QueueNames.Est ;}
-        else if(carrefour==this.carrefourOuest){return QueueNames.Ouest;}
+        if(     this.carrefourNord !=null && carrefour==this.carrefourNord ){return QueueNames.Nord;}
+        else if(this.carrefourSud  !=null && carrefour==this.carrefourSud  ){return QueueNames.Sud ;}
+        else if(this.carrefourEst  !=null && carrefour==this.carrefourEst  ){return QueueNames.Est ;}
+        else if(this.carrefourOuest!=null && carrefour==this.carrefourOuest){return QueueNames.Ouest;}
         else{
             return QueueNames.Not_a_queue;
             // TODO : log l'erreur
@@ -363,10 +413,10 @@ public class Carrefour extends SimEntity {
     public QueueNames getQueueByCarrefourName(CarrefourNames carrefour){
         // J'utilise la compraison par carrefour car c'est bien plus rapide de comparer deux adresses que des String
         // Mais si nécessaire on peut changer par les nom des carrefours.
-        if(     carrefour.equals(this.carrefourNord.getNom() )){return QueueNames.Nord;}
-        else if(carrefour.equals(this.carrefourSud.getNom()  )){return QueueNames.Sud ;}
-        else if(carrefour.equals(this.carrefourEst.getNom()  )){return QueueNames.Est ;}
-        else if(carrefour.equals(this.carrefourOuest.getNom())){return QueueNames.Ouest;}
+        if(     this.carrefourNord !=null && carrefour.equals(this.carrefourNord.getNom() )){return QueueNames.Nord ;}
+        else if(this.carrefourSud  !=null && carrefour.equals( this.carrefourSud.getNom() )){return QueueNames.Sud  ;}
+        else if(this.carrefourEst  !=null && carrefour.equals( this.carrefourEst.getNom() )){return QueueNames.Est  ;}
+        else if(this.carrefourOuest!=null && carrefour.equals(this.carrefourOuest.getNom())){return QueueNames.Ouest;}
         else{
             return QueueNames.Not_a_queue;
             // TODO : log l'erreur

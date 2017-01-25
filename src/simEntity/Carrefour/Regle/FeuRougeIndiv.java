@@ -75,6 +75,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Sud);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
         }
@@ -87,6 +88,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Nord);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
         }
@@ -99,6 +101,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Est);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertE))) );
         }
@@ -111,6 +114,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Ouest);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertN(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertO))) );
         }

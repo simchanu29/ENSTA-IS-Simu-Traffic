@@ -66,6 +66,9 @@ public class FeuRougeCroises extends CarrefourRegle {
 
         @Override
         public void process() {
+            //On met le trigger que sur les premiers event car ils sont tous liés
+            triggerUpdate();
+
             getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
             getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
             FeuRougeCroises.this.addEvent( new FeuVertNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuRougeNS))) );
@@ -79,6 +82,8 @@ public class FeuRougeCroises extends CarrefourRegle {
 
         @Override
         public void process() {
+            triggerUpdate();
+
             getAuthorizationEnterCarrefour().put(QueueNames.Nord,true);
             getAuthorizationEnterCarrefour().put(QueueNames.Sud,true);
             FeuRougeCroises.this.addEvent( new FeuRougeNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertNS))) );
@@ -94,7 +99,7 @@ public class FeuRougeCroises extends CarrefourRegle {
         public void process() {
             getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
             getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
-            FeuRougeCroises.this.addEvent( new FeuRougeNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuRougeEO))) );
+            FeuRougeCroises.this.addEvent( new FeuVertEO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuRougeEO))) );
         }
     }
     public class FeuVertEO extends SimEvent{
@@ -106,7 +111,7 @@ public class FeuRougeCroises extends CarrefourRegle {
         public void process() {
             getAuthorizationEnterCarrefour().put(QueueNames.Est,true);
             getAuthorizationEnterCarrefour().put(QueueNames.Ouest,true);
-            FeuRougeCroises.this.addEvent( new FeuRougeNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertEO))) );
+            FeuRougeCroises.this.addEvent( new FeuRougeEO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertEO))) );
         }
     }
 }
