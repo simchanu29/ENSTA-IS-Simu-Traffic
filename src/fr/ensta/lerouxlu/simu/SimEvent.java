@@ -1,13 +1,19 @@
 package fr.ensta.lerouxlu.simu;
+import simEntity.Voiture.Voiture;
 
 import enstabretagne.base.time.LogicalDateTime;
 
 public  abstract class SimEvent implements ISimEvent {
 
 		public LogicalDateTime scheduledDate;
+		public Voiture v;
 		
 		public SimEvent(LogicalDateTime scheduledDate){
 			this.scheduledDate = scheduledDate;
+		}
+		public SimEvent(LogicalDateTime scheduledDate, Voiture v){
+			this.scheduledDate = scheduledDate;
+			this.v=v;
 		}
 		
 		@Override
@@ -27,5 +33,18 @@ public  abstract class SimEvent implements ISimEvent {
 		public void resetProcessDate(LogicalDateTime simulationDate) {
 			scheduledDate = simulationDate;
 		}
+		public LogicalDateTime getScheduledDate() {
+			return scheduledDate;
+		}
+		public void setScheduledDate(LogicalDateTime scheduledDate) {
+			this.scheduledDate = scheduledDate;
+		}
+		public Voiture getV() {
+			return v;
+		}
+		public void setV(Voiture v) {
+			this.v = v;
+		}
+		
 		
 	}

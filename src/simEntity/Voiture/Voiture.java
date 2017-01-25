@@ -57,7 +57,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      */
     public class CrossCarrefour extends SimEvent {
 			public CrossCarrefour(LogicalDateTime scheduledDate){
-				super(scheduledDate);
+				super(scheduledDate,Voiture.this);
 			}
 			@Override
 			public void process() {
@@ -83,7 +83,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     public class GoTo extends SimEvent {
 
         public GoTo(LogicalDateTime scheduledDate){
-            super(scheduledDate);
+            super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
@@ -99,7 +99,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      */
     public class ArriveToQueue extends SimEvent {
         public ArriveToQueue(LogicalDateTime scheduledDate){
-            super(scheduledDate);
+            super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
@@ -117,9 +117,11 @@ public  class Voiture extends SimEntity implements IRecordable {
      * Cet evenement est declenche par le carrefour lorsqu'une voiture deviens la premiÃ¨re dans la queue sur une
      * des files du carrefour.
      */
+
     public class CheckPassage extends SimEvent {
         public CheckPassage(LogicalDateTime scheduledDate){
             super(scheduledDate);
+
         }
         @Override
         public void process() {
