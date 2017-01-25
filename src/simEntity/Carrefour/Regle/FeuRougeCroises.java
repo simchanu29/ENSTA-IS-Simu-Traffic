@@ -44,7 +44,7 @@ public class FeuRougeCroises extends CarrefourRegle {
 
     @Override
     public boolean voiturePasse(Voiture voiture, Carrefour carrefour) {
-        QueueNames voitureQueue = carrefour.getQueueOfVoiture(voiture);
+        QueueNames voitureQueue = carrefour.getQueueNameOfVoiture(voiture);
 
         switch (voitureQueue.name()){
             case "Nord":
