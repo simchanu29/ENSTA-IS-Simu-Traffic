@@ -15,7 +15,6 @@ import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
 import simEntity.Carrefour.Regle.CarrefourRegle;
 import simEntity.Carrefour.Regle.FeuRougeCroises;
-import simEntity.Monitor.SimMonitor;
 import simEntity.Quartier.Quartier;
 
 public class Main {
@@ -39,7 +38,6 @@ public class Main {
 
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
-		SimMonitor sm=new SimMonitor(engine, "Monitor");
 		LinkedList<Integer> freqPopVoitureP1=createListeFreq(40,300,20,100,20);
 		LinkedList<Integer> freqPopVoitureP2=createListeFreq(50,200,30,150,30);
 		LinkedList<Integer> freqPopVoitureP3=createListeFreq(30,100,20,300,15);

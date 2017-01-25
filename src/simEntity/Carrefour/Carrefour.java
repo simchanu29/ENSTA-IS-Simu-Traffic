@@ -12,11 +12,8 @@ import java.util.Queue;
 import enstabretagne.base.math.MoreRandom;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
-import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 
-import fr.ensta.lerouxlu.simu.SimEngine;
-import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 
 
@@ -56,62 +53,46 @@ public class Carrefour extends SimEntity {
     MoreRandom random;
     private LinkedList<Integer> freqPopVoiture; // Faire une liste des frequences en fonction des heures
 
-    /**
-     * Constructeur carrefour, si le lien est vide, mettre NULL
-     *
-     * Le carrefourNames est necessaire pour l'instant pour Dijkistra
-     * Malgré tout on a un doublon avec la definition du carrefour
-     * TODO : investiguer si c'est un probleme.
-     * MAJ : on peut maintenant demander au quartier un carrefour par son nom, du coup ça deviens encore moins utile.
-     */
-    public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle, Carrefour carrSud,Carrefour carrEst,Carrefour carrNord,Carrefour carrOuest, LinkedList<Integer>freqPopVoiture){
-    	super(engine,"Carrefour");
-
-    	carrefourEst=carrEst;
-        carrefourNord=carrNord;
-        carrefourOuest=carrOuest;
-        carrefourSud=carrSud;
-        
-        queueSud=new LinkedList<Voiture>();
-        queueNord=new LinkedList<Voiture>();
-        queueOuest=new LinkedList<Voiture>();
-        queueEst=new LinkedList<Voiture>();
-
-        this.nom=nom;
-        this.regle=regle;
-        this.quartier = quartier;
-
-        random = new MoreRandom(MoreRandom.globalSeed);
-        this.freqPopVoiture=freqPopVoiture;
-    }
+    private Voiture bufferCarrefourNE;
+    private Voiture bufferCarrefourSO;
 
     /**
-     *
+     *  Constructeur du carrefour : intersection
      * @param engine
      * @param quartier
      * @param nom
      * @param regle
      */
-    // Constructeur Intersection 
     public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, CarrefourRegle regle){
     	super(engine,"Carrefour");
+        regle.setCarrefour(this);
 
     	this.nom=nom;
         this.regle=regle;
     	this.quartier = quartier;
+
+        queueSud=new LinkedList<Voiture>();
+        queueNord=new LinkedList<Voiture>();
+        queueOuest=new LinkedList<Voiture>();
+        queueEst=new LinkedList<Voiture>();
     }
-    
-    // Construction spot de pop
+
+    /**
+     * Constructeur du spot de pop
+     * @param engine
+     * @param quartier
+     * @param nom
+     * @param freqPopVoiture
+     */
     public Carrefour(SimEngine engine, Quartier quartier, CarrefourNames nom, LinkedList<Integer>freqPopVoiture){
     	super(engine,"Carrefour");
 
-    	this.nom=nom;;
+    	this.nom=nom;
     	this.quartier = quartier;
 
         random = new MoreRandom(MoreRandom.globalSeed);
         this.freqPopVoiture=freqPopVoiture;
     }
-
 
     /**
      * override functions
@@ -150,12 +131,15 @@ public class Carrefour extends SimEntity {
      * @param voiture
      * @return true si la voiture peux passer
      */
-    public boolean authorisationPassage(Voiture voiture){
-
+    public boolean autorisationPassageEntree(Voiture voiture){
         // Lui il a besoin de savoir où est la voiture qui veut passer et si les autres files prioritaires sont vide
         // Il a donc besoin de connaitre l'etat des autres files(recupérer l'objet) et la file dans laquelle est la
         // voiture (le carrefour ?)
-        return regle.voiturePasse(voiture,this);
+        return regle.voitureEntre(voiture,this);
+    }
+
+    public boolean autorisationPassageSortie(Voiture voiture){
+        return regle.voitureSort(voiture,this);
     }
 
     CarrefourNames calculDestination(CarrefourNames departure){
@@ -231,30 +215,7 @@ public class Carrefour extends SimEntity {
         System.out.println("lastCarr  : " + lastCarr.getNom() );
         QueueNames queue = getQueueByCarrefour(lastCarr);
         System.out.println("QueueNames  : " + queue.name());
-        addToQueueByName(queue,voiture);
-    }
-
-    public void addToQueueByName(QueueNames queue,Voiture voiture){
-
-        switch (queue){
-            case Nord:
-            	System.out.println("queueNord   :"+queueNord.toString());
-                queueNord.add(voiture);
-                break;
-            case Sud:
-            	queueSud.add(voiture);
-                break;
-            case Est:
-            	queueEst.add(voiture);
-                break;
-            case Ouest:
-                queueOuest.add(voiture);
-                break;
-            case Not_a_queue:
-                System.out.println("ERREUR : queue inconnue");
-                //TODO : log error with logger
-                break;
-        }
+        getQueueByName(queue).add(voiture);
     }
 
     //=== EVENT ===
@@ -305,6 +266,23 @@ public class Carrefour extends SimEntity {
 
 	//=== GETTER AND SETTERS ===
 
+    public Queue getQueueByName(QueueNames queue){
+        switch (queue){
+            case Nord:
+                return queueNord;
+            case Sud:
+                return queueSud;
+            case Est:
+                return queueEst;
+            case Ouest:
+                return queueOuest;
+            case Not_a_queue:
+                System.out.println("ERREUR : queue inconnue");
+                //TODO : log error with logger
+                break;
+        }
+        return null;
+    }
     public LogicalDateTime getNextTimeForVoiture() {
         int currentFreqPopVoiture=freqPopVoiture.get(0);
         int simHour=getEngine().SimulationDate().getHour();
@@ -345,6 +323,18 @@ public class Carrefour extends SimEntity {
             // TODO : log l'erreur
         }
     }
+    public QueueNames getQueueByCarrefourName(CarrefourNames carrefour){
+        // J'utilise la compraison par carrefour car c'est bien plus rapide de comparer deux adresses que des String
+        // Mais si nécessaire on peut changer par les nom des carrefours.
+        if(     carrefour.equals(this.carrefourNord.getNom() )){return QueueNames.Nord;}
+        else if(carrefour.equals(this.carrefourSud.getNom()  )){return QueueNames.Sud ;}
+        else if(carrefour.equals(this.carrefourEst.getNom()  )){return QueueNames.Est ;}
+        else if(carrefour.equals(this.carrefourOuest.getNom())){return QueueNames.Ouest;}
+        else{
+            return QueueNames.Not_a_queue;
+            // TODO : log l'erreur
+        }
+    }
     public CarrefourNames getNom() {
         return nom;
     }
@@ -378,5 +368,17 @@ public class Carrefour extends SimEntity {
     }
     public Queue<Voiture> getQueueSud() {
         return queueSud;
+    }
+    public Voiture getBufferCarrefourNE() {
+        return bufferCarrefourNE;
+    }
+    public void setBufferCarrefourNE(Voiture bufferCarrefourNE) {
+        this.bufferCarrefourNE = bufferCarrefourNE;
+    }
+    public Voiture getBufferCarrefourSO() {
+        return bufferCarrefourSO;
+    }
+    public void setBufferCarrefourSO(Voiture bufferCarrefourSO) {
+        this.bufferCarrefourSO = bufferCarrefourSO;
     }
 }

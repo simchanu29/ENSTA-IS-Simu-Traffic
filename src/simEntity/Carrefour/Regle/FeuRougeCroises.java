@@ -24,6 +24,7 @@ public class FeuRougeCroises extends CarrefourRegle {
      * Duree du feu vert Nord-Sud en secondes
      */
     private int dureeFeuVertNS;
+
     private int dureeFeuRougeEO;
     private int dureeFeuVertEO;
 
@@ -39,23 +40,7 @@ public class FeuRougeCroises extends CarrefourRegle {
         this.dureeFeuVertEO = dureeFeuRougeNS;
 
         this.addEvent( new FeuRougeNS(getEngine().SimulationDate()) );
-        this.addEvent( new FeuRougeEO(getEngine().SimulationDate()) );
-    }
-
-    @Override
-    public boolean voiturePasse(Voiture voiture, Carrefour carrefour) {
-        QueueNames voitureQueue = carrefour.getQueueOfVoiture(voiture);
-
-        switch (voitureQueue.name()){
-            case "Nord":
-            case "Sud":
-                return !feuNSRouge;
-            case "Est":
-            case "Ouest":
-                return feuNSRouge;
-        }
-
-        return false;
+        this.addEvent( new FeuVertEO(getEngine().SimulationDate()) );
     }
 
     //Event
@@ -72,7 +57,8 @@ public class FeuRougeCroises extends CarrefourRegle {
 
         @Override
         public void process() {
-            FeuRougeCroises.this.feuNSRouge = true;
+            getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
+            getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
             FeuRougeCroises.this.addEvent( new FeuVertNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuRougeNS))) );
         }
     }
@@ -84,7 +70,8 @@ public class FeuRougeCroises extends CarrefourRegle {
 
         @Override
         public void process() {
-            FeuRougeCroises.this.feuNSRouge = false;
+            getAuthorizationEnterCarrefour().put(QueueNames.Nord,true);
+            getAuthorizationEnterCarrefour().put(QueueNames.Sud,true);
             FeuRougeCroises.this.addEvent( new FeuRougeNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertNS))) );
         }
     }
@@ -96,6 +83,8 @@ public class FeuRougeCroises extends CarrefourRegle {
 
         @Override
         public void process() {
+            getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
+            getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
             FeuRougeCroises.this.addEvent( new FeuRougeNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuRougeEO))) );
         }
     }
@@ -104,10 +93,12 @@ public class FeuRougeCroises extends CarrefourRegle {
         public FeuVertEO(LogicalDateTime scheduledDate) {
             super(scheduledDate);
         }
-
         @Override
         public void process() {
+            getAuthorizationEnterCarrefour().put(QueueNames.Est,true);
+            getAuthorizationEnterCarrefour().put(QueueNames.Ouest,true);
             FeuRougeCroises.this.addEvent( new FeuRougeNS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertEO))) );
+
         }
     }
 }

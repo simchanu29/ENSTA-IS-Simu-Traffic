@@ -17,7 +17,7 @@ public class Stop extends CarrefourRegle {
 
 	@Override
 
-    public boolean voiturePasse(Voiture voiture, Carrefour carrefour) {
+    public boolean voitureEntre(Voiture voiture, Carrefour carrefour) {
         return false;
     }
 }

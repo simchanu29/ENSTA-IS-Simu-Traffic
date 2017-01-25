@@ -1,8 +1,6 @@
 package simEntity.Voiture;
 
 
-import java.util.LinkedList;
-
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
@@ -119,14 +117,29 @@ public  class Voiture extends SimEntity implements IRecordable {
      * Cet evenement est declenche par le carrefour lorsqu'une voiture deviens la premiÃ¨re dans la queue sur une
      * des files du carrefour.
      */
-    public class FirstInQueue extends SimEvent {
-        public FirstInQueue(LogicalDateTime scheduledDate){
+    public class CheckPassage extends SimEvent {
+        public CheckPassage(LogicalDateTime scheduledDate){
             super(scheduledDate);
         }
         @Override
         public void process() {
             Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
-            boolean peutPasser = carrefourActuel.authorisationPassage(Voiture.this);
+            boolean peutPasser = carrefourActuel.autorisationPassageEntree(Voiture.this);
+
+            if(peutPasser){
+                addEvent(new CheckPrio(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
+            }
+        }
+    }
+
+    public class CheckPrio extends SimEvent{
+        public CheckPrio(LogicalDateTime scheduledDate) {
+            super(scheduledDate);
+        }
+        @Override
+        public void process(){
+            Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
+            boolean peutPasser = carrefourActuel.autorisationPassageSortie(Voiture.this);
 
             if(peutPasser){
                 addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
