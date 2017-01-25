@@ -42,6 +42,7 @@ public abstract class CarrefourRegle extends SimEntity{
      * @return
      */
     public boolean voitureEntre(Voiture voiture, Carrefour carrefour){
+    	
         QueueNames queue = carrefour.getQueueNameOfVoiture(voiture);
         return getAuthorizationEnterCarrefour().get(queue);
     };

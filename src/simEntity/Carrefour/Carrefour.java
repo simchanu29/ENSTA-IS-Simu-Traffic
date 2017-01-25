@@ -156,7 +156,7 @@ public class Carrefour extends SimEntity {
      *  - CheckPrio pour toutes les voitures dans les buffer si elles n'ont pas reagi suite a un precedent evenement
      */
     public void updateCarrefour(){
-    	System.out.println("(updateCarrefour)  "+ nom);
+    	//System.out.println("(updateCarrefour)  "+ nom);
 
     	//CheckPassage
         if( queueNord.peek()!=null && !queueNord.peek().isInsideCarrefour()){
@@ -270,13 +270,13 @@ public class Carrefour extends SimEntity {
     public void addToQueue(Voiture voiture){
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getPrevious());
         QueueNames queue = getQueueByCarrefour(lastCarr);
-        System.out.println("Add to queue : " + queue.name());
+        System.out.println("(AddToQueue)   " +voiture.getName()+"  added to queue : " + nom+"/"+queue.name());
         getQueueByName(queue).add(voiture);
     }
 
     public void rmFromQueue(Voiture voiture){
-        //System.out.println("(rmFromQueue)       "+this.getQueueOfVoiture(voiture).peek().getName()+"  will be removed from  "+ nom +"/"+this.getQueueNameOfVoiture(voiture));
-        this.listFirstInQueue.remove(voiture);     //supprime de la liste des voitures en 1ere place des files d'attente
+        System.out.println("(rmFromQueue)       "+this.getQueueOfVoiture(voiture).peek().getName()+"  will be removed from  "+ nom +"/"+this.getQueueNameOfVoiture(voiture));
+        //this.listFirstInQueue.remove(voiture);     //supprime de la liste des voitures en 1ere place des files d'attente
         this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente
     }
 
