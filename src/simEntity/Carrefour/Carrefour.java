@@ -46,9 +46,13 @@ public class Carrefour extends SimEntity {
      * Les queues sont vide à l'initialisation
      */
     private Queue<Voiture> queueSud;
+    private Route RouteSud;
     private Queue<Voiture> queueEst;
+    private Route RouteEst;
     private Queue<Voiture> queueNord;
+    private Route RouteNord;
     private Queue<Voiture> queueOuest;
+    private Route RouteOuest;
 
     MoreRandom random;
     private LinkedList<Integer> freqPopVoiture; // Faire une liste des frequences en fonction des heures
