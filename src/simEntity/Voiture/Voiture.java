@@ -1,6 +1,7 @@
 package simEntity.Voiture;
 
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 import enstabretagne.base.time.LogicalDateTime;
@@ -81,15 +82,13 @@ public  class Voiture extends SimEntity implements IRecordable {
 				System.out.println("(crossCarrefour)   Chemin de "+name+" :  "+chemin.toString());
 				//System.out.println("(crossCarrefour)   Previous : "+chemin.getPrevious()+ "          Next  : " +chemin.getNext());
 
-                if (chemin.getNext()!=chemin.getPrevious()){
+				//La voiture dÃ©clenche l'Ã©venemenement pour se deplacer au carrefour suivant.
+				addEvent(new GoTo(getEngine().SimulationDate()));
 
-                    //La voiture déclenche l'évenemenement pour se deplacer au carrefour suivant.
-					addEvent(new GoTo(getEngine().SimulationDate()));
+                //update carrefour qu'on vient de quitter (previous)
+                Carrefour prevCarr = quartier.getDicCarrefour().get(chemin.getPrevious());
+                prevCarr.updateCarrefour();
 
-					//update carrefour qu'on vient de quitter (previous)
-					Carrefour prevCarr = quartier.getDicCarrefour().get(chemin.getPrevious());
-                    prevCarr.updateCarrefour();
-				}
 			}
 		}
 
@@ -114,7 +113,7 @@ public  class Voiture extends SimEntity implements IRecordable {
             	addEvent(new ArriveToQueue(getEngine().SimulationDate().add(chemin.getTime2next())));
             }
             else{
-            	Logger.Information(name, "isArrived", "is arrived at" + chemin.getNext());
+            	addEvent(new IsArrived(getEngine().SimulationDate().add(chemin.getTime2next())));
             }
         }
     }
@@ -134,9 +133,6 @@ public  class Voiture extends SimEntity implements IRecordable {
             Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
             //System.out.println("origin :"+ Voiture.this.departure+ "  destination :"+Voiture.this.destination   +"  newtCarre  "+nextCarr.getNom());
             nextCarr.addToQueue(Voiture.this);
-            //Déclencher CheckCarrefour si la voiture est la 1ere dans sa file
-            //TODO : suppression
-            Queue<Voiture> myQueue=nextCarr.getQueueOfVoiture(Voiture.this);
 
             //UpdateCarrefour pour voir si c'est la 1ere dans la file et déclencher CheckPassage quand ça sera le cas
             nextCarr.updateCarrefour();
@@ -153,7 +149,6 @@ public  class Voiture extends SimEntity implements IRecordable {
     public class CheckPassage extends SimEvent {
         public CheckPassage(LogicalDateTime scheduledDate){
             super(scheduledDate);
-
         }
         @Override
         public void process() {
@@ -214,6 +209,22 @@ public  class Voiture extends SimEntity implements IRecordable {
                 System.out.println("[ERROR] checkPrio while outside or crossing carrefour");
             }
         }
+    }
+    /**
+     * EVENT
+     * La voiture est arrivée à sa destination finale.
+     * Event déclenché par GoTo si destination=chemin.getNext
+     * **/
+    public class IsArrived extends SimEvent {
+        public IsArrived(LogicalDateTime scheduledDate){
+            super(scheduledDate);
+        }
+        @Override
+        public void process() {
+        	Logger.Information(name, "isArrived", "is arrived at" + chemin.getNext());
+        	Voiture.this.terminate();
+        }
+
     }
 
     //=== OVERRIDE ===
@@ -285,7 +296,6 @@ public  class Voiture extends SimEntity implements IRecordable {
     public boolean isInsideCarrefour() {
         return insideCarrefour;
     }
-
     public void setInsideCarrefour(boolean insideCarrefour) {
         this.insideCarrefour = insideCarrefour;
     }
@@ -300,8 +310,4 @@ public  class Voiture extends SimEntity implements IRecordable {
         this.departure = departure;
     }
     public void setDestination(CarrefourNames destination) { this.destination = destination; }
-
-
-
-
 }
