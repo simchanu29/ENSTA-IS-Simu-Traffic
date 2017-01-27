@@ -156,48 +156,35 @@ public class Carrefour extends SimEntity {
      *  - CheckPrio pour toutes les voitures dans les buffer si elles n'ont pas reagi suite a un precedent evenement
      */
     public void updateCarrefour(){
-    	//System.out.println("(updateCarrefour)  "+ nom);
+    	System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+ nom);
 
     	//CheckPassage
         if( queueNord.peek()!=null && !queueNord.peek().isInsideCarrefour()){
-    			addEvent(queueNord.peek().new CheckPassage(getEngine().SimulationDate()));
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueNord.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            addEvent(queueNord.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
     	if(  queueSud.peek()!=null && !queueSud.peek().isInsideCarrefour()){
-    			addEvent(queueSud.peek().new CheckPassage(getEngine().SimulationDate()));
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueSud.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            addEvent(queueSud.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
     	if(queueOuest.peek()!=null && !queueOuest.peek().isInsideCarrefour()){
-    			addEvent(queueOuest.peek().new CheckPassage(getEngine().SimulationDate()));
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueOuest.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            addEvent(queueOuest.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
     	if(  queueEst.peek()!=null && !queueEst.peek().isInsideCarrefour()){
-    			addEvent(queueEst.peek().new CheckPassage(getEngine().SimulationDate()));
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueEst.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            addEvent(queueEst.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
 
     	//CheckPrio
     	if(bufferCarrefourNE!=null && bufferCarrefourNE.isInsideCarrefour()){
-                addEvent(bufferCarrefourNE.new CrossCarrefour(getEngine().SimulationDate()));
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+bufferCarrefourNE.getName()+" addEvent CheckPrio in "+this.nom);
+            addEvent(bufferCarrefourNE.new CheckPrio(getEngine().SimulationDate()));
         }
         if(bufferCarrefourSO!=null && bufferCarrefourSO.isInsideCarrefour()){
-                addEvent(bufferCarrefourSO.new CrossCarrefour(getEngine().SimulationDate()));
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+bufferCarrefourSO.getName()+" addEvent CheckPrio in "+this.nom);
+    	    addEvent(bufferCarrefourSO.new CheckPrio(getEngine().SimulationDate()));
         }
-
-//    	if(queueNord.peek()!=null && !this.listFirstInQueue.contains(queueNord.peek())){
-//    			this.listFirstInQueue.add(queueNord.peek());
-//    			addEvent(queueNord.peek().new CheckPassage(getEngine().SimulationDate()));
-//    	}
-//    	if(queueSud.peek()!=null && !this.listFirstInQueue.contains(queueSud.peek())){
-//    			this.listFirstInQueue.add(queueSud.peek());
-//    			addEvent(queueSud.peek().new CheckPassage(getEngine().SimulationDate()));
-//    	}
-//    	if(queueOuest.peek()!=null && !this.listFirstInQueue.contains(queueOuest.peek())){
-//    			this.listFirstInQueue.add(queueOuest.peek());
-//    			addEvent(queueOuest.peek().new CheckPassage(getEngine().SimulationDate()));
-//    	}
-//    	if(queueEst.peek()!=null && !this.listFirstInQueue.contains(queueEst.peek())){
-//    			this.listFirstInQueue.add(queueEst.peek());
-//    			addEvent(queueEst.peek().new CheckPassage(getEngine().SimulationDate()));
-//    	}
-
-    	//addEvent(prevCarr.new UpdateCarrefour(getEngine().SimulationDate()));
     }
 
     CarrefourNames calculDestination(CarrefourNames departure){
@@ -271,16 +258,15 @@ public class Carrefour extends SimEntity {
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getPrevious());
         QueueNames queue = getQueueByCarrefour(lastCarr);
 
-        System.out.println("(AddToQueue)   " +voiture.getName()+"  added to queue : " + nom+"/"+queue.name());
+        System.out.println("["+getEngine().SimulationDate()+"][INFO](AddToQueue) " +voiture.getName()+"  added to queue : " + this.nom+"/"+queue.name());
 
         getQueueByName(queue).add(voiture);
     }
 
     public void rmFromQueue(Voiture voiture){
 
-        System.out.println("(rmFromQueue)       "+this.getQueueOfVoiture(voiture).peek().getName()+"  will be removed from  "+ nom +"/"+this.getQueueNameOfVoiture(voiture));
-
-        //this.listFirstInQueue.remove(voiture);     //supprime de la liste des voitures en 1ere place des files d'attente
+        System.out.println("["+getEngine().SimulationDate()+"][INFO](rmFromQueue) "+voiture.getName()+" will be removed from "+ this.nom +"/"+this.getQueueNameOfVoiture(voiture));
+        Queue testtmp = this.getQueueOfVoiture(voiture);
         this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente
     }
 
@@ -354,7 +340,7 @@ public class Carrefour extends SimEntity {
             case Ouest:
                 return queueOuest;
             case Not_a_queue:
-                System.out.println("ERREUR : queue inconnue");
+                System.out.println("[ERREUR](getQueueByName) Queue inconnue");
                 //TODO : log error with logger
                 break;
         }
@@ -385,6 +371,7 @@ public class Carrefour extends SimEntity {
         }else if(queueSud.contains(voiture)){
             return QueueNames.Sud;
         }else{
+            System.out.println("[ERREUR](getQueueNameOfVoiture) Queue inconnue pour "+voiture.getName()+" dans "+this.nom);
             return QueueNames.Not_a_queue;
         }
     }
@@ -398,7 +385,7 @@ public class Carrefour extends SimEntity {
         }else if(queueSud.contains(voiture)){
             return queueSud;
         }else{
-        	System.err.println(voiture.getName()+" doesn't have a valid queue");
+            System.out.println("[ERREUR](getQueueOfVoiture) Queue inconnue pour "+voiture.getName()+" dans "+this.nom);
             return null;
         }
     }
