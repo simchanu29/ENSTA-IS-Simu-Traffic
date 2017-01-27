@@ -20,12 +20,12 @@ ___
     }
 ```
  - Attention methode soustract à créer dans la classe LogicalDuration dans simu_base_common:
- ```
-    public LogicalDuration soustract(LogicalDuration value) {
-		      if(logicalDuration==null || value.logicalDuration==null)
-			         return LogicalDuration.POSITIVE_INFINITY;
-		       return new LogicalDuration(logicalDuration.minus(value.logicalDuration));
-	   }
+``` 
+   public LogicalDuration soustract(LogicalDuration value) {
+	if(logicalDuration==null || value.logicalDuration==null)
+		return LogicalDuration.POSITIVE_INFINITY;
+	return new LogicalDuration(logicalDuration.minus(value.logicalDuration));
+   }
  ```
 ___  
 
