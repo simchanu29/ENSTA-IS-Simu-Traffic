@@ -174,10 +174,14 @@ public class Carrefour extends SimEntity {
 
     	//CheckPrio
     	if(bufferCarrefourNE!=null && bufferCarrefourNE.isInsideCarrefour()){
-                addEvent(bufferCarrefourNE.new CrossCarrefour(getEngine().SimulationDate()));
+    		    System.out.println("(carrefour) Add Event checkPrio  "+bufferCarrefourNE.getChemin().getNext()+" pour  "+bufferCarrefourNE.getName()+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate());
+                addEvent(bufferCarrefourNE.new CheckPrio(getEngine().SimulationDate()));
         }
         if(bufferCarrefourSO!=null && bufferCarrefourSO.isInsideCarrefour()){
-                addEvent(bufferCarrefourSO.new CrossCarrefour(getEngine().SimulationDate()));
+        	 	
+        		System.out.println("(carrefour) Add Event checkPrio  "+bufferCarrefourSO.getChemin().getNext()+" pour  "+bufferCarrefourSO.getName()+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate());
+                addEvent(bufferCarrefourSO.new CheckPrio(getEngine().SimulationDate()));
+                
         }
 
 //    	if(queueNord.peek()!=null && !this.listFirstInQueue.contains(queueNord.peek())){
