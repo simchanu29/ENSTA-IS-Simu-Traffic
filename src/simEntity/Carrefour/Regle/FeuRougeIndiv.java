@@ -18,11 +18,6 @@ public class FeuRougeIndiv extends CarrefourRegle{
     private int dureeFeuVertE;
     private int dureeFeuVertO;
 
-    private boolean feuVertN;
-    private boolean feuVertS;
-    private boolean feuVertE;
-    private boolean feuVertO;
-
     /**
      * Constructeur
      *
@@ -41,46 +36,28 @@ public class FeuRougeIndiv extends CarrefourRegle{
         this.addEvent( new FeuVertN(getEngine().SimulationDate()) );
     }
 
-    @Override
-    public boolean voiturePasse(Voiture voiture, Carrefour carrefour) {
-        QueueNames voitureQueue = carrefour.getQueueNameOfVoiture(voiture);
-
-        switch (voitureQueue){
-            case Nord:
-                return feuVertN;
-            case Sud:
-                return feuVertS;
-            case Est:
-                return feuVertE;
-            case Ouest:
-                return feuVertO;
-        }
-
-        return false;
-    }
-
     public void setFeuIndiv(QueueNames direction){
         switch (direction){
             case Nord:
-                this.feuVertN = true;
-                this.feuVertS = false;
-                this.feuVertE = false;
-                this.feuVertO = false;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,true);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
             case Sud:
-                this.feuVertN = false;
-                this.feuVertS = true;
-                this.feuVertE = false;
-                this.feuVertO = false;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,true);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
             case Est:
-                this.feuVertN = false;
-                this.feuVertS = false;
-                this.feuVertE = true;
-                this.feuVertO = false;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,true);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
             case Ouest:
-                this.feuVertN = false;
-                this.feuVertS = false;
-                this.feuVertE = false;
-                this.feuVertO = true;
+                getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
+                getAuthorizationEnterCarrefour().put(QueueNames.Ouest,true);
         }
     }
 
@@ -98,6 +75,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Sud);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
         }
@@ -110,6 +88,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Nord);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
         }
@@ -122,6 +101,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Est);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertE))) );
         }
@@ -134,6 +114,7 @@ public class FeuRougeIndiv extends CarrefourRegle{
 
         @Override
         public void process() {
+            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Ouest);
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertN(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertO))) );
         }

@@ -122,4 +122,13 @@ public class SimEngine implements ISimulationDateProvider, IEventObserver {
 	public LogicalDateTime SimulationDate() {
 		return currentTime;
 	}
+
+	public SortedList<ISimEvent> getEcheancier() {
+		return echeancier;
+	}
+
+	public void setEcheancier(SortedList<ISimEvent> echeancier) {
+		this.echeancier = echeancier;
+	}
+	
 }
