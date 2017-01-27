@@ -56,7 +56,6 @@ public class Carrefour extends SimEntity {
 
     MoreRandom random;
     private LinkedList<Integer> freqPopVoiture; // Faire une liste des frequences en fonction des heures
-    private LinkedList<Voiture> listFirstInQueue;
 
     private Voiture bufferCarrefourNE;
     private Voiture bufferCarrefourSO;
@@ -80,7 +79,6 @@ public class Carrefour extends SimEntity {
         queueNord=new LinkedList<Voiture>();
         queueOuest=new LinkedList<Voiture>();
         queueEst=new LinkedList<Voiture>();
-        listFirstInQueue=new LinkedList<Voiture>();
     }
 
     /**
@@ -112,7 +110,7 @@ public class Carrefour extends SimEntity {
     public void activate() {
         super.activate();
         LogicalDateTime e = getEngine().SimulationDate();
-        //Si le carrefour est un g�n�rateur (ie un des 7 premiers noms de l'�num�ration)
+        //Si le carrefour est un générateur (ie un des 7 premiers noms de l'énumération)
         if (CarrefourNames.valueOf(nom.toString()).ordinal()<7){
             addEvent(new NouvelleVoitureEvent(e));
         }
@@ -174,12 +172,12 @@ public class Carrefour extends SimEntity {
 
     	//CheckPrio
     	if(bufferCarrefourNE!=null && bufferCarrefourNE.isInsideCarrefour()){
-    		    System.out.println("(carrefour) Add Event checkPrio  "+bufferCarrefourNE.getChemin().getNext()+" pour  "+bufferCarrefourNE.getName()+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate());
+    		    //System.out.println("(carrefour) Add Event checkPrio  "+bufferCarrefourNE.getChemin().getNext()+" pour  "+bufferCarrefourNE.getName()+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate());
                 addEvent(bufferCarrefourNE.new CheckPrio(getEngine().SimulationDate()));
         }
         if(bufferCarrefourSO!=null && bufferCarrefourSO.isInsideCarrefour()){
         	 	
-        		System.out.println("(carrefour) Add Event checkPrio  "+bufferCarrefourSO.getChemin().getNext()+" pour  "+bufferCarrefourSO.getName()+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate());
+        		//System.out.println("(carrefour) Add Event checkPrio  "+bufferCarrefourSO.getChemin().getNext()+" pour  "+bufferCarrefourSO.getName()+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate());
                 addEvent(bufferCarrefourSO.new CheckPrio(getEngine().SimulationDate()));
                 
         }
@@ -275,14 +273,14 @@ public class Carrefour extends SimEntity {
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getPrevious());
         QueueNames queue = getQueueByCarrefour(lastCarr);
 
-        System.out.println("(AddToQueue)   " +voiture.getName()+"  added to queue : " + nom+"/"+queue.name());
+        //System.out.println("(AddToQueue)   " +voiture.getName()+"  added to queue : " + nom+"/"+queue.name());
 
         getQueueByName(queue).add(voiture);
     }
 
     public void rmFromQueue(Voiture voiture){
 
-        System.out.println("(rmFromQueue)       "+this.getQueueOfVoiture(voiture).peek().getName()+"  will be removed from  "+ nom +"/"+this.getQueueNameOfVoiture(voiture));
+        //System.out.println("(rmFromQueue)       "+this.getQueueOfVoiture(voiture).peek().getName()+"  will be removed from  "+ nom +"/"+this.getQueueNameOfVoiture(voiture));
 
         //this.listFirstInQueue.remove(voiture);     //supprime de la liste des voitures en 1ere place des files d'attente
         this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente
@@ -323,8 +321,11 @@ public class Carrefour extends SimEntity {
                 return bufferCarrefourNE;
             case Sud: case Ouest:
                 return bufferCarrefourSO;
+            default:
+                System.out.println("ERREUR : queue inconnue");
+                return null;  
         }
-        return null;
+        
     }
     public void setBufferFromQueue(Voiture voiture){
         //On utilise getQueueByVoiture car la voiture est forcément dans une queue
@@ -335,6 +336,9 @@ public class Carrefour extends SimEntity {
                 break;
             case Sud: case Ouest:
                 this.bufferCarrefourSO=voiture;
+                break;
+             default:
+                System.out.println("ERREUR : queue inconnue");
                 break;
         }
     }
@@ -347,7 +351,7 @@ public class Carrefour extends SimEntity {
         }
         return null;
     }
-    public Queue getQueueByName(QueueNames queue){
+    public Queue<Voiture> getQueueByName(QueueNames queue){
         switch (queue){
             case Nord:
                 return queueNord;
@@ -358,11 +362,15 @@ public class Carrefour extends SimEntity {
             case Ouest:
                 return queueOuest;
             case Not_a_queue:
+            	 System.out.println("ERREUR : not a queue");
+                 //TODO : log error with logger
+                 return null;
+            default:
                 System.out.println("ERREUR : queue inconnue");
                 //TODO : log error with logger
-                break;
+                return null;
         }
-        return null;
+        
     }
     public LogicalDateTime getNextTimeForVoiture() {
         int currentFreqPopVoiture=freqPopVoiture.get(0);

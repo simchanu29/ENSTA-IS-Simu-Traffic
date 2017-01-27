@@ -172,10 +172,10 @@ public  class Voiture extends SimEntity implements IRecordable {
 
                     //System.out.println("Add Event checkPrio  "+Voiture.this.chemin.getPrevious()+" pour  "+name+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1)));
                     addEvent(new CheckPrio(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
-               }
+                }
             }
             else{
-                System.out.println("[ERROR] checkPassage while inside carrefour");
+                System.out.println("[WARNING] checkPassage while inside carrefour");
             }
         }
     }
@@ -207,7 +207,7 @@ public  class Voiture extends SimEntity implements IRecordable {
                 }
             }
             else{
-                System.out.println("[ERROR] checkPrio while outside or crossing carrefour");
+                System.out.println("[WARNING] checkPrio while outside or crossing carrefour");
             }
         }
     }
