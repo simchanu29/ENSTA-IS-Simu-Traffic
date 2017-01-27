@@ -43,7 +43,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         this.insideRoute = false;
 
         this.chemin=new Path(departure,destination);
-        this.tempsOptimal=chemin.getTime2next();
+        this.tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
 
     }
 
@@ -113,11 +113,13 @@ public  class Voiture extends SimEntity implements IRecordable {
         @Override
         public void process() {
 //        	//Ajouter une voiture dans la route
-//            lastCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getLast());
-//            nextCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getNext());
-//            if (nextCar.getNom()==CarrefourNames.I1||nextCar.getNom()==CarrefourNames.I2 || nextCar.getNom()==CarrefourNames.I3|| nextCar.getNom()==CarrefourNames.I4){
-//            	CarrefourNames lcarn=lastCar.getNom();
-//            	nextCar.getRouteByQueueName(nextCar.getQueueByCarrefourName(lcarn)).ajouterVoiture(Voiture.this);}
+            lastCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getPrevious());
+            nextCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getNext());
+            if (nextCar.getNom()==CarrefourNames.I1||nextCar.getNom()==CarrefourNames.I2 || nextCar.getNom()==CarrefourNames.I3|| nextCar.getNom()==CarrefourNames.I4){
+            	CarrefourNames lcarn=lastCar.getNom();
+            	nextCar.AjouterVoitureRoute(Voiture.this, lcarn);
+            	}
+//            	
             
             Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
 
@@ -125,14 +127,19 @@ public  class Voiture extends SimEntity implements IRecordable {
             setInsideCarrefour(false);
 
             if(chemin.getNext()!=destination){
-                addEvent(new ArriveToQueue(getEngine().SimulationDate().add(chemin.getTime2next())));
+            	int offset=nextCar.VoitureSurRoute(lastCar.getNom());
+            	double t=chemin.getTime2next()*1000-360*offset;
+            	LogicalDuration TempsTrajet=LogicalDuration.ofMillis((long)t);
+                addEvent(new ArriveToQueue(getEngine().SimulationDate().add(TempsTrajet)));
             }
             else{
-                addEvent(new IsArrived(getEngine().SimulationDate().add(chemin.getTime2next())));
+                addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(chemin.getTime2next()))));
             }
 
         }
     }
+    
+    
 
     /**
      * EVENT
@@ -149,6 +156,7 @@ public  class Voiture extends SimEntity implements IRecordable {
             Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
             System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" /origin :"+ Voiture.this.departure+ " /destination :"+Voiture.this.destination +" /nextCarr : "+nextCarr.getNom());
             nextCarr.addToQueue(Voiture.this);
+            Logger.Information(name, "ArriveToQueue",name+ " arrive to "+ chemin.getPrevious());
 
             //UpdateCarrefour pour voir si c'est la 1ere dans la file et déclencher CheckPassage quand ça sera le cas
             nextCarr.updateCarrefour();
