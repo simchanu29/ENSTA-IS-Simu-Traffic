@@ -17,8 +17,9 @@ public class Path {
 	private CarrefourNames start;
 	private CarrefourNames end;
 	private LinkedList<CarrefourNames> path;
-	private CarrefourNames last;
+	private CarrefourNames previous;
 	private CarrefourNames next;
+	private CarrefourNames nextOfnext;
 	private int compteur;
 	
 	private LinkedList<Double> trajet;
@@ -32,52 +33,47 @@ public class Path {
 		int indexL=CarrefourNames.valueOf(start.toString()).ordinal()+1;
 		int indexD=CarrefourNames.valueOf(end.toString()).ordinal()+1;
 		this.path =viamichelin.chemin(indexL, indexD); ;
-		this.last = start;
+		this.previous = start;
 		this.next =path.get(1);
+
+		if(path.size()<3){this.nextOfnext = this.next;}
+		else{this.nextOfnext = path.get(2);}
+
 		this.trajet =viamichelin.temps();
 		this.compteur=1;
 		this.Time2next=LogicalDuration.ofSeconds(trajet.getFirst());
 	}
-	
-	
+
+    /**
+     * Les next et compagnies s'accumulent à la fin de la liste quand on arrive en fin de trajet
+     */
 	public void etape(){
 		if (this.end==this.next){
-			this.last=this.next;}
+		    //On ne change que previous
+			this.previous=this.next;
+
+		}
+		else if(this.end==this.nextOfnext){
+            //On ne change pas nextOfnext
+		    this.Time2next=LogicalDuration.ofSeconds(trajet.get(compteur));
+            compteur++;
+
+            this.previous=this.next;
+            this.next=this.path.get(compteur);
+
+        }
 		else{
+		    //On change tout
+
 			this.Time2next=LogicalDuration.ofSeconds(trajet.get(compteur));
 			compteur++;
-			this.last=this.next;
+
+			this.previous=this.next;
 			this.next=this.path.get(compteur);
+
+			this.nextOfnext = this.path.get(compteur+1);
 		}
 	}
-	
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -105,12 +101,12 @@ public class Path {
 		this.path = path;
 	}
 
-	public CarrefourNames getLast() {
-		return last;
+	public CarrefourNames getPrevious() {
+		return previous;
 	}
 
-	public void setLast(CarrefourNames last) {
-		this.last = last;
+	public void setLast(CarrefourNames previous) {
+		this.previous = previous;
 	}
 
 	public CarrefourNames getNext() {
@@ -140,7 +136,15 @@ public class Path {
 	public void setTrajet(LinkedList<Double> trajet) {
 		this.trajet = trajet;
 	}
-	
+
+    public CarrefourNames getNextOfnext() {
+        return nextOfnext;
+    }
+
+    @Override
+	public String toString() {
+		return "[" + path + "]";
+	}
 	
 	
 	

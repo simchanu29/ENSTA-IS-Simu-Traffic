@@ -1,5 +1,6 @@
 package simEntity.Carrefour.Regle;
 
+import enstabretagne.base.time.LogicalDuration;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Voiture.Voiture;
@@ -9,15 +10,17 @@ import simEntity.Voiture.Voiture;
  */
 public class Stop extends CarrefourRegle {
 
-    public Stop(SimEngine engine) {
+    /**
+     * Duree de l'arret recommandé au STOP
+     * Cette duree est en int pour rendre le constructeur moins long à l'ecriture
+     */
+    private int dureeArretStop;
 
+    public Stop(SimEngine engine, int dureeArretStop) {
 		super(engine);
-		// TODO Auto-generated constructor stub
+		this.dureeArretStop = dureeArretStop;
 	}
 
-	@Override
-
-    public boolean voitureEntre(Voiture voiture, Carrefour carrefour) {
-        return false;
-    }
+	//TODO : create events for STOP
+    //TODO : Quand une voiture arrive, elle s'arrête 2 sec et checke si il n'y a personne dans les files qui coupent son trajet. Si c'est bon elle traverse.
 }

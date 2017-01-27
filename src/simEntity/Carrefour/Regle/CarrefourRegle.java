@@ -42,7 +42,8 @@ public abstract class CarrefourRegle extends SimEntity{
      * @return
      */
     public boolean voitureEntre(Voiture voiture, Carrefour carrefour){
-        QueueNames queue = carrefour.getQueueOfVoiture(voiture);
+    	
+        QueueNames queue = carrefour.getQueueNameOfVoiture(voiture);
         return getAuthorizationEnterCarrefour().get(queue);
     };
 
@@ -57,14 +58,14 @@ public abstract class CarrefourRegle extends SimEntity{
      */
     public boolean voitureSort(Voiture voiture, Carrefour carrefour) {
         // Une voiture coupe une voie si elle tourne à gauche uniquement
-        CarrefourNames nomPrevious = voiture.getChemin().getLast();
-        CarrefourNames nomNext = voiture.getChemin().getNext();
-
+        CarrefourNames nomPrevious = voiture.getChemin().getPrevious();
+        CarrefourNames nomNext = voiture.getChemin().getNextOfnext();
         // On utilise pas la hashMap ici car ajouter le quartier en variable d'instance des feux rouges ne parait pas
         // cohérent
         QueueNames next = carrefour.getQueueByCarrefourName(nomNext);
         QueueNames prev = carrefour.getQueueByCarrefourName(nomPrevious);
 
+        // Normalement les next et les previous ne sont pas le carrefour courrant sauf si c'est le dernier.
         if(next.isLeftOf(prev)){
             //La voiture tourne a gauche, c'est la que les choses intéressantes commencent
 
@@ -87,6 +88,9 @@ public abstract class CarrefourRegle extends SimEntity{
         }
     }
 
+    public void triggerUpdate(){
+        carrefour.updateCarrefour();
+    }
 
     /* TMP
      * TODO : effacer ça quand il n'y en aura plus besoin.

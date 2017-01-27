@@ -38,6 +38,8 @@ public class Main {
 
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
+		
+		//Initialisation des fréquences de pop des carrefours
 		LinkedList<Integer> freqPopVoitureP1=createListeFreq(40,300,20,100,20);
 		LinkedList<Integer> freqPopVoitureP2=createListeFreq(50,200,30,150,30);
 		LinkedList<Integer> freqPopVoitureP3=createListeFreq(30,100,20,300,15);
@@ -51,7 +53,7 @@ public class Main {
         // initialisation quartier
         Quartier githubCity = new Quartier(engine, "githubCity");
 
-        // initialisation des carrefours (pour l'instant servent � rien)
+        // initialisation des carrefours
         Carrefour p1=new Carrefour(engine, githubCity, CarrefourNames.P1, freqPopVoitureP1);
         Carrefour p2=new Carrefour(engine, githubCity, CarrefourNames.P2, freqPopVoitureP2);
         Carrefour p3=new Carrefour(engine, githubCity, CarrefourNames.P3, freqPopVoitureP3);
@@ -91,7 +93,7 @@ public class Main {
 
         // initialisons une liste de carrefour qui sera le quartier.
 
-        // Mise en place d'une liste pour une iteration facile et une modularit� des carrefours
+        // Mise en place d'une liste pour une iteration facile et une modularité des carrefours
         List<Carrefour> listCarrefour = Arrays.asList(p1,p2,p3,p4,p5,p6,p7,i1,i2,i3,i4);
         // Mise en place de la table de hachage pour les carrefours
         HashMap<CarrefourNames,Carrefour> dicCarrefour = new HashMap<>();
