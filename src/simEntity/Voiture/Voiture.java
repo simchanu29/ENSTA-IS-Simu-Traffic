@@ -45,18 +45,23 @@ public  class Voiture extends SimEntity implements IRecordable {
     //=== EVENT ===
     // On considère que la voiture est toujours en transition.
 
+
+    /* Boucle pour une voiture
+     * NouvelleVoiture -> GoTO -> ArriveToQueue -> CheckPassage -> CheckPrio -> CrossCarrefour -> Goto -> ... -> CrossCarrefour -> isArrived
+     */
+
     /* TEMP TODO : erase this if not necessary
      * J'aime pas l'idée actuelle de la conception : a savoir que le goto chaine infiniement avec le isArrived
      * Il faudrait plutôt ça comme event :
      *  - ArriveToQueue
-     *      On arrive dans la file du carrefour, ne dÃ©clenche aucun Ã©venements.
+     *      On arrive dans la file du carrefour, ne déclenche aucun évenements.
      *  - CrossCarrefour
-     *      DÃ¨s que la voiture peut passer, cet evenement est déclenchéé. Utilise le isArrived déjà  configuré.
-     *      La voiture peut passer dès qu'on lui dit que c'est ok. Il faut que le check se fasse dÃ¨s que la voiture
+     *      Dès que la voiture peut passer, cet evenement est déclenché. Utilise le isArrived déjà  configuré.
+     *      La voiture peut passer dès qu'on lui dit que c'est ok. Il faut que le check se fasse dès que la voiture
      *      arrive en 1ère position, dès qu'une voiture passe
      *
      *      DONC il faut un evenement déclenché par le carrefour : firstInQueue
-     *           il faut un evenement du carrefour : voitureCrossing qui dÃ©clenche les Ã©venements des voiture*/
+     *           il faut un evenement du carrefour : voitureCrossing qui déclenche les évenements des voitures*/
 
     /**
      * EVENT
@@ -72,13 +77,13 @@ public  class Voiture extends SimEntity implements IRecordable {
 				Logger.Information(name, "crossCarrefour",name+ " is crossing " + chemin.getNext());
 
 				// On avance d'une etape. Le next qui est celui auquel on est arrivé. L'avancement d'étape le
-                // transforme en last.
+                // transforme en previous.
 				chemin.etape();
 
 				System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Chemin de "+name+" : "+chemin.toString());
 				System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Previous : "+chemin.getPrevious()+ " Next  : " +chemin.getNext());
 
-				//La voiture dÃ©clenche l'Ã©venemenement pour se deplacer au carrefour suivant.
+				//La voiture declenche l'evenemenement pour se deplacer au carrefour suivant.
 				addEvent(new GoTo(getEngine().SimulationDate()));
 
                 //update carrefour qu'on vient de quitter (previous)
@@ -91,7 +96,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     /**
      * EVENT
      * Le GoTo déclenche le ArriveToQueue
-     * C'est le deplacement de la voiture jusqu'à  la queue suivante.
+     * C'est le déplacement de la voiture jusqu'à  la queue suivante.
      * Déclenché par CrossCarrefour
      */
     public class GoTo extends SimEvent {
@@ -139,7 +144,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      * EVENT
      * La voiture est la premiere dans la queue.
      * On declenche donc la verification si on peut passer.
-     * Cet evenement est declenche par le carrefour lorsqu'une voiture deviens la première dans la queue sur une
+     * Cet evenement est declenche par le carrefour (updateCarrefour) lorsqu'une voiture devient la première dans la queue sur une
      * des files du carrefour.
      */
     public class CheckPassage extends SimEvent {
@@ -167,9 +172,9 @@ public  class Voiture extends SimEntity implements IRecordable {
                     //dequeue voiture de la file du carrefour qu'on vient de quitter
                     carrefourActuel.rmFromQueue(Voiture.this);
 
+                    //System.out.println("Add Event checkPrio  "+Voiture.this.chemin.getPrevious()+" pour  "+name+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1)));
                     addEvent(new CheckPrio(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
-                    //Logger.Information(this, "checkPassage", name +" ok pass in 1s");
-                }
+               }
             }
             else{
                 System.out.println("["+getEngine().SimulationDate()+"][ERROR] checkPassage while inside carrefour");
@@ -179,6 +184,7 @@ public  class Voiture extends SimEntity implements IRecordable {
 
     /**
      * EVENT
+     * Déclenché par le carrefour si au milieur du carrefour
      * Une fois que la voiture attend au milieu du carrefour elle verifie si elle peut passer sans griller la priorité
      */
     public class CheckPrio extends SimEvent{
@@ -199,7 +205,7 @@ public  class Voiture extends SimEntity implements IRecordable {
 
                     //On enlève la voiture du buffer
                     carrefourActuel.setBufferOfVoiture(Voiture.this, null);
-
+                    //System.out.println("Add Event crossCarrefour  "+Voiture.this.chemin.getNext()+" pour  "+name+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1)));
                     addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
                 }
             }
@@ -220,7 +226,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         }
         @Override
         public void process() {
-        	Logger.Information(name, "isArrived", "is arrived at" + chemin.getNext());
+        	Logger.Information(name, "isArrived", "is arrived at " + chemin.getNext());
         	Voiture.this.terminate();
         }
 
