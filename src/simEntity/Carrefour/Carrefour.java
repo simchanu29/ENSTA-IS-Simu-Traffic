@@ -220,6 +220,7 @@ public class Carrefour extends SimEntity {
         QueueNames queue = getQueueByCarrefour(lastCarr);
         System.out.println("QueueNames  : " + queue.name());
         getQueueByName(queue).add(voiture);
+//        getRouteByQueueName(queue).retirerVoiture();
     }
 
     //=== EVENT ===
@@ -287,6 +288,23 @@ public class Carrefour extends SimEntity {
         }
         return null;
     }
+    public Route getRouteByQueueName(QueueNames queue){
+        switch (queue){
+            case Nord:
+                return RouteNord;
+            case Sud:
+                return RouteSud;
+            case Est:
+                return RouteEst;
+            case Ouest:
+                return RouteOuest;
+            case Not_a_queue:
+                System.out.println("ERREUR : queue inconnue");
+                //TODO : log error with logger
+                break;
+        }
+        return null;
+    }
     public LogicalDateTime getNextTimeForVoiture() {
         int currentFreqPopVoiture=freqPopVoiture.get(0);
         int simHour=getEngine().SimulationDate().getHour();
@@ -330,15 +348,16 @@ public class Carrefour extends SimEntity {
     public QueueNames getQueueByCarrefourName(CarrefourNames carrefour){
         // J'utilise la compraison par carrefour car c'est bien plus rapide de comparer deux adresses que des String
         // Mais si nécessaire on peut changer par les nom des carrefours.
-        if(     carrefour.equals(this.carrefourNord.getNom() )){return QueueNames.Nord;}
-        else if(carrefour.equals(this.carrefourSud.getNom()  )){return QueueNames.Sud ;}
-        else if(carrefour.equals(this.carrefourEst.getNom()  )){return QueueNames.Est ;}
-        else if(carrefour.equals(this.carrefourOuest.getNom())){return QueueNames.Ouest;}
+        if(     this.carrefourNord!=null && carrefour.equals(this.carrefourNord.getNom() )){return QueueNames.Nord;}
+        else if(this.carrefourSud!=null && carrefour.equals(this.carrefourSud.getNom() )){return QueueNames.Sud ;}
+        else if(this.carrefourEst!=null && carrefour.equals(this.carrefourEst.getNom()  )){return QueueNames.Est ;}
+        else if(this.carrefourOuest!=null && carrefour.equals(this.carrefourOuest.getNom())){return QueueNames.Ouest;}
         else{
             return QueueNames.Not_a_queue;
             // TODO : log l'erreur
         }
     }
+    
     public CarrefourNames getNom() {
         return nom;
     }
@@ -385,4 +404,37 @@ public class Carrefour extends SimEntity {
     public void setBufferCarrefourSO(Voiture bufferCarrefourSO) {
         this.bufferCarrefourSO = bufferCarrefourSO;
     }
+
+	public Route getRouteSud() {
+		return RouteSud;
+	}
+
+	public void setRouteSud(Route routeSud) {
+		RouteSud = routeSud;
+	}
+
+	public Route getRouteEst() {
+		return RouteEst;
+	}
+
+	public void setRouteEst(Route routeEst) {
+		RouteEst = routeEst;
+	}
+
+	public Route getRouteNord() {
+		return RouteNord;
+	}
+
+	public void setRouteNord(Route routeNord) {
+		RouteNord = routeNord;
+	}
+
+	public Route getRouteOuest() {
+		return RouteOuest;
+	}
+
+	public void setRouteOuest(Route routeOuest) {
+		RouteOuest = routeOuest;
+	}
+    
 }

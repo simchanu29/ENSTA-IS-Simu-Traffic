@@ -10,7 +10,11 @@ import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
+import simEntity.Carrefour.Route;
 import simEntity.Quartier.Quartier;
+import java.util.Queue;
+import simEntity.Carrefour.QueueNames;
+
 
 public  class Voiture extends SimEntity implements IRecordable {
 
@@ -20,6 +24,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     private CarrefourNames destination;
     private Path chemin;
     private LogicalDuration tempsOptimal;
+    private Carrefour target;
 
     public Voiture(SimEngine engine, String name, Quartier quartier, CarrefourNames departure, CarrefourNames destination) {
 
@@ -81,14 +86,23 @@ public  class Voiture extends SimEntity implements IRecordable {
      * DÃ©clenchÃ© par CrossCarrefour
      */
     public class GoTo extends SimEvent {
-
+    	public Carrefour lastCar;
+    	public Carrefour nextCar;
         public GoTo(LogicalDateTime scheduledDate){
             super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
+//        	//Ajouter une voiture dans la route
+//            lastCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getLast());
+//            nextCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getNext());
+//            if (nextCar.getNom()==CarrefourNames.I1||nextCar.getNom()==CarrefourNames.I2 || nextCar.getNom()==CarrefourNames.I3|| nextCar.getNom()==CarrefourNames.I4){
+//            	CarrefourNames lcarn=lastCar.getNom();
+//            	nextCar.getRouteByQueueName(nextCar.getQueueByCarrefourName(lcarn)).ajouterVoiture(Voiture.this);}
+            
             Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
             addEvent(new ArriveToQueue(getEngine().SimulationDate().add(chemin.getTime2next())));
+            
         }
     }
 
@@ -120,7 +134,7 @@ public  class Voiture extends SimEntity implements IRecordable {
 
     public class CheckPassage extends SimEvent {
         public CheckPassage(LogicalDateTime scheduledDate){
-            super(scheduledDate);
+            super(scheduledDate,Voiture.this);
 
         }
         @Override
