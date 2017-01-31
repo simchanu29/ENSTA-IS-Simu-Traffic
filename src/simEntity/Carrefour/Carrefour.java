@@ -12,8 +12,8 @@ import java.util.Queue;
 import enstabretagne.base.math.MoreRandom;
 import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
-
 import fr.ensta.lerouxlu.simu.SimEvent;
 
 
@@ -22,7 +22,7 @@ import fr.ensta.lerouxlu.simu.SimEvent;
  *
  * TODO : initialize et compagnie (les fonctions de simEntity)
  */
-public class Carrefour extends SimEntity {
+public class Carrefour extends SimEntity implements IRecordable {
 
     private CarrefourNames nom;
     private CarrefourRegle regle;
@@ -117,9 +117,14 @@ public class Carrefour extends SimEntity {
     public void activate() {
         super.activate();
         LogicalDateTime e = getEngine().SimulationDate();
-        //Si le carrefour est un g�n�rateur (ie un des 7 premiers noms de l'�num�ration)
+        //Si le carrefour est un générateur (ie un des 7 premiers noms de l'énumération)
         if (CarrefourNames.valueOf(nom.toString()).ordinal()<7){
             addEvent(new NouvelleVoitureEvent(e));
+        }
+        //Sinon c'est une intersection on initialise l'observation de ses files d'attente
+        else{
+        	addEvent(new ObservationTailleFilesAttente(getEngine().SimulationDate().add(LogicalDuration.ofMinutes(5))));
+    		
         }
     }
 
@@ -311,6 +316,18 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 			v.activate();
 			getEngine().addVoiture(1);
 		}
+	}
+    
+    class ObservationTailleFilesAttente extends SimEvent{
+    	public ObservationTailleFilesAttente(LogicalDateTime scheduledDate) {
+			super(scheduledDate);
+		}
+		@Override
+		public void process() {			
+			Logger.Data(Carrefour.this);
+			addEvent(new ObservationTailleFilesAttente(getEngine().SimulationDate().add(LogicalDuration.ofMinutes(5))));
+		}
+		
 	}
 
 	//=== GETTER AND SETTERS ===
@@ -528,6 +545,30 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 
 	public void setRouteOuest(Route routeOuest) {
 		RouteOuest = routeOuest;
+	}
+
+	@Override
+	public String[] getTitles() {
+		// TODO Auto-generated method stub
+		String[] titles= new String[]{"CarrefourID", "QueueNord", "QueueSud","QueueEst","QueueOuest"};
+		return titles;
+	}
+
+	@Override
+	public String[] getRecords() {
+		// TODO Auto-generated method stub
+		String[] records= new String[]{this.nom.toString(), "none", "none","none","none"};;
+		if (this.carrefourNord !=null) records[1]=String.valueOf(this.queueNord.size());
+		if (this.carrefourSud !=null) records[2]=String.valueOf(this.queueSud.size());
+		if (this.carrefourEst !=null) records[3]=String.valueOf(this.queueEst.size());
+		if (this.carrefourOuest !=null) records[4]=String.valueOf(this.queueOuest.size());
+		return records;
+	}
+
+	@Override
+	public String getClassement() {
+		// TODO Auto-generated method stub
+		return "Carrefour";
 	}
     
 }
