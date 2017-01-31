@@ -26,8 +26,8 @@ public  class Voiture extends SimEntity implements IRecordable {
     private Path chemin;
     private LogicalDuration tempsOptimal;
     private Carrefour target;
-    private LogicalDuration dureeAttente;
-    private LogicalDateTime dateCrossPreviousCarrefour;
+    //private LogicalDuration dureeAttente;
+    //private LogicalDateTime dateCrossPreviousCarrefour;
 
     /**
      * Si la voiture est pas "dans un carrefour"
@@ -48,11 +48,9 @@ public  class Voiture extends SimEntity implements IRecordable {
 
         this.chemin=new Path(departure,destination);
 
-        this.dureeAttente = LogicalDuration.ZERO;
+        //this.dureeAttente = LogicalDuration.ZERO;
 
         this.tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
-
-
     }
 
     //=== EVENT ===
@@ -90,15 +88,15 @@ public  class Voiture extends SimEntity implements IRecordable {
 				Logger.Information(name, "crossCarrefour",name+ " is crossing " + chemin.getNext());
 
 				// Calcul temps attente
-				LogicalDuration dureeTrajet=getEngine().SimulationDate().soustract(dateCrossPreviousCarrefour);
-				LogicalDuration dureeAttente=dureeTrajet.soustract(tempsOptimal);
-				dureeAttente.add(dureeAttente);
+				//LogicalDuration dureeTrajet=getEngine().SimulationDate().soustract(dateCrossPreviousCarrefour);
+				//LogicalDuration dureeAttente=dureeTrajet.soustract(tempsOptimal);
+				//dureeAttente.add(dureeAttente);
 				// On avance d'une etape. Le next qui est celui auquel on est arrivé. L'avancement d'étape le
                 // transforme en previous.
 				chemin.etape();
 
 				System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Chemin de "+name+" : "+chemin.toString());
-				System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Previous : "+chemin.getPrevious()+ " Next  : " +chemin.getNext());
+				System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Previous : "+chemin.getPrevious()+ "     Next  : " +chemin.getNext());
 
 				//La voiture declenche l'evenemenement pour se deplacer au carrefour suivant.
 				addEvent(new GoTo(getEngine().SimulationDate()));
