@@ -80,6 +80,11 @@ public class Carrefour extends SimEntity {
         queueNord=new LinkedList<Voiture>();
         queueOuest=new LinkedList<Voiture>();
         queueEst=new LinkedList<Voiture>();
+        RouteSud=new Route();
+        RouteNord=new Route();
+        RouteEst=new Route();
+        RouteOuest=new Route();
+        
         listFirstInQueue=new LinkedList<Voiture>();
     }
 
@@ -261,7 +266,7 @@ public class Carrefour extends SimEntity {
         System.out.println("["+getEngine().SimulationDate()+"][INFO](AddToQueue) " +voiture.getName()+"  added to queue : " + this.nom+"/"+queue.name());
 
         getQueueByName(queue).add(voiture);
-//        getRouteByQueueName(queue).retirerVoiture();
+        getRouteByQueueName(queue).retirerVoiture();
     }
 
     public void rmFromQueue(Voiture voiture){
@@ -270,6 +275,18 @@ public class Carrefour extends SimEntity {
         Queue testtmp = this.getQueueOfVoiture(voiture);
         this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente
     }
+    
+    
+    
+public void AjouterVoitureRoute (Voiture v,CarrefourNames lcarn){
+	
+	getRouteByQueueName(this.getQueueByCarrefourName(lcarn)).ajouterVoiture(v);
+}
+public int VoitureSurRoute(CarrefourNames lcarn){
+	int nb=getQueueByName(this.getQueueByCarrefourName(lcarn)).size();
+	nb+=getRouteByQueueName(this.getQueueByCarrefourName(lcarn)).getNbVoiture();
+	return nb;
+}
 
     //=== EVENT ===
 
