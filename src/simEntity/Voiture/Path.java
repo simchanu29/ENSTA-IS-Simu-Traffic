@@ -45,7 +45,7 @@ public class Path {
 	}
 
     /**
-     * Les next et compagnies s'accumulent à la fin de la liste quand on arrive en fin de trajet
+     * Les next et compagnie s'accumulent à la fin de la liste quand on arrive en fin de trajet
      */
 	public void etape(){
 		if (this.end==this.next){
