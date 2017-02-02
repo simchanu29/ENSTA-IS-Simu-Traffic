@@ -34,7 +34,7 @@ public class Main {
 		LogicalDateTime begin = LogicalDateTime.Zero;
 
 
-		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(1));
+		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(24));
 
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
@@ -51,7 +51,7 @@ public class Main {
 		//=== INIT SIM OBJECTS ===
 
         // initialisation quartier
-        Quartier githubCity = new Quartier(engine, "githubCity");
+        Quartier  githubCity = new Quartier(engine, "githubCity");
 
         // initialisation des carrefours
         Carrefour p1=new Carrefour(engine, githubCity, CarrefourNames.P1, freqPopVoitureP1);
