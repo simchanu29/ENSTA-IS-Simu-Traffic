@@ -27,6 +27,8 @@ public class Route {
 	
 	
 	public Route(){
+		ListVoiture=new LinkedList<Voiture>();
+		this.nbVoiture=0;
 		
 	}
 	public void ajouterVoiture (Voiture car){
@@ -53,6 +55,19 @@ public class Route {
 			
 		}
 	}
+	public LinkedList<Voiture> getListVoiture() {
+		return ListVoiture;
+	}
+	public void setListVoiture(LinkedList<Voiture> listVoiture) {
+		ListVoiture = listVoiture;
+	}
+	public int getNbVoiture() {
+		return nbVoiture;
+	}
+	public void setNbVoiture(int nbVoiture) {
+		this.nbVoiture = nbVoiture;
+	}
+	
 	
 
 }

@@ -23,7 +23,7 @@ public class Path {
 	private int compteur;
 	
 	private LinkedList<Double> trajet;
-	private LogicalDuration Time2next;
+	private Double Time2next;
 
 	public Path(CarrefourNames start, CarrefourNames end) {
 		super();
@@ -41,7 +41,7 @@ public class Path {
 
 		this.trajet =viamichelin.temps();
 		this.compteur=1;
-		this.Time2next=LogicalDuration.ofSeconds(trajet.getFirst());
+		this.Time2next=trajet.getFirst();
 	}
 
     /**
@@ -55,7 +55,7 @@ public class Path {
 		}
 		else if(this.end==this.nextOfnext){
             //On ne change pas nextOfnext
-		    this.Time2next=LogicalDuration.ofSeconds(trajet.get(compteur));
+		    this.Time2next=(trajet.get(compteur));
             compteur++;
 
             this.previous=this.next;
@@ -65,7 +65,7 @@ public class Path {
 		else{
 		    //On change tout
 
-			this.Time2next=LogicalDuration.ofSeconds(trajet.get(compteur));
+			this.Time2next=(trajet.get(compteur));
 			compteur++;
 
 			this.previous=this.next;
@@ -118,12 +118,12 @@ public class Path {
 	}
 
 
-	public LogicalDuration getTime2next() {
+	public Double getTime2next() {
 		return Time2next;
 	}
 
 
-	public void setTime2next(LogicalDuration time2next) {
+	public void setTime2next(Double time2next) {
 		Time2next = time2next;
 	}
 

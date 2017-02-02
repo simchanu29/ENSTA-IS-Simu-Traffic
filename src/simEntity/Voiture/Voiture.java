@@ -9,9 +9,13 @@ import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
+import simEntity.Carrefour.Route;
 import simEntity.Quartier.Quartier;
 
+import java.util.LinkedList;
 import java.util.Queue;
+import simEntity.Carrefour.QueueNames;
+
 
 public  class Voiture extends SimEntity implements IRecordable {
 
@@ -21,6 +25,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     private CarrefourNames destination;
     private Path chemin;
     private LogicalDuration tempsOptimal;
+    private Carrefour target;
 
     /**
      * Si la voiture est pas "dans un carrefour"
@@ -46,8 +51,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         this.insideRoute = false;
 
         this.chemin=new Path(departure,destination);
-        this.tempsOptimal=chemin.getTime2next();
-
+        this.tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
     }
 
     //=== EVENT ===
@@ -108,21 +112,35 @@ public  class Voiture extends SimEntity implements IRecordable {
      * Déclenché par CrossCarrefour
      */
     public class GoTo extends SimEvent {
-
+    	public Carrefour lastCar;
+    	public Carrefour nextCar;
         public GoTo(LogicalDateTime scheduledDate){
             super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
+//        	//Ajouter une voiture dans la route
+            lastCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getPrevious());
+            nextCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getNext());
+            if (nextCar.getNom()==CarrefourNames.I1||nextCar.getNom()==CarrefourNames.I2 || nextCar.getNom()==CarrefourNames.I3|| nextCar.getNom()==CarrefourNames.I4){
+            	CarrefourNames lcarn=lastCar.getNom();
+            	nextCar.AjouterVoitureRoute(Voiture.this, lcarn);
+            	}
+//
+
             Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
+
             setInsideRoute(true);
             setInsideCarrefour(false);
 
             if(chemin.getNext()!=destination){
-                addEvent(new ArriveToQueue(getEngine().SimulationDate().add(chemin.getTime2next())));
+            	int offset=nextCar.VoitureSurRoute(lastCar.getNom());
+            	double t=chemin.getTime2next()*1000-360*offset;
+            	LogicalDuration TempsTrajet=LogicalDuration.ofMillis((long)t);
+                addEvent(new ArriveToQueue(getEngine().SimulationDate().add(TempsTrajet)));
             }
             else{
-                addEvent(new IsArrived(getEngine().SimulationDate().add(chemin.getTime2next())));
+                addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(chemin.getTime2next()))));
             }
         }
     }
@@ -157,7 +175,7 @@ public  class Voiture extends SimEntity implements IRecordable {
      */
     public class CheckPassage extends SimEvent {
         public CheckPassage(LogicalDateTime scheduledDate){
-            super(scheduledDate);
+            super(scheduledDate,Voiture.this);
         }
         @Override
         public void process() {
@@ -318,6 +336,7 @@ public  class Voiture extends SimEntity implements IRecordable {
     public void setInsideRoute(boolean insideRoute) {
         this.insideRoute = insideRoute;
     }
+
     public boolean isInsideRoute() {
         return insideRoute;
     }
