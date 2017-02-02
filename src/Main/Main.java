@@ -54,7 +54,7 @@ public class Main {
 		//=== INIT SIM OBJECTS ===
 
         // initialisation quartier
-        Quartier githubCity = new Quartier(engine, "githubCity");
+        Quartier  githubCity = new Quartier(engine, "githubCity");
 
         // initialisation des carrefours
         Carrefour p1=new Carrefour(engine, githubCity, CarrefourNames.P1, freqPopVoitureP1);
@@ -74,6 +74,13 @@ public class Main {
         stopHPI2.put(QueueNames.Nord,false); stopHPI2.put(QueueNames.Sud,true);
         stopHPI2.put(QueueNames.Ouest,false); stopHPI2.put(QueueNames.Est,false);
         Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new Stop(engine,3,stopHPI2));
+        
+        HashMap<QueueNames,Boolean> stopHPI4 = new HashMap<>();
+        stopHPI4.put(QueueNames.Nord,true); stopHPI4.put(QueueNames.Sud,true);
+        stopHPI4.put(QueueNames.Ouest,false); stopHPI4.put(QueueNames.Est,false);
+        Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new Stop(engine,3,stopHPI4));
+        
+
 
 
 //        HashMap<QueueNames,Boolean> stopHPI3 = new HashMap<>();
@@ -86,6 +93,7 @@ public class Main {
         stopHPI4.put(QueueNames.Nord,true); stopHPI4.put(QueueNames.Sud,true);
         stopHPI4.put(QueueNames.Ouest,false); stopHPI4.put(QueueNames.Est,false);
         Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new Stop(engine,3,stopHPI4));
+
 
         // relier les carrefours entre eux
         p1.setCarrefourEst(i1);
