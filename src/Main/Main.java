@@ -13,8 +13,10 @@ import enstabretagne.simulation.core.ISimulationDateProvider;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
+import simEntity.Carrefour.QueueNames;
 import simEntity.Carrefour.Regle.CarrefourRegle;
 import simEntity.Carrefour.Regle.FeuRougeCroises;
+import simEntity.Carrefour.Regle.Stop;
 import simEntity.Quartier.Quartier;
 
 public class Main {
@@ -34,7 +36,7 @@ public class Main {
 		LogicalDateTime begin = LogicalDateTime.Zero;
 
 
-		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(1));
+		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(24));
 
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
@@ -61,8 +63,19 @@ public class Main {
         Carrefour p5=new Carrefour(engine, githubCity, CarrefourNames.P5, freqPopVoitureP5);
         Carrefour p6=new Carrefour(engine, githubCity, CarrefourNames.P6, freqPopVoitureP6);
         Carrefour p7=new Carrefour(engine, githubCity, CarrefourNames.P7, freqPopVoitureP7);
-        Carrefour i1=new Carrefour(engine, githubCity, CarrefourNames.I1, new FeuRougeCroises(engine,30,30));
-        Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new FeuRougeCroises(engine,30,30));
+
+        HashMap<QueueNames,Boolean> stopHPI1 = new HashMap<>();
+        stopHPI1.put(QueueNames.Nord,true); stopHPI1.put(QueueNames.Sud,false);
+        stopHPI1.put(QueueNames.Ouest,false); stopHPI1.put(QueueNames.Est,false);
+        Carrefour i1=new Carrefour(engine, githubCity, CarrefourNames.I1, new Stop(engine,3,stopHPI1));
+
+        HashMap<QueueNames,Boolean> stopHPI2 = new HashMap<>();
+        stopHPI2.put(QueueNames.Nord,false); stopHPI2.put(QueueNames.Sud,true);
+        stopHPI2.put(QueueNames.Ouest,false); stopHPI2.put(QueueNames.Est,false);
+        Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new Stop(engine,3,stopHPI2));
+
+//        Carrefour i1=new Carrefour(engine, githubCity, CarrefourNames.I1, new FeuRougeCroises(engine,30,30));
+//        Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new FeuRougeCroises(engine,30,30));
         Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeCroises(engine,30,30));
         Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new FeuRougeCroises(engine,30,30));
 
@@ -87,9 +100,6 @@ public class Main {
         i4.setCarrefourEst(i3);
         i4.setCarrefourNord(p6);
         i4.setCarrefourSud(i1);
-
-
-
 
         // initialisons une liste de carrefour qui sera le quartier.
 

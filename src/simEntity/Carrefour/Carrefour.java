@@ -414,6 +414,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
         return possibleVoitureArrival;
     }
     public QueueNames getQueueNameOfVoiture(Voiture voiture){
+
         if(queueEst.contains(voiture)){
             return QueueNames.Est;
         }else if(queueNord.contains(voiture)){
