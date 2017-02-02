@@ -17,17 +17,9 @@ public enum QueueNames {
     private String name;
     private int num;
 
-    private QueueNames leftQueue;
-    private QueueNames rightQueue;
-    private QueueNames frontQueue;
-
     private QueueNames(String name,int num){
         this.name=name;
         this.num=num;
-
-        this.leftQueue = getQueueNameByNum(Math.floorMod(num+1,4));
-        this.rightQueue = getQueueNameByNum(Math.floorMod(num-1,4));
-        this.frontQueue = getQueueNameByNum(Math.floorMod(num+2,4));
     }
 
     public boolean isLeftOf(QueueNames dir){
@@ -45,7 +37,7 @@ public enum QueueNames {
     public int getNum() {
         return num;
     }
-    private QueueNames getQueueNameByNum(int num){
+    public QueueNames getQueueNameByNum(int num){
         switch (num){
             case 0:
                 return Nord;
@@ -59,12 +51,12 @@ public enum QueueNames {
         return Not_a_queue;
     }
     public QueueNames getLeftQueue() {
-        return leftQueue;
+        return getQueueNameByNum(Math.floorMod(num+1,4));
     }
     public QueueNames getRightQueue() {
-        return rightQueue;
+        return getQueueNameByNum(Math.floorMod(num-1,4));
     }
     public QueueNames getFrontQueue() {
-        return frontQueue;
+        return getQueueNameByNum(Math.floorMod(num+2,4));
     }
 }

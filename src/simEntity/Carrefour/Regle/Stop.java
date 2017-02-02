@@ -26,7 +26,9 @@ public class Stop extends CarrefourRegle {
 		this.dureeArretStop = dureeArretStop;
 
         for (QueueNames queueNames:QueueNames.values()) {
-            getAuthorizationEnterCarrefour().put(queueNames, !tabStopExist.get(queueNames));
+            if(queueNames!=QueueNames.Not_a_queue){
+                getAuthorizationEnterCarrefour().put(queueNames, !tabStopExist.get(queueNames));
+            }
         }
     }
 
@@ -40,8 +42,8 @@ public class Stop extends CarrefourRegle {
      */
     @Override
     public boolean voitureSort(Voiture voiture, Carrefour carrefour) {
-        QueueNames queueNameOfVoiture = carrefour.getQueueNameOfVoiture(voiture);
-        if(tabStopExist.get(queueNameOfVoiture)){
+        QueueNames lastQueueNameOfVoiture = carrefour.getQueueByCarrefourName(voiture.getChemin().getPrevious());
+        if(tabStopExist.get(lastQueueNameOfVoiture)){
             return true;
         }else {
             return prioDroite(voiture, carrefour);
@@ -55,7 +57,7 @@ public class Stop extends CarrefourRegle {
     @Override
     public void triggerRule(Voiture voiture, Carrefour carrefour) {
         for (QueueNames queueName:QueueNames.values()) {
-            if(tabStopExist.get(queueName)){
+            if(queueName!=QueueNames.Not_a_queue && tabStopExist.get(queueName)){
 
                 /*
                  * Le stop est passant si :
@@ -70,10 +72,12 @@ public class Stop extends CarrefourRegle {
                  */
 
                 Voiture voitureOnCurrentQueue = (Voiture) carrefour.getQueueByName(queueName).peek();
-                // Si la voiture, si elle existe, a assez attendu
-                if(voitureOnCurrentQueue!=null && voitureOnCurrentQueue.getTimeArrivalFirstInQueue().soustract(
-                                                  getEngine().SimulationDate()).compareTo(
-                                                  LogicalDuration.ofSeconds(dureeArretStop)) == 1){
+                // Si la voiture, si elle existe, a assez attendu, si elle a commencé a attendre
+                if(voitureOnCurrentQueue!=null && voitureOnCurrentQueue.getTimeArrivalFirstInQueue()!=null &&
+
+                        getEngine().SimulationDate().soustract(
+                        voitureOnCurrentQueue.getTimeArrivalFirstInQueue()).compareTo(
+                        LogicalDuration.ofSeconds(dureeArretStop)) == 1){
 
                     /*
                      * On est sur une voie avec un stop
@@ -86,7 +90,7 @@ public class Stop extends CarrefourRegle {
 
                     // Si le buffer n'est pas vide on passe pas
                     if(carrefour.getBufferFromQueue(voitureOnCurrentQueue)==null){
-                        QueueNames dirVoiture = carrefour.getQueueByCarrefourName(voiture.getChemin().getNextOfnext());
+                        QueueNames dirVoiture = carrefour.getQueueByCarrefourName(voitureOnCurrentQueue.getChemin().getNextOfnext());
                         if(dirVoiture.equals(leftDir)){
                             // Prio : Face, Gauche, Droite
 
