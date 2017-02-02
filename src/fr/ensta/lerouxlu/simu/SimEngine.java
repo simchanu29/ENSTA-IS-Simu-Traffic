@@ -48,7 +48,7 @@ public class SimEngine implements ISimulationDateProvider, IEventObserver {
 	}
 	
 	public void initialize() {
-		System.out.println("Simulation commence à "+currentTime);
+		System.out.println("Simulation commence Ã  "+currentTime);
 		for (SimEntity entity : entities)
 			entity.initialize();
 	}
@@ -113,7 +113,7 @@ public class SimEngine implements ISimulationDateProvider, IEventObserver {
 				echeancier.clear();
 				for (SimEntity entity : entities)
 					entity.deactivate();
-				System.out.println("Simulation terminée à " + currentTime);
+				System.out.println("Simulation terminÃ©e Ã  " + currentTime);
 		}
 		
 	}

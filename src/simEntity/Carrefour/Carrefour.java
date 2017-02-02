@@ -166,33 +166,33 @@ public class Carrefour extends SimEntity implements IRecordable {
      *  - CheckPrio pour toutes les voitures dans les buffer si elles n'ont pas reagi suite a un precedent evenement
      */
     public void updateCarrefour(){
-    	System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+ nom);
+    	//System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+ nom);
 
     	//CheckPassage
         if( queueNord.peek()!=null && !queueNord.peek().isInsideCarrefour()){
-            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueNord.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            //System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueNord.peek().getName()+" addEvent CheckPassage in "+this.nom);
             addEvent(queueNord.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
     	if(  queueSud.peek()!=null && !queueSud.peek().isInsideCarrefour()){
-            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueSud.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            //System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueSud.peek().getName()+" addEvent CheckPassage in "+this.nom);
             addEvent(queueSud.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
     	if(queueOuest.peek()!=null && !queueOuest.peek().isInsideCarrefour()){
-            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueOuest.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            //System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueOuest.peek().getName()+" addEvent CheckPassage in "+this.nom);
             addEvent(queueOuest.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
     	if(  queueEst.peek()!=null && !queueEst.peek().isInsideCarrefour()){
-            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueEst.peek().getName()+" addEvent CheckPassage in "+this.nom);
+            //System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+queueEst.peek().getName()+" addEvent CheckPassage in "+this.nom);
             addEvent(queueEst.peek().new CheckPassage(getEngine().SimulationDate()));
     	}
 
     	//CheckPrio
     	if(bufferCarrefourNE!=null && bufferCarrefourNE.isInsideCarrefour()){
-            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+bufferCarrefourNE.getName()+" addEvent CheckPrio in "+this.nom);
+            //System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+bufferCarrefourNE.getName()+" addEvent CheckPrio in "+this.nom);
             addEvent(bufferCarrefourNE.new CheckPrio(getEngine().SimulationDate()));
         }
         if(bufferCarrefourSO!=null && bufferCarrefourSO.isInsideCarrefour()){
-            System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+bufferCarrefourSO.getName()+" addEvent CheckPrio in "+this.nom);
+            //System.out.println("["+getEngine().SimulationDate()+"][INFO](updateCarrefour) "+bufferCarrefourSO.getName()+" addEvent CheckPrio in "+this.nom);
     	    addEvent(bufferCarrefourSO.new CheckPrio(getEngine().SimulationDate()));
         }
     }
@@ -268,7 +268,7 @@ public class Carrefour extends SimEntity implements IRecordable {
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getPrevious());
         QueueNames queue = getQueueByCarrefour(lastCarr);
 
-        System.out.println("["+getEngine().SimulationDate()+"][INFO](AddToQueue) " +voiture.getName()+"  added to queue : " + this.nom+"/"+queue.name());
+        //System.out.println("["+getEngine().SimulationDate()+"][INFO](AddToQueue) " +voiture.getName()+"  added to queue : " + this.nom+"/"+queue.name());
 
         getQueueByName(queue).add(voiture);
         getRouteByQueueName(queue).retirerVoiture();
@@ -276,7 +276,7 @@ public class Carrefour extends SimEntity implements IRecordable {
 
     public void rmFromQueue(Voiture voiture){
 
-        System.out.println("["+getEngine().SimulationDate()+"][INFO](rmFromQueue) "+voiture.getName()+" will be removed from "+ this.nom +"/"+this.getQueueNameOfVoiture(voiture));
+        //System.out.println("["+getEngine().SimulationDate()+"][INFO](rmFromQueue) "+voiture.getName()+" will be removed from "+ this.nom +"/"+this.getQueueNameOfVoiture(voiture));
         Queue testtmp = this.getQueueOfVoiture(voiture);
         this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente
     }
@@ -364,7 +364,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
         }
         return null;
     }
-    public Queue getQueueByName(QueueNames queue){
+    public Queue<Voiture> getQueueByName(QueueNames queue){
         switch (queue){
             case Nord:
                 return queueNord;
