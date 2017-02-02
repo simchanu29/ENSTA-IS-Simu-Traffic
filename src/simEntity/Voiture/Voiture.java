@@ -152,7 +152,7 @@ public  class Voiture extends SimEntity implements IRecordable {
             setInsideCarrefour(false);
 
             if(chemin.getNext()!=destination){
-            	int offset=nextCar.VoitureSurRoute(lastCar.getNom());
+                int offset=nextCar.VoitureSurRoute(lastCar.getNom());
             	double t=chemin.getTime2next()*1000-360*offset;
             	LogicalDuration TempsTrajet=LogicalDuration.ofMillis((long)t);
             	tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
@@ -179,6 +179,8 @@ public  class Voiture extends SimEntity implements IRecordable {
         }
         @Override
         public void process() {
+            setInsideRoute(false);
+
             // Le next c'est celui après la queue
             Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
             //System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" /origin :"+ Voiture.this.departure+ " /destination :"+Voiture.this.destination +" /nextCarr : "+nextCarr.getNom());
@@ -204,17 +206,18 @@ public  class Voiture extends SimEntity implements IRecordable {
         }
         @Override
         public void process() {
-            setInsideRoute(false);
-
-            //Pour avoir le temps d'attente minimal au stop
-            if(!isFirstInQueue){
-                timeArrivalFirstInQueue = getEngine().SimulationDate();
-                isFirstInQueue = true;
-            }
 
             // Le !insideCarrefour est juste une sécurité, on pourrait ajouter un else if !insideCarrefour et log une
             // erreur si ça arrivait
-            if(!insideCarrefour) {
+            if(!insideCarrefour && !insideRoute) {
+                setInsideRoute(false);
+
+                //Pour avoir le temps d'attente minimal au stop
+                if(!isFirstInQueue){
+                    timeArrivalFirstInQueue = getEngine().SimulationDate();
+                    isFirstInQueue = true;
+                }
+
                 Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
                 boolean peutPasser = carrefourActuel.autorisationPassageEntree(Voiture.this);
 
@@ -251,7 +254,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         @Override
         public void process(){
 
-            if(insideCarrefour) {
+            if(insideCarrefour && !insideRoute) {
                 Carrefour carrefourActuel = quartier.getDicCarrefour().get(chemin.getNext());
                 boolean peutPasser = carrefourActuel.autorisationPassageSortie(Voiture.this);
 

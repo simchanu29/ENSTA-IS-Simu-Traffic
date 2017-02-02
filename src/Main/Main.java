@@ -66,7 +66,7 @@ public class Main {
         Carrefour p7=new Carrefour(engine, githubCity, CarrefourNames.P7, freqPopVoitureP7);
 
         HashMap<QueueNames,Boolean> stopHPI1 = new HashMap<>();
-        stopHPI1.put(QueueNames.Nord,true); stopHPI1.put(QueueNames.Sud,false);
+        stopHPI1.put(QueueNames.Nord,true); stopHPI1.put(QueueNames.Sud,true);
         stopHPI1.put(QueueNames.Ouest,false); stopHPI1.put(QueueNames.Est,false);
         Carrefour i1=new Carrefour(engine, githubCity, CarrefourNames.I1, new Stop(engine,3,stopHPI1));
 
@@ -81,11 +81,19 @@ public class Main {
         Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new Stop(engine,3,stopHPI4));
         
 
-//        Carrefour i1=new Carrefour(engine, githubCity, CarrefourNames.I1, new FeuRougeCroises(engine,30,30));
-//        Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new FeuRougeCroises(engine,30,30));
-        
-        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeIndiv(engine,30,0,30,30));
-        //Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new FeuRougeCroises(engine,30,30));
+
+
+//        HashMap<QueueNames,Boolean> stopHPI3 = new HashMap<>();
+//        stopHPI3.put(QueueNames.Nord,true); stopHPI3.put(QueueNames.Sud,false);
+//        stopHPI3.put(QueueNames.Ouest,true); stopHPI3.put(QueueNames.Est,true);
+//        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new Stop(engine,3,stopHPI3));
+        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeIndiv(engine,30,30,0,30));
+
+        HashMap<QueueNames,Boolean> stopHPI4 = new HashMap<>();
+        stopHPI4.put(QueueNames.Nord,true); stopHPI4.put(QueueNames.Sud,true);
+        stopHPI4.put(QueueNames.Ouest,false); stopHPI4.put(QueueNames.Est,false);
+        Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new Stop(engine,3,stopHPI4));
+
 
         // relier les carrefours entre eux
         p1.setCarrefourEst(i1);
