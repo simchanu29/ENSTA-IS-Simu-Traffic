@@ -16,6 +16,7 @@ import simEntity.Carrefour.CarrefourNames;
 import simEntity.Carrefour.QueueNames;
 import simEntity.Carrefour.Regle.CarrefourRegle;
 import simEntity.Carrefour.Regle.FeuRougeCroises;
+import simEntity.Carrefour.Regle.FeuRougeIndiv;
 import simEntity.Carrefour.Regle.Stop;
 import simEntity.Quartier.Quartier;
 
@@ -73,11 +74,18 @@ public class Main {
         stopHPI2.put(QueueNames.Nord,false); stopHPI2.put(QueueNames.Sud,true);
         stopHPI2.put(QueueNames.Ouest,false); stopHPI2.put(QueueNames.Est,false);
         Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new Stop(engine,3,stopHPI2));
+        
+        HashMap<QueueNames,Boolean> stopHPI4 = new HashMap<>();
+        stopHPI4.put(QueueNames.Nord,true); stopHPI4.put(QueueNames.Sud,true);
+        stopHPI4.put(QueueNames.Ouest,false); stopHPI4.put(QueueNames.Est,false);
+        Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new Stop(engine,3,stopHPI4));
+        
 
 //        Carrefour i1=new Carrefour(engine, githubCity, CarrefourNames.I1, new FeuRougeCroises(engine,30,30));
 //        Carrefour i2=new Carrefour(engine, githubCity, CarrefourNames.I2, new FeuRougeCroises(engine,30,30));
-        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeCroises(engine,30,30));
-        Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new FeuRougeCroises(engine,30,30));
+        
+        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeIndiv(engine,30,0,30,30));
+        //Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new FeuRougeCroises(engine,30,30));
 
         // relier les carrefours entre eux
         p1.setCarrefourEst(i1);

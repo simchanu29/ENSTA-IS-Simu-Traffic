@@ -558,7 +558,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 	@Override
 	public String[] getRecords() {
 		// TODO Auto-generated method stub
-		String[] records= new String[]{this.nom.toString(), "none", "none","none","none"};;
+		String[] records= new String[]{this.nom.toString(), " ", " "," "," "};;
 		if (this.carrefourNord !=null) records[1]=String.valueOf(this.queueNord.size());
 		if (this.carrefourSud !=null) records[2]=String.valueOf(this.queueSud.size());
 		if (this.carrefourEst !=null) records[3]=String.valueOf(this.queueEst.size());

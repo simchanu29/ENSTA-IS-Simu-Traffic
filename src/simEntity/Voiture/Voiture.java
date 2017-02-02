@@ -181,7 +181,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         public void process() {
             // Le next c'est celui après la queue
             Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
-            System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" /origin :"+ Voiture.this.departure+ " /destination :"+Voiture.this.destination +" /nextCarr : "+nextCarr.getNom());
+            //System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" /origin :"+ Voiture.this.departure+ " /destination :"+Voiture.this.destination +" /nextCarr : "+nextCarr.getNom());
             nextCarr.addToQueue(Voiture.this);
             dateEntreeFile=getEngine().SimulationDate();
             Logger.Information(name, "ArriveToQueue",name+ " arrive to "+ chemin.getNext());
@@ -219,7 +219,7 @@ public  class Voiture extends SimEntity implements IRecordable {
                 boolean peutPasser = carrefourActuel.autorisationPassageEntree(Voiture.this);
 
                 if (peutPasser) {
-                    System.out.println("["+getEngine().SimulationDate()+"][INFO](CheckPassage) "+name+" checkPassage with sucess in "+carrefourActuel.getNom()+" : trigger CheckPrio");
+                    //System.out.println("["+getEngine().SimulationDate()+"][INFO](CheckPassage) "+name+" checkPassage with sucess in "+carrefourActuel.getNom()+" : trigger CheckPrio");
                     //On entre dans le carrefour et quitte la file
                     setInsideCarrefour(true);
 
@@ -353,11 +353,11 @@ public  class Voiture extends SimEntity implements IRecordable {
         return tempsReel;
     }
     @Override public String[] getTitles() {
-        String[] titles={"Départ","Arrivée","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S"};
+        String[] titles={"Départ/Arrivée","     ","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S"};
         return titles;
     }
     @Override public String[] getRecords() {
-    	String[] records={getDeparture().toString(),getDestination().toString(),String.valueOf(getTempsOptimalTot().DoubleValue()),String.valueOf(getTempsReel().DoubleValue()),"         "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    	String[] records={getDeparture().toString()+getDestination().toString(),"    ",String.valueOf(getTempsOptimalTot().DoubleValue()),String.valueOf(getTempsReel().DoubleValue()),"         "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
     	for(int i=0;i<16;i++){
     		if (dureeAttente[i]!=-1) records[i+5]=String.valueOf(dureeAttente[i]);
     	}
