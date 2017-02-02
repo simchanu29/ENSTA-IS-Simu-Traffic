@@ -356,11 +356,19 @@ public  class Voiture extends SimEntity implements IRecordable {
         return tempsReel;
     }
     @Override public String[] getTitles() {
-        String[] titles={"Départ/Arrivée","     ","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S"};
+        String[] titles={"Départ/Arrivée","     ","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S","Créneau Horaire"};
         return titles;
     }
     @Override public String[] getRecords() {
-    	String[] records={getDeparture().toString()+getDestination().toString(),"    ",String.valueOf(getTempsOptimalTot().DoubleValue()),String.valueOf(getTempsReel().DoubleValue()),"         "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    	  int simHour=getEngine().SimulationDate().getHour();
+    	  System.out.println("hour    "+simHour);
+    	  String[] records={getDeparture().toString()+getDestination().toString(),"    ",String.valueOf(getTempsOptimalTot().DoubleValue()),String.valueOf(getTempsReel().DoubleValue()),"         "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+      	
+          if (simHour<7) records[21]="0h00-7h00";
+          if (simHour>=7  && simHour<9 ) records[21]="7h00-9h00";
+          if (simHour>=9  && simHour<17) records[21]="9h00-17h00";
+          if (simHour>=17 && simHour<19) records[21]="17h00-19h00";
+          if (simHour>=19 && simHour<24) records[21]="19h00-0h00";
     	for(int i=0;i<16;i++){
     		if (dureeAttente[i]!=-1) records[i+5]=String.valueOf(dureeAttente[i]);
     	}

@@ -37,7 +37,7 @@ public class Main {
 		LogicalDateTime begin = LogicalDateTime.Zero;
 
 
-		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(24));
+		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(8));
 
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
@@ -88,12 +88,6 @@ public class Main {
 //        stopHPI3.put(QueueNames.Ouest,true); stopHPI3.put(QueueNames.Est,true);
 //        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new Stop(engine,3,stopHPI3));
         Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeIndiv(engine,30,30,0,30));
-
-        HashMap<QueueNames,Boolean> stopHPI4 = new HashMap<>();
-        stopHPI4.put(QueueNames.Nord,true); stopHPI4.put(QueueNames.Sud,true);
-        stopHPI4.put(QueueNames.Ouest,false); stopHPI4.put(QueueNames.Est,false);
-        Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new Stop(engine,3,stopHPI4));
-
 
         // relier les carrefours entre eux
         p1.setCarrefourEst(i1);

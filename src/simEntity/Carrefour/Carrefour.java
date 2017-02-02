@@ -297,6 +297,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 
     /**
      * EVENT
+     *
      */
     class NouvelleVoitureEvent extends SimEvent {
 
@@ -402,11 +403,11 @@ public int VoitureSurRoute(CarrefourNames lcarn){
         int currentFreqPopVoiture=freqPopVoiture.get(0);
         int simHour=getEngine().SimulationDate().getHour();
 
-        if (simHour<=7) currentFreqPopVoiture=freqPopVoiture.get(0);
-        if (simHour>7  && simHour<=9 ) currentFreqPopVoiture = freqPopVoiture.get(1);
-        if (simHour>9  && simHour<=17) currentFreqPopVoiture = freqPopVoiture.get(2);
-        if (simHour>17 && simHour<=19) currentFreqPopVoiture = freqPopVoiture.get(3);
-        if (simHour>19 && simHour<=24) currentFreqPopVoiture = freqPopVoiture.get(4);
+        if (simHour<7) currentFreqPopVoiture=freqPopVoiture.get(0);
+        if (simHour>=7  && simHour<9 ) currentFreqPopVoiture = freqPopVoiture.get(1);
+        if (simHour>=9  && simHour<17) currentFreqPopVoiture = freqPopVoiture.get(2);
+        if (simHour>=17 && simHour<19) currentFreqPopVoiture = freqPopVoiture.get(3);
+        if (simHour>=19 && simHour<24) currentFreqPopVoiture = freqPopVoiture.get(4);
 
         LogicalDuration t = LogicalDuration.ofSeconds(Math.floor(3600/currentFreqPopVoiture));
         LogicalDateTime possibleVoitureArrival = getEngine().SimulationDate().add(t);
