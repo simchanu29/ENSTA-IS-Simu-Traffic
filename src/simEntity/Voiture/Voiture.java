@@ -11,6 +11,8 @@ import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
 import simEntity.Quartier.Quartier;
 
+import java.util.Queue;
+
 public  class Voiture extends SimEntity implements IRecordable {
 
     private String name;
@@ -25,6 +27,12 @@ public  class Voiture extends SimEntity implements IRecordable {
      */
     private boolean insideCarrefour;
     private boolean insideRoute;
+
+    /**
+     * Gestion des stops
+     */
+    private boolean isFirstInQueue;
+    private LogicalDateTime timeArrivalFirstInQueue;
 
     public Voiture(SimEngine engine, String name, Quartier quartier, CarrefourNames departure, CarrefourNames destination) {
 
@@ -154,6 +162,12 @@ public  class Voiture extends SimEntity implements IRecordable {
         @Override
         public void process() {
             setInsideRoute(false);
+
+            //Pour avoir le temps d'attente minimal au stop
+            if(!isFirstInQueue){
+                timeArrivalFirstInQueue = getEngine().SimulationDate();
+                isFirstInQueue = true;
+            }
 
             // Le !insideCarrefour est juste une sécurité, on pourrait ajouter un else if !insideCarrefour et log une
             // erreur si ça arrivait
@@ -304,7 +318,6 @@ public  class Voiture extends SimEntity implements IRecordable {
     public void setInsideRoute(boolean insideRoute) {
         this.insideRoute = insideRoute;
     }
-
     public boolean isInsideRoute() {
         return insideRoute;
     }
@@ -312,4 +325,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         this.departure = departure;
     }
     public void setDestination(CarrefourNames destination) { this.destination = destination; }
+    public LogicalDateTime getTimeArrivalFirstInQueue() {
+        return timeArrivalFirstInQueue;
+    }
 }

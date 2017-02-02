@@ -14,7 +14,7 @@ import simEntity.Voiture.Voiture;
  * Le principe c'est que ce sont des feux croisés alternés. Les différentes variables sont pour plus de lisibilité
  * concernant les évenements
  */
-public class FeuRougeCroises extends CarrefourRegle {
+public class FeuRougeCroises extends Feu {
 
     /**
      * Duree du feu rouge Nord-Sud en secondes

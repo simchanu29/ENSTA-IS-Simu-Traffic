@@ -11,7 +11,7 @@ import simEntity.Voiture.Voiture;
 /**
  * Created by Tag on 18/01/2017.
  */
-public class FeuRougeIndiv extends CarrefourRegle{
+public class FeuRougeIndiv extends Feu{
 
     private int dureeFeuVertN;
     private int dureeFeuVertS;

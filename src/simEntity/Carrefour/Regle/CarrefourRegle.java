@@ -9,10 +9,27 @@ import simEntity.Voiture.Voiture;
 
 import java.util.HashMap;
 
+
+    /* Dev note
+     *
+     * J'ai besoin de gérer 2 problèmes : la gestion des priorité lorsqu'une voiture tourne sur une voie dont
+     * elle est pas prioritaire et la gestion de la simultanéité des voitures.
+     *
+     * Le but ça serai de faire une classe générale de règles de priorité. C'est à dire un carrefour à entrée variable
+     * (max 4 : les 4 directions des queues)
+     * Donc on a de manière générale les canPass sur les chaques entrées : hashmap
+     *
+     * De manière générale on peut passer ou pas et on a le nombre de voie du carrefour. Pour mettre en place cette
+     * modularité on va mettre une hashmap qui permet d'acceder aux variables ?
+     *
+     * La simultanéité des voitures sera resolue par une variable de rage. Les rageux passent en premier. Certains
+     * décideraient plutôt de la nommer initiative mais avoir des rageux c'est plus marrant. Mais dans le code de la
+     * route on en a pas vraiment besoin.
+     */
+
 /**
  * Created by Tag on 18/01/2017.
- *
- * TODO : initialize et compagnie (les fonctions de simEntity)
+ * Rassemble les regles des carrefour
  */
 public abstract class CarrefourRegle extends SimEntity{
 
@@ -20,7 +37,7 @@ public abstract class CarrefourRegle extends SimEntity{
      * Est ce que les voitures peuvent passer
      * Si il n'y a pas de règle la voie n'existe pas
      */
-    private HashMap<QueueNames,Boolean> authorizationEnterCarrefour;
+    protected HashMap<QueueNames,Boolean> authorizationEnterCarrefour;
     private Carrefour carrefour;
 
     public CarrefourRegle(SimEngine engine){
@@ -44,8 +61,29 @@ public abstract class CarrefourRegle extends SimEntity{
     public boolean voitureEntre(Voiture voiture, Carrefour carrefour){
     	
         QueueNames queue = carrefour.getQueueNameOfVoiture(voiture);
+        triggerRule(voiture,carrefour);
         return getAuthorizationEnterCarrefour().get(queue);
     };
+
+    /**
+     * Methode abstraite pour autoriser la sortie des voitures du carrefour
+     * @param voiture
+     * @param carrefour
+     * @return
+     */
+    public abstract boolean voitureSort(Voiture voiture, Carrefour carrefour);
+
+    /**
+     * Trigger si besoin les evenement de la règle
+     */
+    public abstract void triggerRule(Voiture voiture, Carrefour carrefour);
+
+    /**
+     * Trigger l'update dans Carrefour
+     */
+    public void triggerUpdate(){
+        carrefour.updateCarrefour();
+    }
 
     /**
      * La voiture peut sortir
@@ -54,9 +92,9 @@ public abstract class CarrefourRegle extends SimEntity{
      * si elle coupe une voie que celle-ci soit vide ou bloquee
      * @param voiture
      * @param carrefour
-     * @return
+     * @return autorisationPassage
      */
-    public boolean voitureSort(Voiture voiture, Carrefour carrefour) {
+    public boolean prioDroite(Voiture voiture, Carrefour carrefour){
         // Une voiture coupe une voie si elle tourne à gauche uniquement
         CarrefourNames nomPrevious = voiture.getChemin().getPrevious();
         CarrefourNames nomNext = voiture.getChemin().getNextOfnext();
@@ -87,27 +125,6 @@ public abstract class CarrefourRegle extends SimEntity{
             return true;
         }
     }
-
-    public void triggerUpdate(){
-        carrefour.updateCarrefour();
-    }
-
-    /* TMP
-     * TODO : effacer ça quand il n'y en aura plus besoin.
-     * J'ai besoin de gérer 2 problèmes : la gestion des priorité lorsqu'une voiture tourne sur une voie dont
-     * elle est pas prioritaire et la gestion de la simultanéité des voitures.
-     *
-     * Le but ça serai de faire une classe générale de règles de priorité. C'est à dire un carrefour à entrée variable
-     * (max 4 : les 4 directions des queues)
-     * Donc on a de manière générale les canPass sur les chaques entrées : hashmap
-     *
-     * De manière générale on peut passer ou pas et on a le nombre de voie du carrefour. Pour mettre en place cette
-     * modularité on va mettre une hashmap qui permet d'acceder aux variables ?
-     *
-     * La simultanéité des voitures sera resolue par une variable de rage. Les rageux passent en premier. Certains
-     * décideraient plutôt de la nommer initiative mais avoir des rageux c'est plus marrant. Mais dans le code de la
-     * route on en a pas vraiment besoin.
-     */
 
     public HashMap<QueueNames, Boolean> getAuthorizationEnterCarrefour() {
         return authorizationEnterCarrefour;

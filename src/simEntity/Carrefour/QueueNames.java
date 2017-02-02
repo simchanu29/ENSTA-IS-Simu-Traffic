@@ -2,6 +2,10 @@ package simEntity.Carrefour;
 
 /**
  * Created by Tag on 18/01/2017.
+ * On tourne dans le sens horaire donc
+ * -1 = droite
+ * +1 = gauche
+ * -2 ou -2 = en face
  */
 public enum QueueNames {
     Nord("Nord",0),
@@ -13,9 +17,17 @@ public enum QueueNames {
     private String name;
     private int num;
 
+    private QueueNames leftQueue;
+    private QueueNames rightQueue;
+    private QueueNames frontQueue;
+
     private QueueNames(String name,int num){
         this.name=name;
         this.num=num;
+
+        this.leftQueue = getQueueNameByNum(Math.floorMod(num+1,4));
+        this.rightQueue = getQueueNameByNum(Math.floorMod(num-1,4));
+        this.frontQueue = getQueueNameByNum(Math.floorMod(num+2,4));
     }
 
     public boolean isLeftOf(QueueNames dir){
@@ -32,5 +44,27 @@ public enum QueueNames {
 
     public int getNum() {
         return num;
+    }
+    private QueueNames getQueueNameByNum(int num){
+        switch (num){
+            case 0:
+                return Nord;
+            case 1:
+                return Est;
+            case 2:
+                return Sud;
+            case 3:
+                return Ouest;
+        }
+        return Not_a_queue;
+    }
+    public QueueNames getLeftQueue() {
+        return leftQueue;
+    }
+    public QueueNames getRightQueue() {
+        return rightQueue;
+    }
+    public QueueNames getFrontQueue() {
+        return frontQueue;
     }
 }
