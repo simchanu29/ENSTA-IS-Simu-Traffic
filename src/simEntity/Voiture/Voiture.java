@@ -37,6 +37,12 @@ public  class Voiture extends SimEntity implements IRecordable {
     private boolean insideCarrefour;
     private boolean insideRoute;
 
+    /**
+     * Gestion des stops
+     */
+    private boolean isFirstInQueue;
+    private LogicalDateTime timeArrivalFirstInQueue;
+
     public Voiture(SimEngine engine, String name, Quartier quartier, CarrefourNames departure, CarrefourNames destination) {
 
         super(engine,"Voiture");
@@ -54,7 +60,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         this.tempsOptimalTot=LogicalDuration.ZERO;
         this.dureeAttente=new double[16];
         for (int i=0;i<16;i++)this.dureeAttente[i]=-1;
-        
+
         }
 
     //=== EVENT ===
@@ -99,13 +105,13 @@ public  class Voiture extends SimEntity implements IRecordable {
 			    int i = CarrefourNames.valueOf(chemin.getNext().toString()).ordinal()-7;
 			    int j =QueueNames.valueOf(queue.toString()).ordinal();
 				dureeAttente[4*i+j]=dureeTrajet.DoubleValue();
-				
+
 				// On avance d'une etape. Le next qui est celui auquel on est arrivé. L'avancement d'étape le
                 // transforme en previous.
 				chemin.etape();
 
 				//System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Chemin de "+name+" : "+chemin.toString());
-				//System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Previous : "+chemin.getPrevious()+ "     Next  : " +chemin.getNext());
+				//System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Previous : "+chemin.getPrevious()+ " Next  : " +chemin.getNext());
 
 				//La voiture declenche l'evenemenement pour se deplacer au carrefour suivant.
 				addEvent(new GoTo(getEngine().SimulationDate()));
@@ -138,8 +144,8 @@ public  class Voiture extends SimEntity implements IRecordable {
             	CarrefourNames lcarn=lastCar.getNom();
             	nextCar.AjouterVoitureRoute(Voiture.this, lcarn);
             	}
-//            	
-            
+//
+
             Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
 
             setInsideRoute(true);
@@ -152,18 +158,15 @@ public  class Voiture extends SimEntity implements IRecordable {
             	tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
             	tempsOptimalTot=tempsOptimalTot.add(TempsTrajet);
             	addEvent(new ArriveToQueue(getEngine().SimulationDate().add(TempsTrajet)));
-                
+
             }
             else{
             	tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
             	tempsOptimalTot=tempsOptimalTot.add(LogicalDuration.ofSeconds(chemin.getTime2next()));
                 addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(chemin.getTime2next()))));
             }
-
         }
     }
-    
-    
 
     /**
      * EVENT
@@ -178,7 +181,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         public void process() {
             // Le next c'est celui après la queue
             Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
-            //System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" /origin :"+ Voiture.this.departure+ " /destination :"+Voiture.this.destination +" /nextCarr : "+nextCarr.getNom());
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" /origin :"+ Voiture.this.departure+ " /destination :"+Voiture.this.destination +" /nextCarr : "+nextCarr.getNom());
             nextCarr.addToQueue(Voiture.this);
             dateEntreeFile=getEngine().SimulationDate();
             Logger.Information(name, "ArriveToQueue",name+ " arrive to "+ chemin.getNext());
@@ -198,12 +201,16 @@ public  class Voiture extends SimEntity implements IRecordable {
     public class CheckPassage extends SimEvent {
         public CheckPassage(LogicalDateTime scheduledDate){
             super(scheduledDate,Voiture.this);
-
-
         }
         @Override
         public void process() {
             setInsideRoute(false);
+
+            //Pour avoir le temps d'attente minimal au stop
+            if(!isFirstInQueue){
+                timeArrivalFirstInQueue = getEngine().SimulationDate();
+                isFirstInQueue = true;
+            }
 
             // Le !insideCarrefour est juste une sécurité, on pourrait ajouter un else if !insideCarrefour et log une
             // erreur si ça arrivait
@@ -212,7 +219,7 @@ public  class Voiture extends SimEntity implements IRecordable {
                 boolean peutPasser = carrefourActuel.autorisationPassageEntree(Voiture.this);
 
                 if (peutPasser) {
-                    //System.out.println("["+getEngine().SimulationDate()+"][INFO](CheckPassage) "+name+" checkPassage with success in "+carrefourActuel.getNom()+" : trigger CheckPrio");
+                    System.out.println("["+getEngine().SimulationDate()+"][INFO](CheckPassage) "+name+" checkPassage with sucess in "+carrefourActuel.getNom()+" : trigger CheckPrio");
                     //On entre dans le carrefour et quitte la file
                     setInsideCarrefour(true);
 
@@ -227,7 +234,7 @@ public  class Voiture extends SimEntity implements IRecordable {
                }
             }
             else{
-                //System.out.println("["+getEngine().SimulationDate()+"][ERROR] checkPassage while inside carrefour");
+                System.out.println("["+getEngine().SimulationDate()+"][ERROR] checkPassage while inside carrefour");
             }
         }
     }
@@ -260,7 +267,7 @@ public  class Voiture extends SimEntity implements IRecordable {
                 }
             }
             else{
-                //System.out.println("["+getEngine().SimulationDate()+"][ERROR] checkPrio while outside or crossing carrefour");
+                System.out.println("["+getEngine().SimulationDate()+"][ERROR] checkPrio while outside or crossing carrefour");
             }
         }
     }
@@ -339,14 +346,12 @@ public  class Voiture extends SimEntity implements IRecordable {
     public LogicalDuration getTempsOptimal() {
         return tempsOptimal;
     }
-    
     public LogicalDuration getTempsOptimalTot() {
         return tempsOptimalTot;
     }
     public LogicalDuration getTempsReel() {
         return tempsReel;
     }
-    
     @Override public String[] getTitles() {
         String[] titles={"Départ","Arrivée","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S"};
         return titles;
@@ -378,4 +383,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         this.departure = departure;
     }
     public void setDestination(CarrefourNames destination) { this.destination = destination; }
+    public LogicalDateTime getTimeArrivalFirstInQueue() {
+        return timeArrivalFirstInQueue;
+    }
 }
