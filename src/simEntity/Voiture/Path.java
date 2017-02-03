@@ -4,19 +4,20 @@ import java.util.LinkedList;
 import simEntity.Carrefour.CarrefourNames;
 import de.vogella.algorithms.dijkstra.test.DijkstraRoutier;
 
-
+	// Cette classe a pour but de donner à chaque voiture un accès à ses temps de parcours est l'état de son trajet
 public class Path {
-	private DijkstraRoutier viamichelin;
-	private CarrefourNames start;
-	private CarrefourNames end;
-	private LinkedList<CarrefourNames> path;
-	private CarrefourNames previous;
-	private CarrefourNames next;
-	private CarrefourNames nextOfnext;
-	private int compteur;
 	
-	private LinkedList<Double> trajet;
-	private Double Time2next;
+	private DijkstraRoutier viamichelin;
+	private CarrefourNames start; //Origine
+	private CarrefourNames end; //Destinatin
+	private LinkedList<CarrefourNames> path; //les différents Nodes traversés
+	private CarrefourNames previous; //dernier carrefour traversé
+	private CarrefourNames next; //prochain carrefour
+	private CarrefourNames nextOfnext;
+	private int compteur; // avancement du trajet
+	
+	private LinkedList<Double> trajet; //liste des temps de parcours des segements
+	private Double Time2next; // prochain temps de parcours
 
 	public Path(CarrefourNames start, CarrefourNames end) {
 		super();

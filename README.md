@@ -30,12 +30,13 @@ ___
 ___  
 
 ######Romain
--Attention Getter & Setter pour la variable L dans La classe SortedList du projet simu_base_common (package enstabretagne.simulation.core)
-
-public List<T> getL() {
+ - Attention Getter & Setter pour la variable L dans La classe SortedList du projet simu_base_common (package enstabretagne.simulation.core)
+``` 
+	public List<T> getL() {
 		return l;
 	}
 
 	public void setL(List<T> l) {
 		this.l = l;
 	}
+```

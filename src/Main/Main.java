@@ -76,6 +76,7 @@ public class Main {
         /*HashMap<QueueNames,Boolean> stopHPI4 = new HashMap<>();
         stopHPI4.put(QueueNames.Nord,true); stopHPI4.put(QueueNames.Sud,true);
         stopHPI4.put(QueueNames.Ouest,false); stopHPI4.put(QueueNames.Est,false);
+
         Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new Stop(engine,3,stopHPI4));*/
         Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeCroises(engine,12,8));
 
@@ -84,6 +85,11 @@ public class Main {
         stopHPI3.put(QueueNames.Ouest,true); stopHPI3.put(QueueNames.Est,true);
         Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new Stop(engine,3,stopHPI3));*/
         Carrefour i4=new Carrefour(engine, githubCity, CarrefourNames.I4, new FeuRougeCroises(engine,8,12));
+
+
+        // Test feu rouge indiv
+          //Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeIndiv(engine,30,0,30,30));
+
 
         // relier les carrefours entre eux
         p1.setCarrefourEst(i1);
@@ -124,7 +130,7 @@ public class Main {
 		
 		Logger.Terminate();
 	}
-	
+	//Cette fonction utilise les fréquences choisies par l'utilisateur pour en créer une liste 
 	public static LinkedList<Integer> createListeFreq(int a, int b, int c, int d, int e) {
 		LinkedList<Integer> freqPopVoiture=new LinkedList<Integer>();
 		freqPopVoiture.add(a);

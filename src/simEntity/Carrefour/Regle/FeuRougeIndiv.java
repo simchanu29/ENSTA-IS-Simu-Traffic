@@ -77,9 +77,11 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Sud);
+            triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertS) in "+getCarrefour().getNom()+" triggers FeuVertO in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS)));
+
         }
     }
     public class FeuVertN extends SimEvent{
@@ -90,9 +92,12 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Nord);
+
+            triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertN) in "+getCarrefour().getNom()+" triggers FeuVertE in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN)));
+
         }
     }
     public class FeuVertE extends SimEvent{
@@ -103,9 +108,10 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Est);
+            triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertE))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertE) in "+getCarrefour().getNom()+" triggers FeuVertS in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertE)));
         }
     }
     public class FeuVertO extends SimEvent{
@@ -116,9 +122,10 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Ouest);
+            triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertN(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertO))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertO) in "+getCarrefour().getNom()+" triggers FeuVertN in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertO)));
         }
     }
 }
