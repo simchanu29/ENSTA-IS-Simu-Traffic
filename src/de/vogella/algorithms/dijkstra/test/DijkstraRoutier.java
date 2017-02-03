@@ -15,7 +15,7 @@ import simEntity.Carrefour.CarrefourNames;
 
 
 public class DijkstraRoutier {
-
+	// Cette classe adapte l'algorithme de Dijkstra à notre système
   private List<IVertex> nodes;
   private List<IEdge> edges;
   private Graph graph;
@@ -25,6 +25,7 @@ public class DijkstraRoutier {
   
   
   public DijkstraRoutier() {
+	  // Creation des Nodes
 	    nodes = new ArrayList<IVertex>();
 	    edges = new ArrayList<IEdge>();
 	    Vertex location = new Vertex("Node_" + 0,CarrefourNames.I2 );
@@ -52,7 +53,7 @@ public class DijkstraRoutier {
 		      nodes.add(location);
 		      j++;
 		    }
-
+	    	// Création des arcs avec leur poids (en secondes)
 	    addLane("Edge_0", 1, 10, 216);
 	    addLane("Edge_1", 10, 0, 94);
 	    addLane("Edge_2", 0, 3, 324);
@@ -79,6 +80,7 @@ public LinkedList<CarrefourNames> chemin(int NodeDepart,int NodeArrive) {
      return gps;
     }
 public LinkedList<Double> temps(){
+	// Cette fonction nous donne une liste contenant les temps de parcours des axes.
 	LinkedList<Double> time=new LinkedList<Double>();
 	int size=trajet.size()-1;
 	for (int i=0;i<size;i++){

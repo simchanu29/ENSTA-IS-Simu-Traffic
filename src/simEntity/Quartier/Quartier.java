@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by Tag on 23/01/2017.
+ * le quartier nous sert à donner un accès à la hashmap pour toutes nos entités.
  */
 public class Quartier extends SimEntity {
 
