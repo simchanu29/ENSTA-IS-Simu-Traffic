@@ -4,9 +4,7 @@ import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEvent;
-import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.QueueNames;
-import simEntity.Voiture.Voiture;
 
 /**
  * Created by Tag on 18/01/2017.
@@ -37,8 +35,6 @@ public class FeuRougeCroises extends Feu {
      */
     private int dureeFeuVertEO;
 
-
-    private boolean feuNSRouge;
 
     public FeuRougeCroises(SimEngine engine, int dureeFeuRougeNS, int dureeFeuVertNS){
         super(engine);

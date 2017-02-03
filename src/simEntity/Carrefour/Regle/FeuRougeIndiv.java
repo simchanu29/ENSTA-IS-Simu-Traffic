@@ -4,9 +4,7 @@ import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEvent;
-import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.QueueNames;
-import simEntity.Voiture.Voiture;
 
 /**
  * Created by Tag on 18/01/2017.
@@ -21,7 +19,7 @@ public class FeuRougeIndiv extends Feu{
     /**
      * Constructeur
      *
-     * Si un feu n'existe pas on peut mettre la duree du feu vert à -1.
+     * Si un feu n'existe pas on peut mettre la duree du feu vert à 0.
      * @param engine
      * @param dureeFeuVertN
      */
@@ -69,7 +67,7 @@ public class FeuRougeIndiv extends Feu{
      * Gestion des feux. Ceux ci sont initialisés à leur création.
      * L'évênement en lui-même crée l'évenement suivant.
      *
-     * Si la duree du feu est à -1 l'evenement n'est pas loggé
+     * Si la duree du feu est à 0 l'evenement n'est pas loggé
      */
     public class FeuVertS extends SimEvent {
 
@@ -83,6 +81,7 @@ public class FeuRougeIndiv extends Feu{
             triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
             System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertS) in "+getCarrefour().getNom()+" triggers FeuVertO in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS)));
+
         }
     }
     public class FeuVertN extends SimEvent{
@@ -94,9 +93,11 @@ public class FeuRougeIndiv extends Feu{
         @Override
         public void process() {
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Nord);
+
             triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
             System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertN) in "+getCarrefour().getNom()+" triggers FeuVertE in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN)));
+
         }
     }
     public class FeuVertE extends SimEvent{
