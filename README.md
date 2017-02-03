@@ -4,6 +4,7 @@
 ####Notes de developpeurs  
 
 - Des problèmes d'encodages peuvent apparaître, ainsi nous conseillons aux utilisateurs de vérifier qu'ils utilisent le même encodage que celui utilisé par les développeurs : l' UTF-8
+
 ___  
 
 ######Simon  
