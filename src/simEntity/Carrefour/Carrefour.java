@@ -297,6 +297,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 
     /**
      * EVENT
+     *
      */
     class NouvelleVoitureEvent extends SimEvent {
 
@@ -402,11 +403,11 @@ public int VoitureSurRoute(CarrefourNames lcarn){
         int currentFreqPopVoiture=freqPopVoiture.get(0);
         int simHour=getEngine().SimulationDate().getHour();
 
-        if (simHour<=7) currentFreqPopVoiture=freqPopVoiture.get(0);
-        if (simHour>7  && simHour<=9 ) currentFreqPopVoiture = freqPopVoiture.get(1);
-        if (simHour>9  && simHour<=17) currentFreqPopVoiture = freqPopVoiture.get(2);
-        if (simHour>17 && simHour<=19) currentFreqPopVoiture = freqPopVoiture.get(3);
-        if (simHour>19 && simHour<=24) currentFreqPopVoiture = freqPopVoiture.get(4);
+        if (simHour<7) currentFreqPopVoiture=freqPopVoiture.get(0);
+        if (simHour>=7  && simHour<9 ) currentFreqPopVoiture = freqPopVoiture.get(1);
+        if (simHour>=9  && simHour<17) currentFreqPopVoiture = freqPopVoiture.get(2);
+        if (simHour>=17 && simHour<19) currentFreqPopVoiture = freqPopVoiture.get(3);
+        if (simHour>=19 && simHour<24) currentFreqPopVoiture = freqPopVoiture.get(4);
 
         LogicalDuration t = LogicalDuration.ofSeconds(Math.floor(3600/currentFreqPopVoiture));
         LogicalDateTime possibleVoitureArrival = getEngine().SimulationDate().add(t);
@@ -548,7 +549,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 	@Override
 	public String[] getRecords() {
 		// TODO Auto-generated method stub
-		String[] records= new String[]{this.nom.toString(), "none", "none","none","none"};;
+		String[] records= new String[]{this.nom.toString(), " ", " "," "," "};;
 		if (this.carrefourNord !=null) records[1]=String.valueOf(this.queueNord.size());
 		if (this.carrefourSud !=null) records[2]=String.valueOf(this.queueSud.size());
 		if (this.carrefourEst !=null) records[3]=String.valueOf(this.queueEst.size());
