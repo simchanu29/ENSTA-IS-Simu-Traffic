@@ -102,17 +102,19 @@ public  class Voiture extends SimEntity implements IRecordable {
 				Carrefour lastCarr = quartier.getDicCarrefour().get(chemin.getPrevious());
 				Carrefour nextCarr = quartier.getDicCarrefour().get(chemin.getNext());
 			    QueueNames queue = lastCarr.getQueueByCarrefour(nextCarr);
-			    //System.out.println(chemin.getNext().toString());
+			    System.out.println(chemin.getNext().toString());
 			    int i = CarrefourNames.valueOf(chemin.getNext().toString()).ordinal()-7;
-			    int j =QueueNames.valueOf(queue.toString()).ordinal();
+			    int j = QueueNames.valueOf(queue.toString()).ordinal();
 				dureeAttente[4*i+j]=dureeTrajet.DoubleValue();
-
-				// On avance d'une etape. Le next qui est celui auquel on est arrivé. L'avancement d'étape le
+//                for(int it = 0;it<16;it++){
+//                    System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour) "+name+" : ["+it+"] "+dureeAttente[i]+"sec");
+//                }
+                // On avance d'une etape. Le next qui est celui auquel on est arrivé. L'avancement d'étape le
                 // transforme en previous.
 				chemin.etape();
 
-				//System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Chemin de "+name+" : "+chemin.toString());
-				//System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Previous : "+chemin.getPrevious()+ " Next  : " +chemin.getNext());
+				System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Chemin de "+name+" : "+chemin.toString());
+				System.out.println("["+getEngine().SimulationDate()+"][INFO](crossCarrefour)   Previous : "+chemin.getPrevious()+ " Next  : " +chemin.getNext());
 
 				//La voiture declenche l'evenemenement pour se deplacer au carrefour suivant.
 				addEvent(new GoTo(getEngine().SimulationDate()));
@@ -144,9 +146,8 @@ public  class Voiture extends SimEntity implements IRecordable {
             if (nextCar.getNom()==CarrefourNames.I1||nextCar.getNom()==CarrefourNames.I2 || nextCar.getNom()==CarrefourNames.I3|| nextCar.getNom()==CarrefourNames.I4){
             	CarrefourNames lcarn=lastCar.getNom();
             	nextCar.AjouterVoitureRoute(Voiture.this, lcarn);
-            	}
+            }
 //
-
             Logger.Information(name, "goTo",name+ " go to "+ chemin.getNext());
 
             setInsideRoute(true);
@@ -188,7 +189,8 @@ public  class Voiture extends SimEntity implements IRecordable {
             nextCarr.addToQueue(Voiture.this);
             dateEntreeFile=getEngine().SimulationDate();
             Logger.Information(name, "ArriveToQueue",name+ " arrive to "+ chemin.getNext());
-
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" arrives to "+nextCarr.getQueueNameOfVoiture(Voiture.this).name()+" in "+nextCarr.getNom());
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](ArriveToQueue) Voiture : "+Voiture.this.getName()+" is in queue of size : "+nextCarr.getQueueOfVoiture(Voiture.this).size());
             //UpdateCarrefour pour voir si c'est la 1ere dans la file et déclencher CheckPassage quand ça sera le cas
             nextCarr.updateCarrefour();
         }
@@ -266,7 +268,7 @@ public  class Voiture extends SimEntity implements IRecordable {
 
                     //On enlève la voiture du buffer
                     carrefourActuel.setBufferOfVoiture(Voiture.this, null);
-                    //System.out.println("Add Event crossCarrefour  "+Voiture.this.chemin.getNext()+" pour  "+name+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1)));
+                    System.out.println("Add Event crossCarrefour  "+Voiture.this.chemin.getNext()+" pour  "+name+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1)));
                     addEvent(new CrossCarrefour(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
                 }
             }
@@ -360,11 +362,52 @@ public  class Voiture extends SimEntity implements IRecordable {
         return tempsReel;
     }
     @Override public String[] getTitles() {
-        String[] titles={"Départ","Arrivée","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S"};
+        String[] titles={
+                "Départ",
+                "Arrivée",
+                "Durée Optimale Trajet",
+                "Durée Réelle Trajet",
+                "         ",
+                "I1 N",
+                "I1 E",
+                "I1 O",
+                "I1 S",
+                "I2 N",
+                "I2 E",
+                "I2 O",
+                "I2 S",
+                "I3 N",
+                "I3 E",
+                "I3 O",
+                "I3 S",
+                "I4 N",
+                "I4 E",
+                "I4 O",
+                "I4 S"};
         return titles;
     }
     @Override public String[] getRecords() {
-    	String[] records={getDeparture().toString(),getDestination().toString(),String.valueOf(getTempsOptimalTot().DoubleValue()),String.valueOf(getTempsReel().DoubleValue())," ","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none","none"};
+    	String[] records = {getDeparture().toString(),
+                            getDestination().toString(),
+                            String.valueOf(getTempsOptimalTot().DoubleValue()),
+                            String.valueOf(getTempsReel().DoubleValue()),
+                            " ",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none",
+                            "none"};
     	for(int i=0;i<16;i++){
     		if (dureeAttente[i]!=-1) records[i+5]=String.valueOf(dureeAttente[i]);
     	}

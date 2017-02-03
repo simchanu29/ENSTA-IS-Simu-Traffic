@@ -43,21 +43,25 @@ public class FeuRougeIndiv extends Feu{
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
+                break;
             case Sud:
                 getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,true);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
+                break;
             case Est:
                 getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,true);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
+                break;
             case Ouest:
                 getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,true);
+                break;
         }
     }
 
@@ -75,9 +79,10 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Sud);
-            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
+            triggerUpdate();
+            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertS) in "+getCarrefour().getNom()+" triggers FeuVertO in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS)));
         }
     }
     public class FeuVertN extends SimEvent{
@@ -88,9 +93,10 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Nord);
-            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
+            triggerUpdate();
+            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertN) in "+getCarrefour().getNom()+" triggers FeuVertE in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN)));
         }
     }
     public class FeuVertE extends SimEvent{
@@ -101,9 +107,10 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Est);
+            triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertS(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertE))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertE) in "+getCarrefour().getNom()+" triggers FeuVertS in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertE)));
         }
     }
     public class FeuVertO extends SimEvent{
@@ -114,9 +121,10 @@ public class FeuRougeIndiv extends Feu{
 
         @Override
         public void process() {
-            triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Ouest);
+            triggerUpdate();
             FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertN(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertO))) );
+            System.out.println("["+getEngine().SimulationDate()+"][INFO](FeuVertO) in "+getCarrefour().getNom()+" triggers FeuVertN in "+ getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertO)));
         }
     }
 }

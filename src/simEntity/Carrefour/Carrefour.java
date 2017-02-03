@@ -515,46 +515,36 @@ public int VoitureSurRoute(CarrefourNames lcarn){
     public void setBufferCarrefourSO(Voiture bufferCarrefourSO) {
         this.bufferCarrefourSO = bufferCarrefourSO;
     }
-
 	public Route getRouteSud() {
 		return RouteSud;
 	}
-
 	public void setRouteSud(Route routeSud) {
 		RouteSud = routeSud;
 	}
-
 	public Route getRouteEst() {
 		return RouteEst;
 	}
-
 	public void setRouteEst(Route routeEst) {
 		RouteEst = routeEst;
 	}
-
 	public Route getRouteNord() {
 		return RouteNord;
 	}
-
 	public void setRouteNord(Route routeNord) {
 		RouteNord = routeNord;
 	}
-
 	public Route getRouteOuest() {
 		return RouteOuest;
 	}
-
 	public void setRouteOuest(Route routeOuest) {
 		RouteOuest = routeOuest;
 	}
-
 	@Override
 	public String[] getTitles() {
 		// TODO Auto-generated method stub
 		String[] titles= new String[]{"CarrefourID", "QueueNord", "QueueSud","QueueEst","QueueOuest"};
 		return titles;
 	}
-
 	@Override
 	public String[] getRecords() {
 		// TODO Auto-generated method stub
@@ -565,7 +555,6 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 		if (this.carrefourOuest !=null) records[4]=String.valueOf(this.queueOuest.size());
 		return records;
 	}
-
 	@Override
 	public String getClassement() {
 		// TODO Auto-generated method stub

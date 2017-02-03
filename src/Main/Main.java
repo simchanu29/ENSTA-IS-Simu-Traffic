@@ -80,7 +80,7 @@ public class Main {
 //        stopHPI3.put(QueueNames.Nord,true); stopHPI3.put(QueueNames.Sud,false);
 //        stopHPI3.put(QueueNames.Ouest,true); stopHPI3.put(QueueNames.Est,true);
 //        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new Stop(engine,3,stopHPI3));
-        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeIndiv(engine,30,30,0,30));
+        Carrefour i3=new Carrefour(engine, githubCity, CarrefourNames.I3, new FeuRougeIndiv(engine,30,0,30,30));
 
         HashMap<QueueNames,Boolean> stopHPI4 = new HashMap<>();
         stopHPI4.put(QueueNames.Nord,true); stopHPI4.put(QueueNames.Sud,true);
