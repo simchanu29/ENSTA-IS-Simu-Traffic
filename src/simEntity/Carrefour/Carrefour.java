@@ -198,6 +198,7 @@ public class Carrefour extends SimEntity implements IRecordable {
     }
 
     CarrefourNames calculDestination(CarrefourNames departure){
+    	// Cette méthode choisit la destination d'une voiture en tenant compte de son origine et des probabilités
         CarrefourNames destination=null;
         double pDest = random.nextDouble()*100;
         switch(departure){
@@ -263,7 +264,7 @@ public class Carrefour extends SimEntity implements IRecordable {
         }
         return destination;
     }
-
+    // Une voiture passe de la Route à la queue
     public void addToQueue(Voiture voiture){
         Carrefour lastCarr = quartier.getDicCarrefour().get(voiture.getChemin().getPrevious());
         QueueNames queue = getQueueByCarrefour(lastCarr);
@@ -284,10 +285,16 @@ public class Carrefour extends SimEntity implements IRecordable {
     
     
 public void AjouterVoitureRoute (Voiture v,CarrefourNames lcarn){
+	// Ajoute une voiture sur la route apropriée
 	
 	getRouteByQueueName(this.getQueueByCarrefourName(lcarn)).ajouterVoiture(v);
 }
+public void AjouterTempsSurRoute (CarrefourNames lcarn){
+	// Tiens compte des voiture sortante du carrefour sur le temps de trajet des voitures sur la route
+	getRouteByQueueName(this.getQueueByCarrefourName(lcarn)).ajouterTempsEnMasse();;
+}
 public int VoitureSurRoute(CarrefourNames lcarn){
+	// Permet d'obtenir le nombre de voiture sur un segement
 	int nb=getQueueByName(this.getQueueByCarrefourName(lcarn)).size();
 	nb+=getRouteByQueueName(this.getQueueByCarrefourName(lcarn)).getNbVoiture();
 	return nb;
@@ -300,7 +307,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
      *
      */
     class NouvelleVoitureEvent extends SimEvent {
-
+    		// Processus de création et d'activation d'une voiture
 		public NouvelleVoitureEvent(LogicalDateTime scheduledDate) {
 			super(scheduledDate);
 		}
@@ -320,6 +327,7 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 	}
     
     class ObservationTailleFilesAttente extends SimEvent{
+    	// cette évènement n'est pas nécessaire pour la simylation mais il améliore grandemen la lecture des logs
     	public ObservationTailleFilesAttente(LogicalDateTime scheduledDate) {
 			super(scheduledDate);
 		}

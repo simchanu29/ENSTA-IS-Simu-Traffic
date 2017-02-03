@@ -20,7 +20,10 @@ import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 
-
+	/*
+	 Cette classe a pour but de représenter l''intervale de temps entre la sortie d'un carrefour et l'entrée dans un carrefour
+	 C'est donc les parties du trajet où la voiture roule à sa vitesse de croisière.
+	 */
 public class Route {
 	private LinkedList<Voiture> ListVoiture;
 	private int nbVoiture;
@@ -40,12 +43,15 @@ public class Route {
 		this.nbVoiture=this.nbVoiture-1;
 	}
 	public void ajouterTempsEnMasse(){
+		// met à jour l'évèneent d'arriver d'une voiture à un carrefour
+		// pour toutes les voitures en mouvement sur notre route
 		for(int i=0;i<this.nbVoiture;i++){
 			ajouterTemps(this.ListVoiture.get(i));
 		}
 	}
 	
 	public void ajouterTemps(Voiture car){
+		// met à jour l'évèneent d'arriver d'une voiture à un carrefour
 		int nbEvent=car.getEngine().getEcheancier().getL().size();
 		LogicalDuration offset =LogicalDuration.ofMillis(360);
 		for (int i=0;i<nbEvent;i++){
