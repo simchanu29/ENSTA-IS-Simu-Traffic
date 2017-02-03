@@ -9,11 +9,7 @@ import fr.ensta.lerouxlu.simu.SimEntity;
 import fr.ensta.lerouxlu.simu.SimEvent;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
-import simEntity.Carrefour.Route;
 import simEntity.Quartier.Quartier;
-
-import java.util.LinkedList;
-import java.util.Queue;
 import simEntity.Carrefour.QueueNames;
 
 
@@ -157,6 +153,7 @@ public  class Voiture extends SimEntity implements IRecordable {
             	LogicalDuration TempsTrajet=LogicalDuration.ofMillis((long)t);
             	tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
             	tempsOptimalTot=tempsOptimalTot.add(TempsTrajet);
+            	//Logger.Information(this, "temps trajet", name+"  temps trajet  "+TempsTrajet);
             	addEvent(new ArriveToQueue(getEngine().SimulationDate().add(TempsTrajet)));
 
             }
@@ -356,13 +353,12 @@ public  class Voiture extends SimEntity implements IRecordable {
         return tempsReel;
     }
     @Override public String[] getTitles() {
-        String[] titles={"Départ/Arrivée","     ","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S","Créneau Horaire"};
+        String[] titles={"Départ/Arrivée","Départ","Durée Optimale Trajet","Durée Réelle Trajet","         ","I1 N","I1 E","I1 O","I1 S","I2 N","I2 E","I2 O","I2 S","I3 N","I3 E","I3 O","I3 S","I4 N","I4 E","I4 O","I4 S","Créneau Horaire"};
         return titles;
     }
     @Override public String[] getRecords() {
     	  int simHour=getEngine().SimulationDate().getHour();
-    	  System.out.println("hour    "+simHour);
-    	  String[] records={getDeparture().toString()+getDestination().toString(),"    ",String.valueOf(getTempsOptimalTot().DoubleValue()),String.valueOf(getTempsReel().DoubleValue()),"         "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
+    	  String[] records={getDeparture().toString()+getDestination().toString(),getDeparture().toString(),String.valueOf(getTempsOptimalTot().DoubleValue()),String.valueOf(getTempsReel().DoubleValue()),"         "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
       	
           if (simHour<7) records[21]="0h00-7h00";
           if (simHour>=7  && simHour<9 ) records[21]="7h00-9h00";

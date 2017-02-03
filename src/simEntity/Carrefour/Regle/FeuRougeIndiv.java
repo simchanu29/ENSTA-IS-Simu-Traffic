@@ -4,9 +4,7 @@ import enstabretagne.base.time.LogicalDateTime;
 import enstabretagne.base.time.LogicalDuration;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEvent;
-import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.QueueNames;
-import simEntity.Voiture.Voiture;
 
 /**
  * Created by Tag on 18/01/2017.
@@ -21,7 +19,7 @@ public class FeuRougeIndiv extends Feu{
     /**
      * Constructeur
      *
-     * Si un feu n'existe pas on peut mettre la duree du feu vert à -1.
+     * Si un feu n'existe pas on peut mettre la duree du feu vert à 0.
      * @param engine
      * @param dureeFeuVertN
      */
@@ -43,21 +41,25 @@ public class FeuRougeIndiv extends Feu{
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
+                break;
             case Sud:
                 getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,true);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
+                break;
             case Est:
                 getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,true);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,false);
+                break;
             case Ouest:
                 getAuthorizationEnterCarrefour().put(QueueNames.Nord,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Sud,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Est,false);
                 getAuthorizationEnterCarrefour().put(QueueNames.Ouest,true);
+                break;
         }
     }
 
@@ -65,7 +67,7 @@ public class FeuRougeIndiv extends Feu{
      * Gestion des feux. Ceux ci sont initialisés à leur création.
      * L'évênement en lui-même crée l'évenement suivant.
      *
-     * Si la duree du feu est à -1 l'evenement n'est pas loggé
+     * Si la duree du feu est à 0 l'evenement n'est pas loggé
      */
     public class FeuVertS extends SimEvent {
 
@@ -77,7 +79,7 @@ public class FeuRougeIndiv extends Feu{
         public void process() {
             triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Sud);
-            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
+            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertS))) );
         }
     }
     public class FeuVertN extends SimEvent{
@@ -90,7 +92,7 @@ public class FeuRougeIndiv extends Feu{
         public void process() {
             triggerUpdate();
             FeuRougeIndiv.this.setFeuIndiv(QueueNames.Nord);
-            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertO(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
+            FeuRougeIndiv.this.addEvent( new FeuRougeIndiv.FeuVertE(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(dureeFeuVertN))) );
         }
     }
     public class FeuVertE extends SimEvent{

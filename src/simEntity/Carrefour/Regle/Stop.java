@@ -166,7 +166,7 @@ public class Stop extends CarrefourRegle {
      *      Si on tourne à face : Gauche, Droite
      * Le droit de sortie est automatique
      *
-     * Il faudrait plutôt que lorsque la voiture le demande, les autorisations sont activée ou modifiées lorsqu'une
+     * Il faudrait plutôt que lorsque la voiture le demande, les autorisations sont activées ou modifiées lorsqu'une
      * voiture demande si elle peut passer.
      */
 }

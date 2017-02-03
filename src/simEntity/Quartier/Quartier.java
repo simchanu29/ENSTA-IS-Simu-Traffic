@@ -5,9 +5,7 @@ import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.SimEntity;
 import simEntity.Carrefour.Carrefour;
 import simEntity.Carrefour.CarrefourNames;
-
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Tag on 23/01/2017.

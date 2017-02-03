@@ -56,7 +56,6 @@ public class Carrefour extends SimEntity implements IRecordable {
 
     MoreRandom random;
     private LinkedList<Integer> freqPopVoiture; // Faire une liste des frequences en fonction des heures
-    private LinkedList<Voiture> listFirstInQueue;
 
     private Voiture bufferCarrefourNE;
     private Voiture bufferCarrefourSO;
@@ -84,8 +83,7 @@ public class Carrefour extends SimEntity implements IRecordable {
         RouteNord=new Route();
         RouteEst=new Route();
         RouteOuest=new Route();
-        
-        listFirstInQueue=new LinkedList<Voiture>();
+
     }
 
     /**
@@ -277,7 +275,6 @@ public class Carrefour extends SimEntity implements IRecordable {
     public void rmFromQueue(Voiture voiture){
 
         //System.out.println("["+getEngine().SimulationDate()+"][INFO](rmFromQueue) "+voiture.getName()+" will be removed from "+ this.nom +"/"+this.getQueueNameOfVoiture(voiture));
-        Queue testtmp = this.getQueueOfVoiture(voiture);
         this.getQueueOfVoiture(voiture).remove();  //supprime de la file d'attente
     }
     
@@ -404,12 +401,12 @@ public int VoitureSurRoute(CarrefourNames lcarn){
         int simHour=getEngine().SimulationDate().getHour();
 
         if (simHour<7) currentFreqPopVoiture=freqPopVoiture.get(0);
-        if (simHour>=7  && simHour<9 ) currentFreqPopVoiture = freqPopVoiture.get(1);
+        if (simHour>=7 && simHour<9 ) currentFreqPopVoiture = freqPopVoiture.get(1);
         if (simHour>=9  && simHour<17) currentFreqPopVoiture = freqPopVoiture.get(2);
         if (simHour>=17 && simHour<19) currentFreqPopVoiture = freqPopVoiture.get(3);
         if (simHour>=19 && simHour<24) currentFreqPopVoiture = freqPopVoiture.get(4);
 
-        LogicalDuration t = LogicalDuration.ofSeconds(Math.floor(3600/currentFreqPopVoiture));
+        LogicalDuration t = LogicalDuration.ofMillis((long)Math.floor(3600/currentFreqPopVoiture*1000));
         LogicalDateTime possibleVoitureArrival = getEngine().SimulationDate().add(t);
 
         return possibleVoitureArrival;
@@ -452,7 +449,6 @@ public int VoitureSurRoute(CarrefourNames lcarn){
         else if(this.carrefourOuest!=null && carrefour==this.carrefourOuest){return QueueNames.Ouest;}
         else{
             return QueueNames.Not_a_queue;
-            // TODO : log l'erreur
         }
     }
     public QueueNames getQueueByCarrefourName(CarrefourNames carrefour){
@@ -551,14 +547,12 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 
 	@Override
 	public String[] getTitles() {
-		// TODO Auto-generated method stub
 		String[] titles= new String[]{"CarrefourID", "QueueNord", "QueueSud","QueueEst","QueueOuest"};
 		return titles;
 	}
 
 	@Override
 	public String[] getRecords() {
-		// TODO Auto-generated method stub
 		String[] records= new String[]{this.nom.toString(), " ", " "," "," "};;
 		if (this.carrefourNord !=null) records[1]=String.valueOf(this.queueNord.size());
 		if (this.carrefourSud !=null) records[2]=String.valueOf(this.queueSud.size());
@@ -569,7 +563,6 @@ public int VoitureSurRoute(CarrefourNames lcarn){
 
 	@Override
 	public String getClassement() {
-		// TODO Auto-generated method stub
 		return "Carrefour";
 	}
     
