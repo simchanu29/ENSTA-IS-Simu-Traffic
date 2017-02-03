@@ -17,13 +17,16 @@ import java.util.Queue;
 import simEntity.Carrefour.QueueNames;
 
 
+
 public  class Voiture extends SimEntity implements IRecordable {
 
     private String name;
     private Quartier quartier;
+    //Les variables contenant le trajet de notre voiture
     private CarrefourNames departure;
     private CarrefourNames destination;
     private Path chemin;
+    //les variables contenant les différents temps de notre voiture
     private LogicalDateTime timeOfDeparture;
     private LogicalDuration tempsOptimal;
     private LogicalDuration tempsOptimalTot;
@@ -55,7 +58,7 @@ public  class Voiture extends SimEntity implements IRecordable {
         this.insideRoute = false;
 
         this.chemin=new Path(departure,destination);
-
+//initialisation des temps
         this.tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
         this.tempsOptimalTot=LogicalDuration.ZERO;
         this.dureeAttente=new double[16];
@@ -149,10 +152,12 @@ public  class Voiture extends SimEntity implements IRecordable {
 
             setInsideRoute(true);
             setInsideCarrefour(false);
-
+// Calcul du temps de trajet en fonction du nombre de voiture présente sur la route
             if(chemin.getNext()!=destination){
+            	// Cas où le prochain carrefour n'est pas la destination finale
                 int offset=nextCar.VoitureSurRoute(lastCar.getNom());
             	double t=chemin.getTime2next()*1000-360*offset;
+            	t =Math.max(t,0);
             	LogicalDuration TempsTrajet=LogicalDuration.ofMillis((long)t);
             	tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
             	tempsOptimalTot=tempsOptimalTot.add(TempsTrajet);
@@ -160,6 +165,7 @@ public  class Voiture extends SimEntity implements IRecordable {
 
             }
             else{
+            	// Cas où le prochain carrefour est la destination finale
             	tempsOptimal=LogicalDuration.ofSeconds(chemin.getTime2next());
             	tempsOptimalTot=tempsOptimalTot.add(LogicalDuration.ofSeconds(chemin.getTime2next()));
                 addEvent(new IsArrived(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(chemin.getTime2next()))));
@@ -234,6 +240,14 @@ public  class Voiture extends SimEntity implements IRecordable {
 
                     //System.out.println("Add Event checkPrio  "+Voiture.this.chemin.getPrevious()+" pour  "+name+"  at  "+getEngine().SimulationDate()+"  for  "+getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1)));
                     addEvent(new CheckPrio(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(1))));
+                    Carrefour lastCar;
+                	Carrefour nextCar;
+                    lastCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getPrevious());
+                    nextCar=Voiture.this.quartier.getDicCarrefour().get(chemin.getNext());
+                    if (nextCar.getNom()==CarrefourNames.I1||nextCar.getNom()==CarrefourNames.I2 || nextCar.getNom()==CarrefourNames.I3|| nextCar.getNom()==CarrefourNames.I4){
+                    	CarrefourNames lcarn=lastCar.getNom();
+                    	nextCar.AjouterTempsSurRoute(lcarn);                   }
+                    
                }
             }
             else{

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import enstabretagne.base.math.MoreRandom;
-
+		// Cette classe nous permet d'avoir des noms faciles d'accès pour nos carrefour
 public enum CarrefourNames {
 	P1("P1"),
 	P2("P2"),

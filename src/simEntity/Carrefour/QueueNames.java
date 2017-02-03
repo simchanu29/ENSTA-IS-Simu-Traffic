@@ -8,6 +8,7 @@ package simEntity.Carrefour;
  * -2 ou -2 = en face
  */
 public enum QueueNames {
+	// Cette clase nous permet d'avoir des noms faciles d'accès pour les Queues d'un carrefour
     Nord("Nord",0),
     Est("Est",1),
     Ouest("Ouest",3),

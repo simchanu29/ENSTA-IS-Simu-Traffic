@@ -37,7 +37,7 @@ public class Main {
 		LogicalDateTime begin = LogicalDateTime.Zero;
 
 
-		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(8));
+		SimEngine engine = new SimEngine(1,begin,LogicalDuration.ofHours(24));
 
 		//Initialisation de l'ensemble des loggers
 		Logger.Init((ISimulationDateProvider) engine, loggersNames, true);
@@ -128,7 +128,7 @@ public class Main {
 		
 		Logger.Terminate();
 	}
-	
+	//Cette fonction utilise les fréquences choisies par l'utilisateur pour en créer une liste 
 	public static LinkedList<Integer> createListeFreq(int a, int b, int c, int d, int e) {
 		LinkedList<Integer> freqPopVoiture=new LinkedList<Integer>();
 		freqPopVoiture.add(a);
